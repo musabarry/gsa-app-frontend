@@ -1,9 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Profile from "../Profile";
-import Login from "../Login";
-import Signup from "../Signup";
-import About from "../About";
+import Profile from "../Profile.js";
+import Login from "../Login.js";
+import Signup from "../Signup.js";
+import About from "../About.js";
+import Majorevents from "../Majorevents.js";
 // import ForgotPassword from "../components/ForgotPassword";
 const Tab = createBottomTabNavigator();
 
@@ -14,6 +15,7 @@ const Authenticated = ({ navigation }) => {
       <Tab.Screen name="Login" component={Login} />
       <Tab.Screen name="Signup" component={Signup} />
       <Tab.Screen name="About" component={About} />
+      <Tab.Screen name="MajorEvents" component={Majorevents} />
       {/* <Tab.Screen name="FortgotPassword" component={FortgotPassword} /> */}
     </Tab.Navigator>
   );

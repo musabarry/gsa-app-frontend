@@ -2,9 +2,11 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Screens from "../components/AutoNavigation/AutoNavigation";
 import Authenticated from "../components/Authenticated/Authenticated";
+import Home from "../components/Home";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import About from "../components/About";
+import Majorevents from "../components/Majorevents";
 // import ForgotPassword from "../components/ForgotPassword";
 
 const RootStack = createStackNavigator();
@@ -16,6 +18,7 @@ const RootSreen = ({ navigation }) => {
       <RootStack.Screen name="LoginAuth" component={Authenticated} />
       <RootStack.Screen name="SignupAuth" component={Authenticated} />
       <RootStack.Screen name="AboutAuth" component={About} />
+      <RootStack.Screen name="MeventsAuth" component={Majorevents} />
       {/* <RootStack.Screen name="FpasswordAuth" component={ForgotPassword} /> */}
     </RootStack.Navigator>
   );

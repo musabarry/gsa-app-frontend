@@ -10,24 +10,20 @@ import {
   Button,
   navigate,
 } from "react-native";
-import Home from "../components/Home";
 
-export default class About extends Component {
+export default class Majorevents extends Component {
   render() {
     return (
       <KeyboardAvoidingView Behavior="padding" style={styles.container}>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("AboutAuth")}
+          onPress={() => this.props.navigation.navigate("MeventsAuth")}
         >
           <View style={styles.GoBackBttn}>
             <Button
               title="Go back"
               onPress={() => this.props.navigation.navigate("Home")}
             ></Button>
-            <Text style={styles.about}>
-              The Guinean Students Association is a group of students who have
-              the same goal....
-            </Text>
+            <Text style={styles.about}> GSA events here</Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -42,6 +38,7 @@ const styles = StyleSheet.create({
   },
   about: {
     flexGrow: 1,
+    fontSize: 20,
     alignItems: "center",
     justifyContent: "center",
   },

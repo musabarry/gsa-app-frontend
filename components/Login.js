@@ -23,6 +23,7 @@ export default class Login extends Component {
           <TextInput
             placeholder="Enter username"
             style={styles.username}
+            autoCapitalize="none"
           ></TextInput>
           <TextInput
             placeholder="Password"
@@ -30,11 +31,11 @@ export default class Login extends Component {
             style={styles.username}
           ></TextInput>
           <View style={styles.LoginView}>
-            <Text style={styles.LoginButton}>Login!!</Text>
+            <Text style={styles.LoginButton}>Login</Text>
           </View>
-          {/* <View style={styles.ForgotPasswordView}>
-            <Text style={styles.ForgotPasswordBttn}>Forgot Password</Text>
-          </View> */}
+          <View style={styles.forgotPassword}>
+            <Text style={styles.LoginButton}>Forgot Password</Text>
+          </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     );
@@ -55,10 +56,25 @@ const styles = StyleSheet.create({
   },
 
   LoginTitle: {
+    fontSize: 16,
     textAlign: "center",
+    width: 200,
+    color: "#ffff",
+    paddingVertical: 13,
+    backgroundColor: "#738289",
+    borderRadius: 50,
+    marginVertical: 10,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   LoginButton: {
     textAlign: "center",
+    fontSize: 14,
+    backgroundColor: "#dce6e0",
+    width: 150,
+    marginRight: "auto",
+    marginLeft: "auto",
+    paddingVertical: 5,
   },
   MemberLogin: {
     paddingVertical: 10,

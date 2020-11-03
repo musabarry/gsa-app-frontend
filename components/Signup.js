@@ -1,28 +1,41 @@
 import React, { Component } from "react";
+// import React, { useState } from "react";
+// import PropTypes from "Prop-types";
 import {
   StyleSheet,
   Text,
   View,
-  Image,
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 
-export default class Login extends Component {
+export default class Signup extends Component {
   render() {
     return (
-      <KeyboardAvoidingView>
-        <View>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("SignupAuth")}
-          >
-            <Text style={styles.buttontext}>Login!</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text>ffh</Text>
-        </View>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("SignupAuth")}
+        >
+          <View style={styles.headerStyle}>
+            <Text style={styles.LoginTitle}>GSA City Tech Signup Form</Text>
+          </View>
+          <TextInput placeholder="Email" style={styles.username}></TextInput>
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            style={styles.username}
+          ></TextInput>
+          <TextInput
+            placeholder="Confirm password"
+            secureTextEntry
+            style={styles.username}
+          ></TextInput>
+          <View style={styles.LoginView}>
+            <Text style={styles.SingupButton}>Signup</Text>
+          </View>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     );
   }
@@ -30,25 +43,36 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingVertical: 100,
     width: Dimensions.get("window").width,
   },
-  logocontainer: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  username: {
+    height: 40,
+    backgroundColor: "rgba(225, 229, 235,0.8)",
+    paddingLeft: 10,
+    marginBottom: 5,
+    borderRadius: 23,
   },
-  logo: {
-    width: 100,
-    height: 100,
+
+  LoginTitle: {
+    textAlign: "center",
   },
-  myform: {
-    flex: 1,
+  headerStyle: {
+    fontSize: 16,
+    paddingVertical: 15,
+    borderRadius: 25,
   },
-  citytech: {
-    color: "rgba(90, 145, 109,0.8)",
-  },
-  buttontext: {
-    paddingVertical: 50,
+  SingupButton: {
+    marginRight: "auto",
+    marginLeft: "auto",
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#ffff",
+    textAlign: "center",
+    width: 300,
+    backgroundColor: "#738289",
+    borderRadius: 25,
+    marginVertical: 10,
+    paddingVertical: 13,
   },
 });

@@ -7,40 +7,39 @@ import {
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Button,
+  navigate,
 } from "react-native";
-import { ceil } from "react-native-reanimated";
+import Home from "../components/Home";
 
-const Profile = (props) => {
-  return (
-    <View style={styles.container}>
-      {/* <Text style={styles.headText}>Profile</Text>
-      <View>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate("ProfileAuth")}
-        >
-          <Text style={styles.buttontext}>Login</Text>
+export default class Profile extends Component {
+  render() {
+    return (
+      <KeyboardAvoidingView Behavior="padding" style={styles.container}>
+        <TouchableOpacity>
+          <View style={styles.GoBackBttn}>
+            <Button
+              title="Go back"
+              onPress={() => this.props.navigation.navigate("Home")}
+            ></Button>
+          </View>
         </TouchableOpacity>
-      </View> */}
-    </View>
-  );
-};
+      </KeyboardAvoidingView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingVertical: 100,
+    width: Dimensions.get("window").width,
   },
-  headText: {
-    fontSize: 20,
-    paddingVertical: 50,
-    textAlign: "center",
+  about: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  buttontext: {
-    textAlign: "center",
-    color: "rgba(89, 138, 72,0.8)",
-    fontWeight: "bold",
-    fontSize: 18,
-    backgroundColor: "#940",
+  GoBackBttn: {
+    textAlign: "right",
   },
 });
-
-export default Profile;
