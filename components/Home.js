@@ -15,31 +15,25 @@ import Login from "../components/Login";
 import Signup from "../components/Signup";
 import About from "../components/About";
 import Majorevents from "./Majorevents";
-
+import { Ionicons, Entypo} from '@expo/vector-icons';
+import Constants from 'expo-constants';
 const Home = (props) => {
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.header}>GSA City Tech</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerView}>
+        <View style={styles.logoView}>
+          <Text>LOGO</Text>
+        </View>
+        <View style={styles.logView}>
+          <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate("Login")}>
+            <Text style={styles.login_text}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate("Signup")}>
+            <Text style={styles.signup_text}>create an account</Text>
+          </TouchableOpacity>
+        </View>     
       </View>
-
-      <SafeAreaView style={styles.content}>
-        <ScrollView>
-          <View style={styles.loginview}>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("Login")}
-            >
-              <Text style={styles.buttondata}>Login</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View>
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate("Signup")}
-            >
-              <Text style={styles.buttondata}>Signup</Text>
-            </TouchableOpacity>
-          </View>
+        <ScrollView style={styles.scrollView}>
           <View style={styles.logo}>
             <Image
               source={require("./images/logo.png")}
@@ -59,13 +53,18 @@ const Home = (props) => {
             <Text style={styles.buttontext}>Major Events</Text>
           </TouchableOpacity>
         </ScrollView>
-      </SafeAreaView>
+  
       <View style={styles.footer}>
         <View>
-          <Text style={styles.foText}>Footer</Text>
+          <Text style={styles.foText}>Contacts</Text>
+        </View>
+        <View style={styles.iconFooter}>
+          <Entypo style={styles.icon} name="facebook" size={24} color="black" />
+          <Entypo style={styles.icon} name="instagram" size={24} color="black" />
+          <Entypo style={styles.icon} name="twitter" size={24} color="black" />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -73,20 +72,60 @@ const { height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: Constants.statusBarHeight,
   },
-  content: {
-    padding: 20,
+  scrollView:{
+    marginHorizontal: 20
   },
   footer: {
     backgroundColor: "#DCD6D6",
     bottom: 0,
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     height: 70,
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    paddingTop: 15
   },
-  foText: {
-    textAlign: "center",
+  foText:{
+    marginLeft: 10
+  },
+  iconFooter:{
+    flexWrap: 'wrap',
+    flexDirection: 'row', 
+    paddingRight: 10,
+  },
+  login_btn:{
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    overflow: 'hidden',
+    height: 30,
+    width: 125,
+    color: '#000'
+  },
+  signup_btn:{
+    padding: 5
+  },
+  icon:{
+   marginRight: 10
+  },
+  headerView:{
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: "#DCD6D6",
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'baseline'
+  },
+  
+  logView:{
+    flexWrap: 'wrap',
+    flexDirection: 'column', 
+    paddingRight: 10,
   },
   header: {
     fontSize: 20,
@@ -95,16 +134,19 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: "#DCD6D6",
   },
-  buttondata: {
+  login_text: {
     fontSize: 18,
-    fontWeight: "500",
-    color: "#313b33",
+    fontWeight: '800',
     textAlign: "center",
     paddingVertical: 3,
-    color: "#3aa184",
   },
-  loginview: {
-    // paddingVertical: 10,
+  signup_text:{
+    fontWeight: '700',
+    fontSize: 18,
+    textTransform: 'capitalize'
+  },
+  logoView:{
+    marginLeft: 15
   },
   buttontext: {
     fontSize: 16,
@@ -116,7 +158,15 @@ const styles = StyleSheet.create({
     marginLeft: "auto",
     marginRight: "auto",
     width: 300,
-    backgroundColor: "#738289",
+    backgroundColor: "#DCD6D6",
+
+    shadowOffset:{
+      width: 1,
+      height: 4
+    },
+    shadowOpacity: 0.5,
+    shadowRadius:  1,
+    shadowColor: "#917e7e",
     borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 13,

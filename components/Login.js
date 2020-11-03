@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Button
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
@@ -14,10 +15,9 @@ export default class Login extends Component {
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("LoginAuth")}
-        >
-          <View style={styles.MemberLogin}>
+    
+        <TouchableOpacity onPress={() => this.props.navigation.navigate("LoginAuth")}>
+          <View style={styles.logoView}>
             <Text style={styles.LoginTitle}>Member Login</Text>
           </View>
           <TextInput
