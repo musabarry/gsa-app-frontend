@@ -16,9 +16,9 @@ export default class Login extends Component {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
     
-        <TouchableOpacity onPress={() => this.props.navigation.navigate("LoginAuth")}>
+        <View>
           <View style={styles.logoView}>
-            <Text style={styles.LoginTitle}>Member Login</Text>
+            <Text style={styles.LoginTitle}>Signup</Text>
           </View>
           <TextInput
             placeholder="Enter username"
@@ -30,13 +30,15 @@ export default class Login extends Component {
             secureTextEntry
             style={styles.username}
           ></TextInput>
-          <View style={styles.LoginView}>
+          <TouchableOpacity style={styles.LoginView} 
+          onPress={() => this.props.navigation.navigate('LoginAuth')}>
             <Text style={styles.LoginButton}>Login</Text>
-          </View>
-          <View style={styles.forgotPassword}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.forgotPassword} 
+          onPress={() => this.props.navigation.navigate('ForgotPassword')}>
             <Text style={styles.LoginButton}>Forgot Password</Text>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </KeyboardAvoidingView>
     );
   }

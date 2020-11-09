@@ -5,7 +5,7 @@ import Login from "../Login.js";
 import Signup from "../Signup.js";
 import About from "../About.js";
 import Majorevents from "../Majorevents.js";
-// import ForgotPassword from "../components/ForgotPassword";
+import ForgotPassword from "../ForgotPassword";
 const Stack = createStackNavigator();
 
 const Screens = ({ navigation }) => {
@@ -16,7 +16,7 @@ const Screens = ({ navigation }) => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="MajorEvents" component={Majorevents} />
-      {/* <Stack.Screen name="ForgotPassword" component={ForgotPassword} /> */}
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 };
