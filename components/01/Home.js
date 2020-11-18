@@ -7,16 +7,13 @@ import {
   Dimensions,
   SafeAreaView,
   ScrollView,
-  TouchableOpacity,
-  KeyboardAvoidingView,
+  TouchableOpacity
 } from "react-native";
-import { ceil } from "react-native-reanimated";
-import Login from "../components/Login";
-import Signup from "../components/Signup";
-import About from "../components/About";
-import Majorevents from "./Majorevents";
-import { Ionicons, Entypo} from '@expo/vector-icons';
+import { Button, Header } from 'react-native-elements';
+
+import { Entypo} from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import logo from '../images/logo.png'
 const Home = (props) => {
   return (
     <SafeAreaView style={styles.container}>
@@ -24,19 +21,19 @@ const Home = (props) => {
         <View style={styles.logoView}>
           <Text>LOGO</Text>
         </View>
-        <View style={styles.logView}>
+        {/* <View style={styles.logView}>
           <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate("Login")}>
             <Text style={styles.login_text}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate("Signup")}>
             <Text style={styles.signup_text}>create an account</Text>
           </TouchableOpacity>
-        </View>     
+        </View>      */}
       </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.logo}>
             <Image
-              source={require("./images/logo.png")}
+              source={logo} alt="logo"
               style={{ width: 300, height: 300 }}
             />
           </View>
@@ -68,7 +65,7 @@ const Home = (props) => {
   );
 };
 
-const { height } = Dimensions.get("screen");
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -102,9 +99,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 18,
     overflow: 'hidden',
-    height: 30,
+    height: 37,
     width: 125,
-    color: '#000'
+    color: '#000',
+    marginBottom: 5
   },
   signup_btn:{
     padding: 5
@@ -123,8 +121,8 @@ const styles = StyleSheet.create({
   },
   
   logView:{
-    flexWrap: 'wrap',
     flexDirection: 'column', 
+    alignItems: 'flex-end',
     paddingRight: 10,
   },
   header: {

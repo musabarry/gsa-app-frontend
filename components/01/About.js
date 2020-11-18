@@ -3,25 +3,26 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Button,
-  navigate,
+  Button
 } from "react-native";
-import Home from "../components/Home";
 
-export default class Profile extends Component {
+export default class About extends Component {
   render() {
     return (
       <KeyboardAvoidingView Behavior="padding" style={styles.container}>
         <TouchableOpacity>
           <View style={styles.GoBackBttn}>
-            <Button
+            {/* <Button
               title="Go back"
               onPress={() => this.props.navigation.navigate("Home")}
-            ></Button>
+            ></Button> */}
+            <Text style={styles.about}>
+              The Guinean Students Association is a group of students who have
+              the same goal....
+            </Text>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>
