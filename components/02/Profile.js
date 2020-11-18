@@ -1,41 +1,26 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
+  Text,
   View,
-  Dimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
 } from "react-native";
+import Constants from 'expo-constants';
+import { AntDesign} from '@expo/vector-icons';
 
 export default class Profile extends Component {
   render() {
     return (
-      <KeyboardAvoidingView Behavior="padding" style={styles.container}>
-        <TouchableOpacity>
-          <View style={styles.GoBackBttn}>
-            <Button
-              title="Go back"
-              onPress={() => this.props.navigation.navigate("Login")}
-            ></Button>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+      <View>
+        <Text>Profile</Text>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 100,
-    width: Dimensions.get("window").width,
-  },
-  about: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  GoBackBttn: {
-    textAlign: "right",
+    flex: 1,
+    marginTop: Constants.statusBarHeight,
   },
 });
+

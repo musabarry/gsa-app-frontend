@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
-import { Button } from "react-native-paper";
+
 export default class Login extends Component {
   render() {
     return (
@@ -27,7 +27,8 @@ export default class Login extends Component {
             <View style={styles.logo}>
               <Text style={styles.logoText} >LOGO</Text>
             </View>
-            <TouchableOpacity  style={styles.signBtn}>
+            <TouchableOpacity  style={styles.signBtn}
+            onPress={() => this.props.navigation.navigate('Signup')}>
             <Text style={styles.LoginTitle}>Signup</Text>
             </TouchableOpacity>
           </View>
@@ -43,7 +44,7 @@ export default class Login extends Component {
               style={styles.username}
             ></TextInput>
             <TouchableOpacity style={styles.LoginView} 
-            onPress={() => this.props.navigation.navigate('auth')}>
+            onPress={() => this.props.navigation.navigate('auth', {screen: 'Profile'})}>
               <Text style={styles.LoginButton}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.forgotPassword} 

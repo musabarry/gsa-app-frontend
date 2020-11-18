@@ -25,9 +25,6 @@ export default class NewPassword extends Component {
               <View style={styles.logo}>
                 <Text style={styles.logoText} >LOGO</Text>
               </View>
-              <TouchableOpacity  style={styles.signBtn}>
-              <Text style={styles.LoginTitle}>Login</Text>
-              </TouchableOpacity>
             </View>
             <TextInput
             placeholder="New Password"

@@ -21,14 +21,14 @@ const Home = (props) => {
         <View style={styles.logoView}>
           <Text>LOGO</Text>
         </View>
-        {/* <View style={styles.logView}>
+        <View style={styles.logView}>
           <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate("Login")}>
             <Text style={styles.login_text}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate("Signup")}>
             <Text style={styles.signup_text}>create an account</Text>
           </TouchableOpacity>
-        </View>      */}
+        </View>     
       </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.logo}>
