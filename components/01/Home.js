@@ -1,13 +1,8 @@
 import React, { Component } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity
+  StyleSheet,Text,View,
+  Image,SafeAreaView,
+  ScrollView,TouchableOpacity
 } from "react-native";
 import { Button, Header } from 'react-native-elements';
 
@@ -17,19 +12,19 @@ import logo from '../images/logo.png'
 const Home = (props) => {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerView}>
-        <View style={styles.logoView}>
-          <Text>LOGO</Text>
+        <View style={styles.header_wrapper}>
+          <View style={styles.logo_wrapper}>
+            <Entypo  name="twitter" size={50} color="black" />
+          </View>
+          <View style={styles.sign_wrapper}>
+            <TouchableOpacity style={styles.login_btn} >
+              <Text style={styles.login_text}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.signup_btn}>
+              <Text style={styles.signup_text}>create an account</Text>
+            </TouchableOpacity>
+          </View>     
         </View>
-        <View style={styles.logView}>
-          <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate("Login")}>
-            <Text style={styles.login_text}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate("Signup")}>
-            <Text style={styles.signup_text}>create an account</Text>
-          </TouchableOpacity>
-        </View>     
-      </View>
         <ScrollView style={styles.scrollView}>
           <View style={styles.logo}>
             <Image
@@ -69,10 +64,29 @@ const Home = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
   },
-  scrollView:{
-    marginHorizontal: 20
+  header_wrapper:{
+    padding: 10,
+    backgroundColor: "#DCD6D6",
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1
+  },
+  sign_wrapper:{
+    flexDirection: 'column', 
+    alignItems: 'flex-end',
+  },
+  login_btn:{
+    borderRadius: 18,
+    overflow: 'hidden',
+    width: 125,
+    color: '#000',
+    backgroundColor: '#ffffff',
+  },
+  signup_btn:{
+    marginTop: 3
   },
   footer: {
     backgroundColor: "#DCD6D6",
@@ -95,42 +109,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     paddingRight: 10,
   },
-  login_btn:{
-    backgroundColor: '#fff',
-    borderRadius: 18,
-    overflow: 'hidden',
-    height: 37,
-    width: 125,
-    color: '#000',
-    marginBottom: 5
-  },
-  signup_btn:{
-    padding: 5
-  },
+
   icon:{
    marginRight: 10
-  },
-  headerView:{
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: "#DCD6D6",
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'baseline'
-  },
-  
-  logView:{
-    flexDirection: 'column', 
-    alignItems: 'flex-end',
-    paddingRight: 10,
-  },
-  header: {
-    fontSize: 20,
-    paddingVertical: 50,
-    textAlign: "center",
-    height: 50,
-    backgroundColor: "#DCD6D6",
   },
   login_text: {
     fontSize: 18,
@@ -143,9 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textTransform: 'capitalize'
   },
-  logoView:{
-    marginLeft: 15
-  },
+
   buttontext: {
     fontSize: 16,
     fontWeight: "500",
