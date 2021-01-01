@@ -1,15 +1,26 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,Text,View,
   Image,SafeAreaView,
   ScrollView,TouchableOpacity
 } from "react-native";
 import { Button, Header } from 'react-native-elements';
-
+import {useQuery, gql} from '@apollo/client';
+import {ALL} from  '../../GraphQl/query'
 import { Entypo} from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import logo from '../images/logo.png'
+import Animated from "react-native-reanimated";
 const Home = (props) => {
+
+  const {loading, error, data } =  useQuery(ALL);
+  const [dataSate, setData] =  useState()
+  // useEffect(() =>{
+
+  //   if(data){
+  //     setData(data.all)
+  //   }
+  // }, data)
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header_wrapper}>
@@ -17,10 +28,10 @@ const Home = (props) => {
             <Entypo  name="twitter" size={50} color="black" />
           </View>
           <View style={styles.sign_wrapper}>
-            <TouchableOpacity style={styles.login_btn} >
+            <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate('Login')} >
               <Text style={styles.login_text}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.signup_btn}>
+            <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate('Signup')}>
               <Text style={styles.signup_text}>create an account</Text>
             </TouchableOpacity>
           </View>     

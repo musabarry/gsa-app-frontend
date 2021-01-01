@@ -1,62 +1,97 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
+  As,
   TouchableOpacity,
+  Button,
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
+import{useMutation} from '@apollo/client';
+import {LOGIN} from '../../GraphQl/mutation';
+import { Alert } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage'
+import { Entypo} from '@expo/vector-icons';
+const Login =(props) => {
 
-export default class Login extends Component {
-  render() {
-    return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        
-        <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
-          <AntDesign name="back" size={24} color="black" />
+  const [email, setEmail] = useState('');
+  const [password, setPassword] =  useState('');
+  const [hidePass, setHidePass] = useState(true)
+  const [login, {error}] =  useMutation(LOGIN)
+
+  const onSubmit = () =>{
+    login({
+      variables:{
+        email: email,
+        password: password
+      }
+    }).then(async (res)  =>{
+      if(res.data.login.success){
+        await AsyncStorage.setItem('@token_key', res.data.login.token)
+      }
+
+    }).catch(error =>{
+      Alert(error);
+    })
+    if(error){
+      Alert(error);
+    }
+  }
+  
+
+  return (
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      
+      <View style={styles.headerView}>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
+        <AntDesign name="back" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+      
+      <View style={styles.login}>
+        <View style={styles.logoView}>
+          <View style={styles.logo}>
+            <Text style={styles.logoText} >LOGO</Text>
+          </View>
+          <TouchableOpacity  style={styles.signBtn}
+          onPress={() => props.navigation.navigate('Signup')}>
+          <Text style={styles.LoginTitle}>Signup</Text>
           </TouchableOpacity>
         </View>
-       
-        <View style={styles.login}>
-          <View style={styles.logoView}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText} >LOGO</Text>
-            </View>
-            <TouchableOpacity  style={styles.signBtn}
-            onPress={() => this.props.navigation.navigate('Signup')}>
-            <Text style={styles.LoginTitle}>Signup</Text>
-            </TouchableOpacity>
-          </View>
-          <View  style={styles.input}>
-            <TextInput
-              placeholder="Enter username"
-              style={styles.username}
-              autoCapitalize="none"
-            ></TextInput>
-            <TextInput
-              placeholder="Password"
-              secureTextEntry
-              style={styles.username}
-            ></TextInput>
-            <TouchableOpacity style={styles.LoginView} 
-            onPress={() => this.props.navigation.navigate('auth', {screen: 'Profile'})}>
-              <Text style={styles.LoginButton}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotPassword} 
-            onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text style={styles.LoginButton}>Forgot Password</Text>
-            </TouchableOpacity>
-          </View>
+        <View  style={styles.input}>
+          <TextInput
+            placeholder="Email"
+            style={styles.username}
+            autoCapitalize="none"
+            value={email}
+            onChangeText={e => setEmail(e)}
+          ></TextInput>
+          <TextInput
+            placeholder="Password"
+            secureTextEntry={hidePass}
+            style={styles.username}
+            value={password}
+            onChangeText={e => setPassword(e)}
+          ></TextInput>
+            {/* <Button onPress={onSubmit} title="LOGIN"/> */}
+          <TouchableOpacity style={styles.LoginView} 
+          onPress={onSubmit}>
+            <Text style={styles.LoginButton}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.forgotPassword} 
+          onPress={() => props.navigation.navigate('ForgotPassword')}>
+            <Text style={styles.LoginButton}>Forgot Password</Text>
+          </TouchableOpacity>
         </View>
-        
-      </KeyboardAvoidingView>
-    );
-  }
+      </View>
+      
+    </KeyboardAvoidingView>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -142,4 +177,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default Login
 
