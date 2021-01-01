@@ -17,10 +17,10 @@ const Home = (props) => {
             <Entypo  name="twitter" size={50} color="black" />
           </View>
           <View style={styles.sign_wrapper}>
-            <TouchableOpacity style={styles.login_btn} >
+            <TouchableOpacity style={styles.login_btn} onPress={() => props.navigation.navigate('Login')} >
               <Text style={styles.login_text}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.signup_btn}>
+            <TouchableOpacity style={styles.signup_btn} onPress={() => props.navigation.navigate('Signup')}>
               <Text style={styles.signup_text}>create an account</Text>
             </TouchableOpacity>
           </View>     
