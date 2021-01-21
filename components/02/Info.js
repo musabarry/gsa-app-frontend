@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useContext  } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,37 +7,61 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Button,
+  Alert,
   TextInput
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
+import authContext  from '../../authContext';
+import {CREATEUSER} from '../../GraphQl/mutation';
+import{useMutation} from '@apollo/client';
+import AsyncStorage from '@react-native-community/async-storage'
 
-export default class Info extends Component {
-  // state = {
-  //   photo: null,
-  // };
-  // handleChoosePhoto = () => {
-  //   const options = {
-  //     noData: true,
-  //   };
-  //   ImagePicker.launchImageLibrary(options, (response) => {
-  //     if (response.uri) {
-  //       this.setState({ photo: response });
-  //     }
-  //   });
-  // };
-  render() {
+const Info = (props) =>{
+
+  const state = useContext(authContext);
+  const [firstname, setFirstname] =  useState();
+  const [lastname, setLastname] =  useState();
+  const [school, setSchool] =  useState();
+  const [major, setMajor] =  useState();
+  const [role, setRole] =  useState();
+  const [skills, setSkills] = useState()
+  const [interest, setInterest] = useState()
+  const [createUser, {error}] =  useMutation(CREATEUSER);
+
+  
+  const onSubmit = async () =>{
+    const userID = await AsyncStorage.getItem('@userID')
+    if(!firstname || !lastname || !userID || !school){
+      console.log('Empty field');
+    }else{
+    createUser({
+        variables:{
+            account: userID,
+            firstname: firstname,
+            lastname: lastname,
+            school: school,
+            major: major,
+            role: role,
+            skills: skills.split(','),
+            interest: interest.split(',')
+          }
+      })
+      .then((res) =>{
+        state.setAccount(true)
+      }).catch(error =>{
+        Alert.alert('Server error')
+      })
+
+    }
+  };
+   
+  
+
 
     return (
       <KeyboardAvoidingView Behavior="padding" style={styles.container}>
         <ScrollView>
-       
-          <View style={styles.headerView}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
-            <AntDesign name="back" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
           <View style={styles.logoView}>
             <View style={styles.logo}>
               <Text style={styles.logoText} >IMAGE</Text>
@@ -52,27 +76,61 @@ export default class Info extends Component {
               <TextInput
                 placeholder="Firstname"
                 style={styles.username}
-              ></TextInput>
+                autoCapitalize={'none'}
+                onChangeText={e => setFirstname(e)}
+                value={firstname}
+              />
               <TextInput
                 placeholder="Lastname"
                 style={styles.username}
-              ></TextInput>
-              <TextInput placeholder="School" style={styles.username}></TextInput>
-              <TextInput placeholder="Major" style={styles.username}></TextInput>
-              <TextInput placeholder="Role" style={styles.username}></TextInput>
+                autoCapitalize={'none'}
+                onChangeText={e => setLastname(e)}
+                value={lastname}
+              />
+              <TextInput 
+              placeholder="School" 
+              autoCapitalize={'none'}
+              style={styles.username}
+              onChangeText={e => setSchool(e)}
+              value={school}
+              />
+              <TextInput 
+              placeholder="Major" 
+              autoCapitalize={'none'}
+              style={styles.username}
+              onChangeText={e => setMajor(e)}
+              value={major}
+              />
+              <TextInput 
+              placeholder="Role" 
+              autoCapitalize={'none'}
+              style={styles.username}
+              onChangeText={e => setRole(e)}
+              value={role}
+              />
               <TextInput
-                placeholder="Interst"
-                style={styles.username}
-              ></TextInput>
+              placeholder="Skills"
+              autoCapitalize={'none'}
+              style={styles.username}
+              onChangeText={e => setSkills(e)}
+              value={skills}
+              />
+              <TextInput
+              placeholder="Interst"
+              autoCapitalize={'none'}
+              style={styles.username}
+              onChangeText={e => setInterest(e)}
+              value={interest}
+              />
               <TouchableOpacity style={styles.LoginView} 
-              onPress={() => this.props.navigation.navigate('auth')}>
-                <Text style={styles.LoginButton}>Signup</Text>
+              onPress={onSubmit}>
+                <Text style={styles.LoginButton}>Submit</Text>
               </TouchableOpacity>
             </View>
         </ScrollView>
       </KeyboardAvoidingView>
     );
-  }
+  
 }
 
 const styles = StyleSheet.create({
@@ -139,3 +197,5 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
   },
 });
+
+export default Info;

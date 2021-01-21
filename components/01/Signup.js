@@ -1,66 +1,108 @@
-import React, { Component } from "react";
+import React, {useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
 } from "react-native";
 import Constants from 'expo-constants';
-import { AntDesign} from '@expo/vector-icons';
-export default class Signup extends Component {
-  render() {
-    return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        
-        <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
-          <AntDesign name="back" size={24} color="black" />
+import authContext  from '../../authContext';
+import AsyncStorage from '@react-native-community/async-storage';
+import {SIGNUP} from '../../GraphQl/mutation';
+import{useMutation} from '@apollo/client';
+const Signup = (props) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] =  useState('');
+  const [confirPass, setConfirPass] = useState('');
+  const [signup, {error, loading}] =  useMutation(SIGNUP)
+
+  const [errors, setErrors] =  useState('')
+  const state = useContext(authContext);
+
+  const onSubmit = () =>{
+    if(!email || !password || !confirPass){
+      console.log('Empty field');
+    }if(password != confirPass){
+      console.log("Password does not match");
+    }else{
+      signup({
+        variables:{
+          email: email,
+          password: password
+        }
+      }).then(async (res) =>{
+        if(res.data.signup.success){
+          await AsyncStorage.setItem('@token_key', res.data.signup.token)
+          await AsyncStorage.setItem('@userID', res.data.signup.account._id)
+          state.setAuthanticated(true)
+          state.seAccount(res.data.signup.success)
+        }
+      })
+    }
+  }
+
+  useEffect(() =>{
+    if(loading){
+      console.log('hello');
+    }
+  },[])
+
+  return (
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      
+      {/* <View style={styles.headerView}>
+        <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
+        <AntDesign name="back" size={24} color="black" />
+        </TouchableOpacity>
+      </View> */}
+      
+      <View style={styles.login}>
+        <View style={styles.logoView}>
+          <View style={styles.logo}>
+            <Text style={styles.logoText} >LOGO</Text>
+          </View>
+          <TouchableOpacity  style={styles.signBtn}
+          onPress={() => props.navigation.navigate('Login')}>
+          <Text style={styles.LoginTitle}>Login</Text>
           </TouchableOpacity>
         </View>
-       
-        <View style={styles.login}>
-          <View style={styles.logoView}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText} >LOGO</Text>
-            </View>
-            <TouchableOpacity  style={styles.signBtn}
-            onPress={() => this.props.navigation.navigate('Login')}>
-            <Text style={styles.LoginTitle}>Login</Text>
-            </TouchableOpacity>
-          </View>
-          <View  style={styles.input}>
-            <TextInput
-              placeholder="Enter username"
-              style={styles.username}
-              autoCapitalize="none"
-            ></TextInput>
-            <TextInput
-              placeholder="Password"
-              secureTextEntry
-              style={styles.username}
-            ></TextInput>
-            <TextInput
-              placeholder="Re enter password"
-              secureTextEntry
-              style={styles.username}
-            ></TextInput>
-            <TouchableOpacity style={styles.LoginView} 
-            onPress={() => this.props.navigation.navigate('auth')}>
-              <Text style={styles.LoginButton}>Signup</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotPassword} 
-            onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-              <Text style={styles.LoginButton}>Forgot Password</Text>
-            </TouchableOpacity>
-          </View>
+        <View  style={styles.input}>
+          <TextInput
+            placeholder="Enter Email"
+            style={styles.username}
+            autoCapitalize="none"
+            value={email}
+            onChangeText={e => setEmail(e)}
+          ></TextInput>
+          <TextInput
+            placeholder="Password"
+            secureTextEntry
+            style={styles.username}
+            value={password}
+            onChangeText={e => setPassword(e)}
+          ></TextInput>
+          <TextInput
+            placeholder="Re enter password"
+            secureTextEntry
+            style={styles.username}
+            value={confirPass}
+            onChangeText={e => setConfirPass(e)}
+          ></TextInput>
+          <TouchableOpacity style={styles.LoginView} 
+            onPress={onSubmit}>
+            <Text style={styles.LoginButton}>Signup</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.forgotPassword} 
+          onPress={() => props.navigation.navigate('ForgotPassword')}>
+            <Text style={styles.LoginButton}>Forgot Password</Text>
+          </TouchableOpacity>
         </View>
-        
-      </KeyboardAvoidingView>
-    );
-  }
+      </View>
+    </KeyboardAvoidingView>
+  );
+
 }
 
 const styles = StyleSheet.create({
@@ -147,3 +189,4 @@ const styles = StyleSheet.create({
   },
 });
 
+export default Signup;

@@ -1,13 +1,7 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  As,
-  TouchableOpacity,
-  Button,
-  TextInput,
-  KeyboardAvoidingView,
+import React, { useState, useContext } from "react";
+import { StyleSheet,
+  Text, View, TouchableOpacity,
+  TextInput,KeyboardAvoidingView
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
@@ -15,84 +9,96 @@ import{useMutation} from '@apollo/client';
 import {LOGIN} from '../../GraphQl/mutation';
 import { Alert } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage'
-import { Entypo} from '@expo/vector-icons';
+import authContext  from '../../authContext';
+import Loading from '../01/loading';
 const Login =(props) => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] =  useState('');
   const [hidePass, setHidePass] = useState(true)
-  const [login, {error}] =  useMutation(LOGIN)
+  const [errors, setErrors] =  useState('')
+  const [login, {error, loading}] =  useMutation(LOGIN)
 
-  const onSubmit = () =>{
-    login({
-      variables:{
-        email: email,
-        password: password
-      }
-    }).then(async (res)  =>{
-      if(res.data.login.success){
-        await AsyncStorage.setItem('@token_key', res.data.login.token)
-      }
-
-    }).catch(error =>{
-      Alert(error);
-    })
-    if(error){
-      Alert(error);
-    }
-  }
+  const state = useContext(authContext);
   
 
-  return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
-      
-      <View style={styles.headerView}>
-        <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-        <AntDesign name="back" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      
-      <View style={styles.login}>
-        <View style={styles.logoView}>
-          <View style={styles.logo}>
-            <Text style={styles.logoText} >LOGO</Text>
+  const onSubmit = () =>{
+    if(!email || !password){
+      Alert.alert("Email or password is empty")
+    }else{
+      login({
+        variables:{
+          email: email,
+          password: password
+        }
+      }).then( async (res) =>{
+        if(res.data.login.success){
+          await AsyncStorage.setItem('@token_key', res.data.login.token)
+          await AsyncStorage.setItem('@userID', res.data.login.account._id)
+          await AsyncStorage.setItem('@userSet', res.data.login.info.toString())
+          state.setAuthanticated(true)
+          state.setAccount(res.data.login.info)
+          state.setUerID(res.data.login.account._id)
+        }
+      }).catch(error =>{
+        console.log({error});
+        Alert.alert('Password wrong')
+      })
+    }
+  }
+
+  if(loading){
+    return(
+      <Loading />
+    )
+  }else{
+    return (
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <View style={styles.login}>
+          <View style={styles.logoView}>
+            <View style={styles.logo}>
+              <Text style={styles.logoText} >LOGO</Text>
+            </View>
+            <TouchableOpacity  style={styles.signBtn}
+            onPress={() => props.navigation.navigate('Signup')}>
+            <Text style={styles.LoginTitle}>Signup</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity  style={styles.signBtn}
-          onPress={() => props.navigation.navigate('Signup')}>
-          <Text style={styles.LoginTitle}>Signup</Text>
-          </TouchableOpacity>
+          <View>
+            <Text></Text>
+          </View>
+          <View  style={styles.input}>
+            <TextInput
+              placeholder="Email"
+              style={styles.username}
+              autoCapitalize="none"
+              value={email}
+              onChangeText={e => setEmail(e)}
+            ></TextInput>
+            <TextInput
+              placeholder="Password"
+              secureTextEntry={hidePass}
+              style={styles.username}
+              value={password}
+              onChangeText={e => setPassword(e)}
+            ></TextInput>
+            <TouchableOpacity style={styles.LoginView} 
+            onPress={onSubmit}>
+              <Text style={styles.LoginButton}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.forgotPassword} 
+            onPress={() => props.navigation.navigate('ForgotPassword')}>
+              <Text style={styles.LoginButton}>Forgot Password</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View  style={styles.input}>
-          <TextInput
-            placeholder="Email"
-            style={styles.username}
-            autoCapitalize="none"
-            value={email}
-            onChangeText={e => setEmail(e)}
-          ></TextInput>
-          <TextInput
-            placeholder="Password"
-            secureTextEntry={hidePass}
-            style={styles.username}
-            value={password}
-            onChangeText={e => setPassword(e)}
-          ></TextInput>
-            {/* <Button onPress={onSubmit} title="LOGIN"/> */}
-          <TouchableOpacity style={styles.LoginView} 
-          onPress={onSubmit}>
-            <Text style={styles.LoginButton}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.forgotPassword} 
-          onPress={() => props.navigation.navigate('ForgotPassword')}>
-            <Text style={styles.LoginButton}>Forgot Password</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      
-    </KeyboardAvoidingView>
-  );
+        
+      </KeyboardAvoidingView>
+    );
+  }
 
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -175,6 +181,16 @@ const styles = StyleSheet.create({
   },
   ForgotPasswordBttn: {
     textAlign: "center",
+  },
+  loading:{
+    flex: 1,
+    backgroundColor: '#c9d9f2',
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
 });
 
