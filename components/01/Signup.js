@@ -12,6 +12,7 @@ import authContext  from '../../authContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SIGNUP} from '../../GraphQl/mutation';
 import{useMutation} from '@apollo/client';
+import { Alert } from "react-native";
 const Signup = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] =  useState('');
@@ -36,9 +37,14 @@ const Signup = (props) => {
         if(res.data.signup.success){
           await AsyncStorage.setItem('@token_key', res.data.signup.token)
           await AsyncStorage.setItem('@userID', res.data.signup.account._id)
+          await AsyncStorage.setItem('@userSet', res.data.signup.info.toString())
           state.setAuthanticated(true)
           state.seAccount(res.data.signup.success)
         }
+      })
+      .catch(erro =>{
+        console.log(error);
+        // Alert.alert('Email already excist')
       })
     }
   }

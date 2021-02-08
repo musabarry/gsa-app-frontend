@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import { StyleSheet, Alert } from "react-native";
 import RootSreen from "./RootStack/RootStack";
 import { NavigationContainer } from "@react-navigation/native";
-import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink } from '@apollo/client';
+import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink, createHttpLink } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-community/async-storage'
 import authContext from './authContext';
@@ -13,16 +13,22 @@ import { setContext } from '@apollo/client/link/context';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>{
-      Alert(`Graphql error ${message}`)
+      console.log(`Graphql error ${message}`)
+      console.log(`Network Error: ${networkError}`);
     })
   }
 })
 
 const link = from([
-  errorLink,
-  new HttpLink({uri: "http://192.168.1.83:8080/graphql"}),
+  //errorLink,
+   new HttpLink({uri: "http://192.168.1.83:8080/graphql"}),
+ 
   
 ])
+
+// const httpLink = createHttpLink({
+//   uri: 'http://192.168.1.83:8080/graphql',
+// });
 
 const authLink = setContext(async (_, { headers }) => {
   const token =await  AsyncStorage.getItem('@token_key')
@@ -35,8 +41,9 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link:   authLink.concat(link),
+  link:     authLink.concat(link),
+  cache: new InMemoryCache()
+  
 });
 
 
@@ -45,27 +52,34 @@ const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [account, setAccount] =  useState(null)
   const [userID, setUerID] =  useState();
+  const [tok, seTok] =  useState('')
 
   client.cache.reset()
+
   useEffect(() =>{
   
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
       const userSet =  await AsyncStorage.getItem('@userSet')
+     seTok(token)
       if(token){
         setAuthanticated(true)
         setAccount(Boolean(userSet))
       }else{
         setAuthanticated(false)
+        setAccount(false)
       }
     })();
     
 
   }, []);
+
+
+ 
   
   return (
     <authContext.Provider value={{authnaticated, setAuthanticated,
-     account, setAccount, userID, setUerID}}>
+     account, setAccount, userID, setUerID, tok}}>
       <ApolloProvider client={client}>
       <NavigationContainer>
         <RootSreen />

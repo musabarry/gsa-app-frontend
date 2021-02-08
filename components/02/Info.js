@@ -57,6 +57,7 @@ const Info = (props) =>{
   };
    
   
+  
 
 
     return (

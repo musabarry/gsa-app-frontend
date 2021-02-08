@@ -22,7 +22,8 @@ const  Content = (props) =>  {
 
   const state = useContext(authContext);
   const {error, data, loading} =  useQuery(USERINFO)
-  const [info, setInfo] = useState([])
+  const [info, setInfo] = useState([]);
+  const [userOut, setUserOut] = useState(false)
 
   const logout = async () =>{
     try {
@@ -30,42 +31,49 @@ const  Content = (props) =>  {
       await AsyncStorage.multiRemove(['@token_key', '@userID', '@userSet'])
       
       .then(res =>{
+        setUserOut(true)
         Alert.alert('Logout success');
         state.setAuthanticated(false)
+        state.setAccount(false)
       })
     } catch (error) {
       console.log(error);
     }
   }
   
-  useEffect(() => {
-    
-    if(data){
-      setInfo(data.userInfo[0])
-    }
-  }, []);
+  // useEffect(() => {
+  //   if(loading){
+  //     setUserOut(true)
+  //   }else{
+  //     setUserOut(false)
+  //   }
+  //   // if(data){
+  //   //   setInfo(data.userInfo[0])
+  //   // }
+  // }, [data]);
+
+  
 
   if(loading){
     return(
       <Loading />
     )
-  }
-  if(data.userInfo[0]){
+  }else{
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>       
         <View style={styles.contentsView}>      
           <View style={styles.infoView}>
             <Text style={styles.name}>
-            {data.userInfo[0].firstname} {data.userInfo[0].lastname}
+            {data.userInfo[0] ? data.userInfo[0].role: ''} {data.userInfo[0] ? data.userInfo[0].lastname: ''}
             </Text>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0].school}</Text>
+              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].shool: ''}</Text>
             </View>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0].major}</Text>
+              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].major: ''}</Text>
             </View>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0].role}</Text>
+              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].role: ''}</Text>
             </View>
             <View>
               <Text style={styles.label}>Skills:</Text>
@@ -77,14 +85,14 @@ const  Content = (props) =>  {
             <View>
               <Text style={styles.label}>Interest</Text>
               <FlatList
-              data={data.userInfo[0].interest}
+              data={data.userInfo[0] ? data.userInfo[0].interest: []}
               renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
               keyExtractor={(item, index) => index.toString()}/>
             </View>
           </View>
           <View style={styles.passView}>
             <TouchableOpacity style={styles.btnPass} 
-            onPress={() => props.navigation.navigate('Change Password')}>
+            onPress={() => props.navigation.navigate('unAuth')}>
               <Text style={styles.btnText}>Change Password </Text>
             </TouchableOpacity>
           </View>

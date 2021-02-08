@@ -1,26 +1,65 @@
 import React, {useContext} from "react";
+import {Button, View} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Info from "../components/02/Info";
 import Profile from '../components/02/Profile';
+import Post from '../components/02/Post'
+import Home from '../components/02/Home'
 import { createStackNavigator } from "@react-navigation/stack";
 import Content from '../components/02/Content';
-
+import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-import authContext  from '../authContext'
+import authContext  from '../authContext';
+
+const profile = (props) =>{
+
+  return(
+    <Stack.Navigator headerMode='none' >
+      <Stack.Screen name="p" component={Profile} />
+      <Stack.Screen name="i" component={Content}/>
+    </Stack.Navigator>
+  )
+}
+
+
 const Authenticated = ({ navigation }) => {
   const state = useContext(authContext);
 
   return (
           !state.account ?(
-          <Stack.Navigator headerMode='float'>
+          <Stack.Navigator headerMode='none'>
             <Tab.Screen name="Info" component={Info}   />
-            </Stack.Navigator>
+          </Stack.Navigator>
           ):(
-          <Tab.Navigator headerMode="none" >
-            <Tab.Screen name="Profile" component={Profile} />  
-            <Tab.Screen name="Content" component={Content} />
-            </Tab.Navigator> 
+          <Tab.Navigator headerMode="none"   >  
+            <Tab.Screen name="Home" component={Home}
+              options={{
+              tabBarIcon: () =>(
+                <Entypo name="home" size={24} color="black" />
+              )}} />  
+            <Tab.Screen name="Post" component={Post}              
+                options={{
+                tabBarIcon: () =>(
+                  <MaterialIcons name="add-box" size={24} color="black" />
+              )}}
+             />
+            <Tab.Screen name="Profile" component={profile} 
+               options={{
+                tabBarIcon: () =>(
+                  <FontAwesome5 name="user-alt" size={24} color="black" />
+              )}} /> 
+              {/* <Tab.Screen name="Profile" component={Profile}
+              options={{tabBarLabel: 'Profile',
+              tabBarIcon: () =>(
+                <FontAwesome5 name="user-alt" size={24} color="black" />
+              )}} />  
+            <Tab.Screen name="Content" component={Content}
+              options={{tabBarLabel: 'Info',
+              tabBarIcon: () =>(
+               <MaterialIcons name="add" size={24} color="black" />
+            )}}/> */}
+          </Tab.Navigator> 
           )
   );
 };
