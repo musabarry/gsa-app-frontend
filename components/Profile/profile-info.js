@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions
+  Dimensions,
+  Image
 } from "react-native";
 import{useQuery} from '@apollo/client';
 import { USERINFO } from "../../GraphQl/query";
@@ -18,23 +19,25 @@ const ProfileInfo = (props) =>{
 
     useEffect(() => {
         if(data){
-          setInfo(data.userInfo[0])
           
         }
        
-      }, [data]);
-    
+      }, []);
+    console.log('====================================');
+    console.log(data, error);
+    console.log('====================================');
+   
+
     if(loading){
         return(
             <Loading />
         )
-    }
-    if(data.userInfo[0]){
+    }else{
         return(
             <View>
                 <View style={styles.top_wrapper}>
                     <View style={styles.img} >
-                    <AntDesign name="user" size={40} color="black" />              
+                        <Image style={styles.photo} source={{uri: 'https://media.istockphoto.com/photos/call-center-workers-picture-id903568822'}} />
                     </View>
                     <View style={styles.name}>
                         <Text style={styles.textName}>{data.userInfo[0].firstname} {data.userInfo[0].lastname}</Text>
@@ -42,9 +45,12 @@ const ProfileInfo = (props) =>{
                 </View>
                 <View style={styles.bottom_wrapper}>
                     <View style={styles.listItems}>
-                        <Text style={styles.text}>{data.userInfo[0].school}</Text>
-                        <Text style={styles.text}>{data.userInfo[0].major}</Text>
-                        <TouchableOpacity style={styles.btn_setting}>
+                        <View style={styles.info}>
+                            <Text style={styles.text}>{data.userInfo[0].school}</Text>
+                            <Text style={styles.text}>{data.userInfo[0].major}</Text>
+                        </View>
+                        <TouchableOpacity style={styles.btn_setting} 
+                            onPress={props.navi}>
                             <EvilIcons name="arrow-right" size={40} color="black" />
                         </TouchableOpacity>
                     </View>
@@ -67,15 +73,17 @@ const styles = StyleSheet.create({
 
     img:{
         marginTop: 35,
-        alignItems: 'center',
-        width: 80,
-        height: 90,
+      
+        maxWidth: 100,
+        maxHeight: 100,
         marginTop: 90,
-        backgroundColor: 'red',
-        borderRadius: 25,
+
         borderColor: '#000',
         borderWidth: 1,
         marginBottom: 15
+    },
+    info:{
+        flexDirection: 'row'
     },
     name:{
         alignItems: 'center',
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignItems: 'baseline',
+        alignItems: 'flex-end',
         paddingLeft: 3,
         paddingRight: 3
     },
@@ -105,6 +113,11 @@ const styles = StyleSheet.create({
     },
     btn_setting:{
         
+    },
+    photo:{
+        height: '100%',
+        width: 90,
+        borderRadius: 25,
     }
 
 })
