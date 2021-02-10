@@ -19,14 +19,10 @@ const ProfileInfo = (props) =>{
 
     useEffect(() => {
         if(data){
-          console.log({data: data.userInfo});
           
         }
        
       }, []);
-    console.log('====================================');
-    console.log(data, error);
-    console.log('====================================');
    
 
     if(loading){
