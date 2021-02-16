@@ -11,6 +11,7 @@ import{useQuery} from '@apollo/client';
 import { USERINFO } from "../../GraphQl/query";
 import { AntDesign, EvilIcons } from '@expo/vector-icons';
 import Loading from '..//01/loading'
+import xmlbuilder from "xmlbuilder";
 
 
 const ProfileInfo = (props) =>{
@@ -18,13 +19,13 @@ const ProfileInfo = (props) =>{
     const [info, setInfo] = useState([])
 
     useEffect(() => {
-        if(data){
-          
+        if(loading){
+            setInfo(data)
         }
-       
-      }, []);
-   
 
+    }, []);
+   
+console.log(error);
     if(loading){
         return(
             <Loading />
