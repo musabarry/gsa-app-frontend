@@ -1,62 +1,37 @@
-import React, { Component, useEffect, useState } from "react";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Image
-} from "react-native";
-import{useQuery} from '@apollo/client';
-import { USERINFO } from "../../GraphQl/query";
-import { AntDesign, EvilIcons } from '@expo/vector-icons';
-import Loading from '..//01/loading'
-import xmlbuilder from "xmlbuilder";
+import React from "react";
+import {TouchableOpacity,StyleSheet,Text,
+        View,Dimensions,Image} from "react-native";
+import {  EvilIcons } from '@expo/vector-icons';
+
 
 
 const ProfileInfo = (props) =>{
-    const {error, data, loading} =  useQuery(USERINFO)
-    const [info, setInfo] = useState([])
 
-    useEffect(() => {
-        if(loading){
-            setInfo(data)
-        }
-
-    }, []);
-   
-console.log(error);
-    if(loading){
-        return(
-            <Loading />
-        )
-    }else{
-        return(
-            <View>
-                <View style={styles.top_wrapper}>
-                    <View style={styles.img} >
-                        <Image style={styles.photo} source={{uri: 'https://media.istockphoto.com/photos/call-center-workers-picture-id903568822'}} />
-                    </View>
-                    <View style={styles.name}>
-                        <Text style={styles.textName}>{data.userInfo[0].firstname} {data.userInfo[0].lastname}</Text>
-                    </View>
+    return(
+        <View>
+            <View style={styles.top_wrapper}>
+                <View style={styles.img} >
+                    <Image style={styles.photo} source={{uri: 'https://media.istockphoto.com/photos/call-center-workers-picture-id903568822'}} />
                 </View>
-                <View style={styles.bottom_wrapper}>
-                    <View style={styles.listItems}>
-                        <View style={styles.info}>
-                            <Text style={styles.text}>{data.userInfo[0].school}</Text>
-                            <Text style={styles.text}>{data.userInfo[0].major}</Text>
-                        </View>
-                        <TouchableOpacity style={styles.btn_setting} 
-                            onPress={props.navi}>
-                            <EvilIcons name="arrow-right" size={40} color="black" />
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.name}>
+                    <Text style={styles.textName}>{props.data.firstname} {props.data.lastname}</Text>
                 </View>
-
             </View>
-        )
-    }
+            <View style={styles.bottom_wrapper}>
+                <View style={styles.listItems}>
+                    <View style={styles.info}>
+                        <Text style={styles.text}>{props.data.school}</Text>
+                        <Text style={styles.text}>{props.data.major}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.btn_setting} 
+                        onPress={props.naviSetting}>
+                        <EvilIcons name="arrow-right" size={40} color="black" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+        </View>
+    )
 }
 
 const wight = Dimensions.get('window').width

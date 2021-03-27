@@ -49,6 +49,7 @@ const Info = (props) =>{
       })
       .then((res) =>{
         state.setAccount(true)
+        state.setUserID(res.data.account._id)
       }).catch(error =>{
         Alert.alert('Server error')
       })

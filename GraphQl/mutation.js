@@ -28,12 +28,19 @@ mutation signup($email: String!, $password: String!){
 export const  CREATEUSER = gql`
  mutation createUser($account: ID!, $firstname: String!, $lastname: String!, $school: String!, $major: String, $role: String, $skills: [String], $interest: [String]) {
   createUser(userInput: {account: $account, firstname: $firstname, lastname:$lastname, school:$school, major: $major, role: $role, skills: $skills, interest: $interest}) {
-    role
+    role,
+    _id
   }
 }
 `
 
-
+export const  CREATEPOSTIMAGE = gql`
+  mutation createPostImage($owner: ID!, $imageAlbum:[String!]!, $text: String){
+      createPostImage(postImage:{owner: $owner, imageAlbum: $imageAlbum, text: $text}){
+        _id
+      }
+    }
+`
 
 //createUser(userInput: {account: $account, firstname: $firstname, lastname:$lastname, school: $school, major:$major, role: $role, interest: $interest})
 

@@ -4,21 +4,25 @@ import {Button, View} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Info from "../components/02/Info";
 import Profile from '../components/02/Profile';
+import FullImage from '../components/Card/FullImage'
 import Post from '../components/02/Post'
 import Home from '../components/02/Home'
 import { createStackNavigator } from "@react-navigation/stack";
 import Content from '../components/02/Content';
 import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
+import CommentPage from '../components/Card/CommentPage'
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 import authContext  from '../authContext';
 
-const profile = (props) =>{
+const profile = ({navigation}) =>{
 
   return(
     <Stack.Navigator headerMode='none' >
-      <Stack.Screen name="p" component={Profile} />
-      <Stack.Screen name="i" component={Content}/>
+      <Stack.Screen name="homeProfile" component={Profile} />
+      <Stack.Screen name="setting" component={Content}/>
+      <Stack.Screen name="fullImage" component={FullImage} />
+      <Stack.Screen name="commentpage" component={CommentPage} />
     </Stack.Navigator>
   )
 }

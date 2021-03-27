@@ -32,7 +32,7 @@ const  Content = (props) =>  {
       
       .then(res =>{
         setUserOut(true)
-        Alert.alert('Logout success');
+        Alert.alert('Logout success')
         state.setAuthanticated(false)
         state.setAccount(false)
       })
@@ -64,28 +64,28 @@ const  Content = (props) =>  {
         <View style={styles.contentsView}>      
           <View style={styles.infoView}>
             <Text style={styles.name}>
-            {data.userInfo[0] ? data.userInfo[0].role: ''} {data.userInfo[0] ? data.userInfo[0].lastname: ''}
+            {data.userInfo ? data.userInfo.role: ''} {data.userInfo ? data.userInfo.lastname: ''}
             </Text>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].shool: ''}</Text>
+              <Text style={styles.data}>{data.userInfo ? data.userInfo.shool: ''}</Text>
             </View>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].major: ''}</Text>
+              <Text style={styles.data}>{data.userInfo ? data.userInfo.major: ''}</Text>
             </View>
             <View style={styles.content}>
-              <Text style={styles.data}>{data.userInfo[0] ? data.userInfo[0].role: ''}</Text>
+              <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
             </View>
             <View>
               <Text style={styles.label}>Skills:</Text>
               <FlatList
-              data={data.userInfo[0].skills}
+              data={data.userInfo.skills}
               renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
               keyExtractor={(item, index) => index.toString()}/>
             </View>
             <View>
               <Text style={styles.label}>Interest</Text>
               <FlatList
-              data={data.userInfo[0] ? data.userInfo[0].interest: []}
+              data={data.userInfo ? data.userInfo.interest: []}
               renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
               keyExtractor={(item, index) => index.toString()}/>
             </View>

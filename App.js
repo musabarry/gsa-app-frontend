@@ -13,14 +13,17 @@ import { setContext } from '@apollo/client/link/context';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>{
+      console.log('Path ',{path});
+      console.log('Location ', {location});
       console.log(`Graphql error ${message}`)
       console.log(`Network Error: ${networkError}`);
     })
   }
 })
 
+
 const link = from([
-  //errorLink,
+  errorLink,
    new HttpLink({uri: "http://192.168.1.83:8080/graphql"}),
  
   
@@ -32,6 +35,7 @@ const link = from([
 
 const authLink = setContext(async (_, { headers }) => {
   const token =await  AsyncStorage.getItem('@token_key')
+
   return {
     headers: {
       ...headers,
@@ -46,14 +50,12 @@ const client = new ApolloClient({
   
 });
 
-
 const App = ({ navigation }) => {
 
   const [authnaticated, setAuthanticated] = useState(false)
   const [account, setAccount] =  useState(null)
-  const [userID, setUerID] =  useState();
+  const [userID, setUserID] =  useState();
   const [tok, seTok] =  useState('')
-
   client.cache.reset()
 
   useEffect(() =>{
@@ -61,10 +63,12 @@ const App = ({ navigation }) => {
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
       const userSet =  await AsyncStorage.getItem('@userSet')
+      const id =  await AsyncStorage.getItem('@userID')
      seTok(token)
       if(token){
         setAuthanticated(true)
         setAccount(Boolean(userSet))
+        setUserID(id)
       }else{
         setAuthanticated(false)
         setAccount(false)
@@ -76,10 +80,10 @@ const App = ({ navigation }) => {
 
 
  
-  
+
   return (
     <authContext.Provider value={{authnaticated, setAuthanticated,
-     account, setAccount, userID, setUerID, tok}}>
+     account, setAccount, userID, setUserID, tok}}>
       <ApolloProvider client={client}>
       <NavigationContainer>
         <RootSreen />

@@ -38,7 +38,7 @@ const Login =(props) => {
           await AsyncStorage.setItem('@userSet', res.data.login.info.toString())
           state.setAuthanticated(true)
           state.setAccount(res.data.login.info)
-          state.setUerID(res.data.login.account._id)
+          state.setUserID(res.data.login.account._id)
         }
       }).catch(error =>{
         console.log({error});

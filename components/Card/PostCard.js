@@ -1,56 +1,34 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image}  from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, Image, TouchableOpacity}  from 'react-native';
 import { FontAwesome5, EvilIcons } from '@expo/vector-icons';
+import FullImage from  './FullImage'
+import CommentLikeIcon from './CommentLikeIcon';
 
 
-const textPost =() =>(
-    <View>
-        <Text style={styles.textPost}>
-            Hello, Everyone. I hope you are doing well.
-            Hello, Everyone. I hope you are doing well.
-            Hello, Everyone. I hope you are doing well.
-            Hello, Everyone. I hope you are doing well.
-        </Text>
-    </View>
-)
-const imagePost =(image) =>(
-    <View>
-
-
-    </View>
-)
 const PostCard = (props) =>{
-
-
-
-    // if(props.uri){
-    //     console.log(true);
-    // }
+    
+ 
 
     return(
         <View style={styles.card_wrapper}>
             <View style={styles.top_wrapper}>
                 <View><FontAwesome5 name="user-alt" size={24} color="black" /></View>
                 <View style={styles.nameBox}>
-                    <Text style={styles.name}>Cellou Diallo</Text>
-                    <Text style={styles.school}>@citytech</Text>
+                    <Text style={styles.name}>firstname lastname</Text>
+                    <Text style={styles.school}>@School</Text>
                 </View>
             </View >
             <View style={styles.middle_wrapper}>
                 <View style={styles.post}>
-                {props.uri ?
+                {props.uri[0] != null ?
                     (
-                        <Image   style={styles.img} 
-                             source={{uri: props.uri}} />
-                                    
+                    <TouchableOpacity style={styles.ImgFrame}>
+                        <Image style={styles.img} source={{uri: props.uri[0]}}/>
+                    </TouchableOpacity>
                     ):(
                     <Text style={styles.textPost}>
-                        Hello, Everyone. I hope you are doing well.
-                        Hello, Everyone. I hope you are doing well.
-                        Hello, Everyone. I hope you are doing well.
-                        Hello, Everyone. I hope you are doing well.
+                        {props.data.text}
                     </Text>
-
                     )}
                     <View style={styles.timeOption}>
                         <Text>6:09 pm . May, 5, 2014</Text>
@@ -58,14 +36,10 @@ const PostCard = (props) =>{
                     </View>
                 </View>
                 <View style={styles.likes}>
-                    <View style={styles.num}>
-                        <EvilIcons name="heart" size={24} color="black" /> 
-                        <Text>6K</Text>
-                    </View>
-                    <View  style={styles.num}>
-                        <EvilIcons name="comment" size={24} color="black" /> 
-                        <Text>4.7K</Text>
-                    </View>
+                    <CommentLikeIcon likes={props.data.likes.length} 
+                                    commnets={props.data.commnets.length}  size={25}  
+                                    data={props.data.commnets} id={props.data._id} 
+                                    navHome={props.navHome} navScreen={props.navScreen}/>
                 </View>
             </View>
             <View style={styles.bottom_wrapper}>
@@ -76,24 +50,25 @@ const PostCard = (props) =>{
 
 const styles =  StyleSheet.create({
     card_wrapper:{
-        minHeight: 40,
+        //minHeight: 90,
         backgroundColor: '#dbdbdb',
         borderWidth: 1,
         borderColor: '#dbdbdb',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
-        width: '95%',
-        margin: 10,
+        //width: '100%',
         borderRadius: 10,
-        padding: 10
+        marginTop: 20
     },
     top_wrapper:{
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'baseline',
         flexWrap: 'wrap',
         margin: 4,
+        alignItems: 'center'
         // borderBottomColor: '#000',
         // borderBottomWidth: 1
     },
@@ -128,9 +103,13 @@ const styles =  StyleSheet.create({
     textPost:{
 
     },
+    ImgFrame:{
+        width: '100%',
+        height: 500,
+    },
     img:{
         width: '100%',
-        height: 150,
+        height: '100%',
     }
 
 })
