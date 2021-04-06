@@ -1,140 +1,209 @@
-import React, {Component} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, Modal, Image, Alert, TouchableHighlight} from 'react-native';
+import React, {useState,  useContext, useEffect} from 'react'
+import {Text, View, StyleSheet, TouchableOpacity, Modal, Image, Alert, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import { FontAwesome, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';
-// import { require } from 'yargs';
+import { FontAwesome, Ionicons, EvilIcons, } from '@expo/vector-icons';
+import Statemen from '../Post/Statemen';
+import {aws} from '../../keys'
+import{useMutation} from '@apollo/client';
+import {CREATEPOSTIMAGE, CREATEPOSTTEXT} from '../../GraphQl/mutation';
+import checkContext  from '../../Context/checkContext';
+import { RNS3 } from 'react-native-aws3';
 
-import Modalcom from  '../Post/Modal'
-class Post extends Component{
+const Post = (props) =>{
 
-    constructor(props){
-        super(props)
-        this.state={
-            hasPermission: null,
-            cameraType: Camera.Constants.Type.back,
-            image: '',
-            url: '',
-            modalVisible: false,
-            next: false
-        }
-    }
-    async componentDidMount() {
-        this.getPermissionAsync()
-    }
+  const [hasPermission,  setHasPermission] = useState(null)
+  const[cameraType, setCameraType]  =  useState(Camera.Constants.Type.back)
+  const [image, setImage] = useState('#.png')
+  const [url, setUrl] = useState('')
+  const [text, setText] =  useState('')
+  const [modalVisible, setModalVisible] =  useState(false)
+  const [takeBtn, setTakeBtn] = useState(false)
+  const [selectBtn, setSelectBtn] = useState(false)
+  const state = useContext(checkContext);
+  const [camera, setCamera] = useState(null)
+  const [createPostImage] =  useMutation(CREATEPOSTIMAGE)
+  const [createPostText] =  useMutation(CREATEPOSTTEXT)
+  useEffect(() =>{
+      (async () =>{
+          if (Platform.OS === 'ios') {
+              const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+              if (status !== 'granted') {
+                alert('Sorry, we need camera roll permissions to make this work!');
+              }
+            }
+            // Camera Permission
+            const { status } = await Permissions.askAsync(Permissions.CAMERA);
+            setHasPermission(status === 'granted')
+      })();
+  })
 
-    nextFun =()=>{
-      if(this.state.image.length != 0){
-        this.setState({next: true})
-      }
-    }
-    cansel = () =>{
-      this.setState({next: false})
-    }
-
-    chnageRoute =() => {
-      this.props.navigation.navigate('Home')
-      this.cansel()
-    }
-    
-
-    getPermissionAsync = async () => {
-        // Camera roll Permission 
-        if (Platform.OS === 'ios') {
-          const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-          if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-          }
-        }
-        // Camera Permission
-        const { status } = await Permissions.askAsync(Permissions.CAMERA);
-        this.setState({ hasPermission: status === 'granted' });
-      }
-    
-      handleCameraType=()=>{
-        const { cameraType } = this.state
-    
-        this.setState({cameraType:
-          cameraType === Camera.Constants.Type.back
+    const handleCameraType=()=>{
+      setCameraType(
+          cameraType === Camera.Constants.Type.back 
           ? Camera.Constants.Type.front
           : Camera.Constants.Type.back
-        })
+      )
+  }
+
+  const takePicture = async () => {
+      if (camera) {
+          let photo = await camera.takePictureAsync().then(res =>{
+              console.log(res.uri);
+              setImage(res.uri)
+          }).catch(err =>{
+            console.log('error');
+          });
       }
+  }
+
+  const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+      }).then(res =>{
+          setImage(res.uri)
+      }).catch(err =>{ 
+        console.log('error');
+      })
+  }
     
-      takePicture = async () => {
-        if (this.camera) {
-          let photo = await this.camera.takePictureAsync().then(res =>{
-            this.setState({image: res.uri})
+  const upload =() =>{
+      const file = {
+        uri: image,
+        name: `${state.userID}-${new Date().getTime()}`,
+        type: "image/jpeg"
+      };
+  
+      const options = {
+        keyPrefix: "postsImg/",
+        bucket: aws.bucket,
+        region: aws.region,
+        accessKey: aws.accessKey,
+        secretKey: aws.secretKey,
+        successActionStatus: 201
+      };
+
+      if(image != '#.png' && image.length > 7){
+      RNS3.put(file, options)
+        .then(response => {
+          if (response.status !== 201) throw Error('Error uploadting to AWS S3')
+          createPostImage({
+              variables:{
+                  owner: `${state.userID}`,
+                  imageAlbum: [`${response.body.postResponse.location}`],
+                  text: text
+              }
+          }).then(res =>{
+           
+            return props.navigation.navigate("Home")
+          }).catch(error =>{
+            console.log({server: error});
           })
-        }
-      }
-    
-      pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images
-        }).then(res =>{
-          this.setState({image: res.uri})
-    
         })
-
+        .catch(error => {
+          console.log(error);
+        });
+      }else{
+        createPostText({
+          variables:{
+            owner: `${state.userID}`,
+            text: text
+          }
+        }).then(res =>{
+          props.navigation.navigate("Home")
+        }).catch(error =>{
+          console.log(error);
+        })
       }
+    }
 
-
-
-    
-    render(){
-
-        const { hasPermission } = this.state
+   
     if (hasPermission === null) {
       return <View />;
     } else if (hasPermission === false) {
       return <Text>No access to camera</Text>;
-    } else {
-      return (
-        
-          <View style={styles.container}>
-           
-            <View>
-                <View style={styles.header}>
-                <TouchableOpacity style={styles.canselBtn} onPress={this.cansel}>
-                  <Text style={styles.canselText}>Cansel</Text>
+    } else{
+      if(!modalVisible){
+        return(
+          <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
+            <View style={styles.container}  >
+              {/* if button camera is  false show test post compoenet else show the camera component */}
+            {!takeBtn  ?
+            <>
+              <View style={styles.statement_box}>
+                <Statemen  img={image} setText={setText} upload={upload}/>
+              </View>
+              <View style={styles.btns}>
+                <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
+                  <FontAwesome name="camera" size={24} color="black"/>
+                  <Text style={styles.add_text}>take a photo</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.nextBtn} onPress={this.nextFun}>
-                  <Text style={styles.nextText}>Next</Text>
+                <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+                  <FontAwesome name="image" size={24} color="black"/>
+                  <Text style={styles.add_text}>Select a photo</Text>
                 </TouchableOpacity>
-                </View>
-            </View>
-            {this.state.next ? <Modalcom  uri={this.state.image} chnageRoute={this.chnageRoute}/> : 
-              <Camera style={{ flex: 1 }} type={this.state.cameraType}  ref={ref => {this.camera = ref}} autoFocus="on">
-                <View style={{flex:1, flexDirection:"column",margin:20}}>
-                  <View style={{flex:6, flexDirection:"row", justifyContent:"center"}} >
-                  <TouchableOpacity  style={styles.camera} onPress={()=>this.takePicture()} >
-                      <Ionicons name="ios-camera" size={50} color="white" />
+              </View>
+              </>:
+              <>
+                <Camera style={{ flex: 5 }} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+                <View style={styles.top}>
+                    <TouchableOpacity onPress={() => setTakeBtn(!takeBtn)}>
+                        <EvilIcons name="close" size={35} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity >
+                        <Text style={styles.select_text}>Select</Text>
                     </TouchableOpacity>
                   </View>
-                    <View style={{flex:1, flexDirection:"row",justifyContent:"space-between"}}>  
-                      <TouchableOpacity style={styles.btn} onPress={()=>this.pickImage()}>
-                        <Ionicons name="ios-photos" size={30} color="white" />
-                      </TouchableOpacity>
-
-                      { this.state.image.length != 0?
-                      <TouchableOpacity style={styles.takenImg}>
-                        <Image source={{uri: `${this.state.image}`}}  style={{ width: 50, height: 45 }} />
-                      </TouchableOpacity>: <></>
-                      }
-                      <TouchableOpacity style={styles.btn} onPress={()=>this.handleCameraType()}>
-                        <Ionicons name="ios-reverse-camera" size={35} color="white" />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
                 </Camera>
-              }
-      </View>
-      );
+                <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>
+                  <View style={styles.btn_wrape}>  
+                    <TouchableOpacity style={styles.takenImg} onPress={() => setModalVisible(!modalVisible)}>
+                      {<Image source={{uri: image}}  style={{ width: 70, height: 61 }} />}
+                    </TouchableOpacity>
+                    <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
+                      <Ionicons name="ios-camera" size={50} color="white" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
+                      <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </>
+            }
+            </View>
+        </TouchableWithoutFeedback>
+      )
+    }else{
+      return(
+        <View style={styles.container}> 
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible)
+            }}>
+                <View style={styles.image_wraper}>
+                  <View style={styles.top}>
+                    <TouchableOpacity onPress={() =>  setModalVisible(!modalVisible)}>
+                        <EvilIcons name="close" size={35} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity >
+                        <Text style={styles.select_text}>Select</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Image source={{uri: image}}  style={styles.image} /> 
+                </View>
+          </Modal>
+        </View>
+      )
     }
-    }
+  }
 }
 
 const styles =  StyleSheet.create({
@@ -142,13 +211,34 @@ const styles =  StyleSheet.create({
       flex: 1,
       marginTop: Constants.statusBarHeight,
   },
-  header:{
+  top:{
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 2,
-    borderBottomColor: '#fff',
-    backgroundColor: '#e0e0e0'
+    backgroundColor: '#CCC',
+    padding: 5
+  },
+  select_text:{
+    fontSize: 18,
+    fontWeight: '600'
+  },
+  image_wraper:{
+    marginTop: Constants.statusBarHeight,
+    marginBottom: 40,
+    borderRadius: 4
+  },
+  image:{
+    width: '100%', 
+    height: '100%'
+  },
+  statement_box:{
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    // borderBottomWidth: 2,
+    // borderBottomColor: '#fff',
+    // backgroundColor: '#e0e0e0'
   },
   canselBtn:{
     padding: 10,
@@ -167,22 +257,35 @@ const styles =  StyleSheet.create({
     fontWeight: '600'
   
   },
-  camera:{
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'transparent' 
+  btn_wrape:{
+    display: 'flex', 
+    flexDirection:"row", 
+    justifyContent: 'space-between',
+    margin: 10,
+    padding: 10
   },
   takenImg:{
-    backgroundColor: 'red',
-    height: 50,
-    width: 40,
+    backgroundColor: '#d9d9d9',
+    borderWidth: 2,
+    borderColor: '#CCC',
     alignSelf: 'flex-end',
     alignItems: 'center',
   },
-  btn:{
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: 'transparent' 
+  btns:{
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 20
+  },
+  add:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    padding: 5,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  add_text:{
+   marginLeft: 10
   }
 
 })

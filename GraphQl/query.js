@@ -13,6 +13,14 @@ export const ALL =  gql`
 export const ALLPOST = gql`
   query{ 
     allPost{
+      owner{
+        _id
+        firstname
+        lastname
+        avatar
+        school
+        
+      }
       _id
       date
       text
@@ -25,10 +33,12 @@ export const ALLPOST = gql`
         _id
         firstname
         lastname
+        avatar
+        school
       }
       }
       likes{
-        user
+        _id
       }
     }
   }
@@ -36,49 +46,62 @@ export const ALLPOST = gql`
 
 export const USERINFO = gql`
 query{ 
-    userInfo{_id firstname lastname school major role skills interest
-    }
-    userPosts{
+  userInfo{
+    _id
+    avatar
+    firstname 
+    lastname 
+    school 
+    email
+    major
+    role
+    interest
+    skills
+  }
+  userPosts{
+    _id
+    date
+    text
+    imageAlbum
+    commnets{
+      _id
+      text
+      byUser{
         _id
-        date
-        text
-        imageAlbum
-        commnets {
-        _id
-        text
-        date
-        byUser{
-          _id
-          firstname
-          lastname
-        }
-        }
-        likes{
-          user
-        }
+        firstname
+        lastname
+        avatar
+        school
       }
+    }
+    likes{
+      _id
+      firstname
+    }
+  }
 }
 `
 export const USERPOST =  gql`
 query{ 
-    userPosts{
-        _id
-        date
-        text
-        imageAlbum
-        commnets {
-        _id
-          text
-        byUser{
-          _id
-          firstname
-          lastname
-        }
-        }
-        likes{
-          user
-        }
-      }
+  userPosts{
+    _id
+    date
+    text
+    imageAlbum
+    commnets {
+    _id
+    text
+    date
+    byUser{
+      _id
+      firstname
+      lastname
+    }
+    }
+    likes{
+      user
+    }
+  }
 }
 `
 

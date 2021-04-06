@@ -6,9 +6,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink, createHttpLink } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-community/async-storage'
-import authContext from './authContext';
+import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
-
+import{useQuery} from '@apollo/client';
+import {ALLPOST, USERINFO } from "./GraphQl/query";
 
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
@@ -55,41 +56,32 @@ const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [account, setAccount] =  useState(null)
   const [userID, setUserID] =  useState();
-  const [tok, seTok] =  useState('')
+  
   client.cache.reset()
 
   useEffect(() =>{
-  
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
-      const userSet =  await AsyncStorage.getItem('@userSet')
       const id =  await AsyncStorage.getItem('@userID')
-     seTok(token)
       if(token){
         setAuthanticated(true)
-        setAccount(Boolean(userSet))
         setUserID(id)
       }else{
         setAuthanticated(false)
-        setAccount(false)
+        //setAccount(false)
       }
     })();
-    
 
   }, []);
 
-
- 
-
   return (
-    <authContext.Provider value={{authnaticated, setAuthanticated,
-     account, setAccount, userID, setUserID, tok}}>
+    <checkContext.Provider value={{authnaticated, setAuthanticated, userID, setUserID}}>
       <ApolloProvider client={client}>
       <NavigationContainer>
         <RootSreen />
       </NavigationContainer>
       </ApolloProvider>
-    </authContext.Provider>
+    </checkContext.Provider>
   );
 };
 

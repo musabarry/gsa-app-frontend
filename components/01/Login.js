@@ -9,7 +9,7 @@ import{useMutation} from '@apollo/client';
 import {LOGIN} from '../../GraphQl/mutation';
 import { Alert } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage'
-import authContext  from '../../authContext';
+import checkContext  from '../../Context/checkContext';
 import Loading from '../01/loading';
 const Login =(props) => {
 
@@ -19,7 +19,7 @@ const Login =(props) => {
   const [errors, setErrors] =  useState('')
   const [login, {error, loading}] =  useMutation(LOGIN)
 
-  const state = useContext(authContext);
+  const state = useContext(checkContext);
   
 
   const onSubmit = () =>{
@@ -34,11 +34,8 @@ const Login =(props) => {
       }).then( async (res) =>{
         if(res.data.login.success){
           await AsyncStorage.setItem('@token_key', res.data.login.token)
-          await AsyncStorage.setItem('@userID', res.data.login.account._id)
-          await AsyncStorage.setItem('@userSet', res.data.login.info.toString())
+          await AsyncStorage.setItem('@userID', res.data.login._id)
           state.setAuthanticated(true)
-          state.setAccount(res.data.login.info)
-          state.setUserID(res.data.login.account._id)
         }
       }).catch(error =>{
         console.log({error});

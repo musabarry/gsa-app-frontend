@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
-import authContext  from '../../authContext';
+import checkContext  from '../../Context/checkContext';
 import {CREATEUSER} from '../../GraphQl/mutation';
 import{useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-community/async-storage'
@@ -48,8 +48,7 @@ const Info = (props) =>{
           }
       })
       .then((res) =>{
-        state.setAccount(true)
-        state.setUserID(res.data.account._id)
+
       }).catch(error =>{
         Alert.alert('Server error')
       })

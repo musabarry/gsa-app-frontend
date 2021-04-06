@@ -1,35 +1,54 @@
-import React from "react";
+import React, {useState} from "react";
 import {TouchableOpacity,StyleSheet,Text,
-        View,Dimensions,Image} from "react-native";
-import {  EvilIcons } from '@expo/vector-icons';
-
+        View,Dimensions,Image, Modal} from "react-native";
+import {  Feather, FontAwesome5 } from '@expo/vector-icons';
+import ProfileImg from './ProfileImage';
 
 
 const ProfileInfo = (props) =>{
 
+    const [modalVisible, setModalVisible] = useState(false);
+    
+    const img = '#.png'
+ 
     return(
         <View>
-            <View style={styles.top_wrapper}>
-                <View style={styles.img} >
-                    <Image style={styles.photo} source={{uri: 'https://media.istockphoto.com/photos/call-center-workers-picture-id903568822'}} />
-                </View>
-                <View style={styles.name}>
-                    <Text style={styles.textName}>{props.data.firstname} {props.data.lastname}</Text>
-                </View>
-            </View>
-            <View style={styles.bottom_wrapper}>
-                <View style={styles.listItems}>
-                    <View style={styles.info}>
-                        <Text style={styles.text}>{props.data.school}</Text>
-                        <Text style={styles.text}>{props.data.major}</Text>
+            <View style={styles.container}>
+                <View style={styles.top_wrapper}>
+                    <View >
+                        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={styles.image_wrape}>
+                        <Image style={styles.image} source={{uri: props.userInfo.avatar}} />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.btn_setting} 
-                        onPress={props.naviSetting}>
-                        <EvilIcons name="arrow-right" size={40} color="black" />
-                    </TouchableOpacity>
+                    <View style={styles.name}>
+                        <View>
+                       
+                            <Text style={styles.textName}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
+                        </View>
+                        <View style={styles.info}>
+                            <View style={styles.school}>
+                                <FontAwesome5 name="school" size={24} color="black" />
+                                <Text style={styles.schoolName}>{props.userInfo.school}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.btn_setting} onPress={props.naviSetting}>
+                                <Feather name="more-horizontal" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
+                
             </View>
-
+            <Modal 
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                setModalVisible(!modalVisible);
+                }}>
+                    <ProfileImg  
+                    setModalVisible={setModalVisible} 
+                    modalVisible={modalVisible}/>
+                </Modal>
         </View>
     )
 }
@@ -37,62 +56,50 @@ const ProfileInfo = (props) =>{
 const wight = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: '#ebebeb',
+        borderBottomColor: '#CCC',
+        borderBottomWidth: 2,
+        borderBottomRightRadius: 25,
+        borderBottomLeftRadius: 25,
+    
+    },
     top_wrapper: {
-        borderBottomColor: '#000',
-        borderBottomWidth: 1,
-        width: wight,
         alignItems: 'center',
+        marginTop: 30
     },
-
-    img:{
-        marginTop: 35,
-      
-        maxWidth: 100,
-        maxHeight: 100,
-        marginTop: 90,
-
-        borderColor: '#000',
-        borderWidth: 1,
-        marginBottom: 15
+    image_wrape:{
+        width: 150,
+        height: 150
     },
-    info:{
-        flexDirection: 'row'
+    image:{
+        borderRadius: 100,
+        height: '100%',
     },
     name:{
         alignItems: 'center',
         marginTop: 10,
     },
     textName:{
-        fontWeight: '800',
-        fontSize: 25
+        fontWeight: '700',
+        fontSize: 20
     },
-    bottom_wrapper:{
-        borderBottomColor: '#000',
-        borderBottomWidth: 1,
-        height: 60,
-        
-    },
-    listItems:{
-        justifyContent: 'space-between',
+    info:{
+        display: 'flex',
         flexDirection: 'row',
-        flexWrap: 'wrap',
         alignItems: 'flex-end',
-        paddingLeft: 3,
-        paddingRight: 3
-    },
-    text:{
-        fontSize: 15,
-        fontWeight: '700'
-    },
-    btn_setting:{
-        
-    },
-    photo:{
-        height: '100%',
-        width: 90,
-        borderRadius: 25,
-    }
 
+    },
+    school:{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'baseline'
+    },
+    schoolName:{
+        fontSize: 15,
+        margin: 5,
+    },
 })
 
 export default ProfileInfo;

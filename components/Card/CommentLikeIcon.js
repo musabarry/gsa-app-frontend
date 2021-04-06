@@ -2,12 +2,11 @@ import React, {useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import {EvilIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import authContext  from '../../authContext';
+import authContext  from '../../Context/authContext';
 const CommentLike = (props) => {
     const navigation = useNavigation();
-    // console.log(props.id);
 
-
+    
     return (
         <View style={styles.wrap}>
             <TouchableOpacity style={styles.num} onPress={() => console.log(props.id)}>
@@ -18,7 +17,7 @@ const CommentLike = (props) => {
                 style={styles.num} 
                 onPress={() => navigation.navigate('Profile', {
                     screen: 'commentpage',
-                    params: {data: props.data, navHome: props.navHome, navScreen: props.navScreen}
+                    params: {data: props.data, navHome: props.navHome, navScreen: props.navScreen, id: props.id}
                 })}>
                 <EvilIcons name="comment" size={props.size} color={"black"} /> 
                 <Text style={styles.commnets}>{props.commnets}</Text>

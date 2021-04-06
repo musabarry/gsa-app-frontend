@@ -1,25 +1,45 @@
-import React, {Component} from 'react'
+import React, {useState, useContext} from 'react'
 import {Text, View, StyleSheet, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
-import{useQuery} from '@apollo/client';
-import {ALLPOST } from "../../GraphQl/query";
-import Loading from '..//01/loading';
 import PostCard from '../Card/PostCard';
-const Home = () => {
-    const {error, data, loading} =  useQuery(ALLPOST)
+import { SearchBar } from 'react-native-elements';
+import authContext  from '../../Context/authContext';
+import Loading from '../01/loading';
 
-    if(loading){
-        return(
-            <Loading />
-        )
-    }
+const Home = (props) => {
+    const [search, setSearch] = useState('');
+    const states = useContext(authContext);
+
+
+
+    console.log('====================================');
+    console.log(states.allPost);
+    console.log('====================================');
     
+    // if(!states.allPost.allPost){
+    //     return(
+    //         <Loading />
+    //     )
+    // }
     return(
         <View style={styles.container}>
+            <View>
+            <SearchBar
+                round
+                searchIcon={{ size: 24 }}
+                onChangeText={(text) => setSearch(text)}
+                onClear={text =>  setSearch('')}
+                placeholder="Search"
+                value={search}
+                inputStyle={{backgroundColor: 'white'}}
+                inputContainerStyle={{backgroundColor: 'white', borderWidth: 1}}
+            />
+            </View>
            <ScrollView>
-           {data.allPost.map(item =>{
+           {states.allPost && states.allPost.allPost.map(item =>{
                 return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
                         data={item} key={item._id} 
+                        userInfo={item.owner}
                         navHome={"Home"} navScreen={""}/>
               })}
            </ScrollView>

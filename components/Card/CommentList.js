@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, FlatList, Platform, TouchableHighlight} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Platform, TouchableHighlight} from 'react-native';
 import Loading from '..//01/loading';
 import { AntDesign } from '@expo/vector-icons';
 const CommentList = ({item}) => {
@@ -7,9 +7,16 @@ const CommentList = ({item}) => {
 
         <View style={styles.comment_wrapper}  >
             <View style={styles.info}>
-                <AntDesign name="user" size={24} color="black"/>
+                <View style={styles.thumbnail_wraper}>
+                    {
+                        item.byUser.avatar ?
+                        <Image style={styles.thumbnail} source={{uri: item.byUser.avatar}}/> :
+                         <AntDesign name="user" size={24} color="black"/>
+                    }
+                </View>
                 <View>
                     <Text style={styles.name}>{item.byUser.firstname} {item.byUser.lastname}</Text>
+                    <Text>  @{item.byUser.school}</Text>
                 </View>
             </View>
             <View style={styles.comment}>
@@ -57,6 +64,18 @@ const styles = StyleSheet.create({
     },
     date:{
         alignSelf: 'flex-end'
+    },
+    thumbnail_wraper:{
+        width: 50,
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 100,
+        borderColor: '#CCC'
+    },
+    thumbnail:{
+        width: '100%',
+        height: '100%',
+        borderRadius: 100
     }
 
 })

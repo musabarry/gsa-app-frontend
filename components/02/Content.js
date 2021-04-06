@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Constants from 'expo-constants';
 
-import authContext  from '../../authContext';
+import checkContext  from '../../Context/checkContext';
 import AsyncStorage from '@react-native-community/async-storage';
 import{useQuery, } from '@apollo/client';
 import { USERINFO } from "../../GraphQl/query";
@@ -20,7 +20,7 @@ import Loading from '../01/loading'
 
 const  Content = (props) =>  {
 
-  const state = useContext(authContext);
+  const state = useContext(checkContext);
   const {error, data, loading} =  useQuery(USERINFO)
   const [info, setInfo] = useState([]);
   const [userOut, setUserOut] = useState(false)
@@ -28,13 +28,12 @@ const  Content = (props) =>  {
   const logout = async () =>{
     try {
 
-      await AsyncStorage.multiRemove(['@token_key', '@userID', '@userSet'])
+      await AsyncStorage.multiRemove(['@token_key', '@userID'])
       
       .then(res =>{
         setUserOut(true)
         Alert.alert('Logout success')
         state.setAuthanticated(false)
-        state.setAccount(false)
       })
     } catch (error) {
       console.log(error);

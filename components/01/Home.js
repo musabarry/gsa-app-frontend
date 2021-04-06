@@ -4,23 +4,11 @@ import {
   Image,SafeAreaView,
   ScrollView,TouchableOpacity
 } from "react-native";
-import { Button, Header } from 'react-native-elements';
-import {useQuery, gql} from '@apollo/client';
-import {ALL} from  '../../GraphQl/query'
 import { Entypo} from '@expo/vector-icons';
-import Constants from 'expo-constants';
 import logo from '../images/logo.png'
-import Animated from "react-native-reanimated";
+
 const Home = (props) => {
 
-  const {loading, error, data } =  useQuery(ALL);
-  const [dataSate, setData] =  useState()
-  // useEffect(() =>{
-
-  //   if(data){
-  //     setData(data.all)
-  //   }
-  // }, data)
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.header_wrapper}>
@@ -51,7 +39,7 @@ const Home = (props) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btnView}
-            onPress={() => props.navigation.navigate("MeventsAuth")}
+            onPress={() => props.navigation.navigate("MajorEvents")}
           >
             <Text style={styles.buttontext}>Major Events</Text>
           </TouchableOpacity>

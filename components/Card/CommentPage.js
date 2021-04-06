@@ -1,72 +1,92 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity,
-     FlatList, TextInput, Platform, ScrollView, InputAccessoryView} from 'react-native';
+ TextInput, ScrollView} from 'react-native';
 import Constants from 'expo-constants';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { TabRouter, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import CommentList from './CommentList'
+import { KeyboardAccessoryView } from 'react-native-keyboard-accessory'
+import{useMutation} from '@apollo/client';
+import {CREATECOMMENT} from '../../GraphQl/mutation';
 
 const CommentPage = (props) => {
+
     const data= props.route.params.data
     const navScreen = props.route.params.navScreen
     const navHome = props.route.params.navHome
+    const [createCommnet, {error, loading}] =  useMutation(CREATECOMMENT)
 
     const navigation = useNavigation();
+
     const goBack  = () =>{
         if(navScreen.length > 1){
-
              return navigation.goBack() //('Profile', {screen: "homeProfile"})
-            
         }else{
            return navigation.reset({index: 0, routes: [{name: 'Home'}],}) //navigate("Home")
         }
     }
-    const inputAccessoryViewID = 'uniqueID';
-    // if(!data){
-    //     return(
-    //         <Loading />
-    //     )
-    // }
+
+    const [commenText, setComentText] = useState('');
+
+    const submit = () =>{
+        //if(commenText.length > 1 && props.route.params.id){
+            createCommnet({
+                variables:{
+                    post: `${props.route.params.id}`,
+                    text: commenText
+                }
+            }).then(res =>{
+                console.log(res);
+            }).catch(error =>{
+                console.log(error);
+            })
+        }
 
     return (
-        <View style={styles.container} keyboardDismissMode="interactive" >
+        <View style={styles.container}  >
             <View style={styles.header}>
                 <View style={styles.btn}>
                     <TouchableOpacity onPress={goBack} style={styles.back}>
                         <MaterialCommunityIcons name="less-than" size={30} color="black" />
                     </TouchableOpacity>
                     <View style={styles.title}>
-                        <Text style={styles.commentText}>Comments</Text>
+                        <Text style={styles.titleText}>Comments</Text>
                     </View>
                     <View>
                     </View>
                 </View>
             </View>
-            <ScrollView >
+            <ScrollView keyboardShouldPersistTaps="always">
                 <View>
-                {data.map(item => <CommentList item={item} key={data} keys={item._id}/>)} 
+                {data.map(item => <CommentList item={item} key={item._id} keys={item._id}/>)} 
                 </View>
             </ScrollView>
-            <InputAccessoryView 
+            <KeyboardAccessoryView 
                     style={styles.keyboardView} 
-                    nativeID={inputAccessoryViewID}
-                    >
+                    alwaysVisible={true}
+                    avoidKeyboard>
+                 {({ isKeyboardVisible }) => (
             <View style={styles.comment_box}>
                 <TextInput 
                 placeholder="Add a comment" 
                 style={styles.comment_input}
-                inputAccessoryViewID={inputAccessoryViewID}
-                blurOnSubmit={false}
+                //blurOnSubmit={false}
+                keyboardAppearance="default"
                 autoFocus={true}
-                keyboardType="ascii-capable"
                 multiline={true}
+                maxLength={250}
+                onChangeText={(text) =>  setComentText(text)}
+                placeholderTextColor="#243333"
+                spellCheck={true}
                 />
-                <TouchableOpacity style={styles.post_btn}>
+                 {isKeyboardVisible && (
+                <TouchableOpacity style={styles.post_btn} onPress={() => submit()}>
                     <Text style={styles.post_text}>Post</Text>
                 </TouchableOpacity>
+                 )}
             </View>
-        
-            </InputAccessoryView>
+            )}
+            </KeyboardAccessoryView>
         </View>
     );
 }
@@ -104,84 +124,54 @@ const styles = StyleSheet.create({
     title:{
         alignSelf: 'center',
     },
-    likes:{
-        width: '48%',
-        borderColor: '#d9d9d9',
-        borderLeftWidth: 2,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    commentText:{
+    titleText:{
         fontWeight: '600',
         fontSize: 18,
         alignSelf: 'center'
     },
-    likeText:{
-        fontWeight: '800',
-        fontSize: 22,
-        alignSelf: 'center'
-    },
-    comment_wrapper:{
-        backgroundColor: '#e6e6e6',
-        display: 'flex',
-        flexDirection: 'column',
-        borderColor: '#000',
-        borderWidth: 1
-    },
-    info:{
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    name:{
-        marginLeft: 10
-    },
-    comment:{
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    text:{
-        marginLeft: 30
-    },
-    date:{
-        alignSelf: 'flex-end'
-    },
     comment_box:{
-        display: "flex",
-        flexDirection: 'row',
+        padding: 5,
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "flex-end",
+        backgroundColor: '#ededed',
+        marginBottom: -75,
+       // display: "flex",
+      
     },
     comment_input:{
-        borderWidth: 1,
-        borderColor: '#595959',
-        minHeight: 40,
+        //flexGrow: 1,
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: "#CCC",
+        backgroundColor: "#f0eded",
+        padding: 10,
+        fontSize: 16,
+        marginRight: 10,
+        textAlignVertical: "top",
+        
+        // borderWidth: 1,
+        // borderColor: '#595959',
+        minHeight: 70,
         maxHeight: 100,
         width: '85%',
-        borderRadius: 5,
-        padding: 5,
+        // borderRadius: 5,
+        // padding: 5,
     },
     post_btn:{
         backgroundColor: '#0076d1',
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 11,
-        paddingRight: 11,
+        paddingTop: 6,
+        paddingBottom: 6,
+        paddingLeft: 12,
+        paddingRight: 12,
         borderRadius: 10,
         alignSelf: "flex-end",
-        marginLeft: 2,
+        //marginLeft: 2,
     },
     post_text:{
         fontSize: 16,
         textAlign: 'center',
         fontWeight: '600',
     },
-    keyboardView:{
-        //borderColor: "red",
-        padding: 2
-    }
 
 })
