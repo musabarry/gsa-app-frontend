@@ -4,12 +4,14 @@ import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import { FontAwesome, Ionicons, EvilIcons, } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, EvilIcons,MaterialIcons } from '@expo/vector-icons';
 import Statemen from '../Post/Statemen';
 import {aws} from '../../keys'
 import{useMutation} from '@apollo/client';
 import {CREATEPOSTIMAGE, CREATEPOSTTEXT} from '../../GraphQl/mutation';
+import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import checkContext  from '../../Context/checkContext';
+import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
 
 const Post = (props) =>{
@@ -23,9 +25,11 @@ const Post = (props) =>{
   const [takeBtn, setTakeBtn] = useState(false)
   const [selectBtn, setSelectBtn] = useState(false)
   const state = useContext(checkContext);
+  const update = useContext(authContext);
   const [camera, setCamera] = useState(null)
   const [createPostImage] =  useMutation(CREATEPOSTIMAGE)
   const [createPostText] =  useMutation(CREATEPOSTTEXT)
+
   useEffect(() =>{
       (async () =>{
           if (Platform.OS === 'ios') {
@@ -37,6 +41,7 @@ const Post = (props) =>{
             // Camera Permission
             const { status } = await Permissions.askAsync(Permissions.CAMERA);
             setHasPermission(status === 'granted')
+            
       })();
   })
 
@@ -63,7 +68,7 @@ const Post = (props) =>{
       let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
-          aspect: [1, 1],
+          aspect: [4, 3],
           quality: 1,
       }).then(res =>{
           setImage(res.uri)
@@ -97,9 +102,9 @@ const Post = (props) =>{
                   owner: `${state.userID}`,
                   imageAlbum: [`${response.body.postResponse.location}`],
                   text: text
-              }
+              },
+              refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
           }).then(res =>{
-           
             return props.navigation.navigate("Home")
           }).catch(error =>{
             console.log({server: error});
@@ -113,7 +118,8 @@ const Post = (props) =>{
           variables:{
             owner: `${state.userID}`,
             text: text
-          }
+          },
+          refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{
           props.navigation.navigate("Home")
         }).catch(error =>{
@@ -133,49 +139,47 @@ const Post = (props) =>{
           <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
             <View style={styles.container}  >
               {/* if button camera is  false show test post compoenet else show the camera component */}
-            {!takeBtn  ?
-            <>
-              <View style={styles.statement_box}>
-                <Statemen  img={image} setText={setText} upload={upload}/>
-              </View>
-              <View style={styles.btns}>
-                <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
-                  <FontAwesome name="camera" size={24} color="black"/>
-                  <Text style={styles.add_text}>take a photo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
-                  <FontAwesome name="image" size={24} color="black"/>
-                  <Text style={styles.add_text}>Select a photo</Text>
-                </TouchableOpacity>
-              </View>
-              </>:
+              {!takeBtn  ?
               <>
-                <Camera style={{ flex: 5 }} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+                <View style={styles.statement_box}>
+                  <Statemen  img={image} setText={setText} upload={upload}/>
+                </View>
+                <View style={styles.btns}>
+                  <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
+                    <FontAwesome name="camera" size={24} color="black"/>
+                    <Text style={styles.add_text}>take a photo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+                    <MaterialIcons name="photo-library" size={24} color="black" />
+                    <Text style={styles.add_text}>Select a photo</Text>
+                  </TouchableOpacity>
+                </View>
+                </>:
+              <>
+                <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
                 <View style={styles.top}>
-                    <TouchableOpacity onPress={() => setTakeBtn(!takeBtn)}>
-                        <EvilIcons name="close" size={35} color="black" />
+                    <TouchableOpacity style={styles.btn} onPress={() => setTakeBtn(!takeBtn)}>
+                        <EvilIcons name="close" size={35} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity >
-                        <Text style={styles.select_text}>Select</Text>
-                    </TouchableOpacity>
+
                   </View>
                 </Camera>
                 <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>
                   <View style={styles.btn_wrape}>  
-                    <TouchableOpacity style={styles.takenImg} onPress={() => setModalVisible(!modalVisible)}>
-                      {<Image source={{uri: image}}  style={{ width: 70, height: 61 }} />}
-                    </TouchableOpacity>
-                    <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
-                      <Ionicons name="ios-camera" size={50} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                      <Ionicons name="ios-reverse-camera" size={50} color="white" />
-                    </TouchableOpacity>
+                      <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+                        <MaterialIcons name="photo-library" size={40} color="white" />
+                      </TouchableOpacity>
+                      <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
+                        <Ionicons name="ios-camera" size={50} color="white" />
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
+                        <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                      </TouchableOpacity>
                   </View>
                 </View>
               </>
             }
-            </View>
+          </View>
         </TouchableWithoutFeedback>
       )
     }else{
@@ -209,21 +213,20 @@ const Post = (props) =>{
 const styles =  StyleSheet.create({
   container:{
       flex: 1,
-      marginTop: Constants.statusBarHeight,
+      //marginTop: Constants.statusBarHeight,
   },
   top:{
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#CCC',
-    padding: 5
+    justifyContent: 'flex-end',
+    backgroundColor: '#1e1e1f', 
   },
-  select_text:{
-    fontSize: 18,
-    fontWeight: '600'
+  btn:{
+    marginRight: 5,
+    marginBottom: 5
   },
   image_wraper:{
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
     marginBottom: 40,
     borderRadius: 4
   },

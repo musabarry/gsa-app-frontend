@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { StyleSheet,
   Text, View, TouchableOpacity,
-  TextInput,KeyboardAvoidingView
+  TextInput,KeyboardAvoidingView, Keyboard, ScrollView
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
@@ -50,8 +50,9 @@ const Login =(props) => {
     )
   }else{
     return (
+
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.login}>
+        <ScrollView style={styles.login}>
           <View style={styles.logoView}>
             <View style={styles.logo}>
               <Text style={styles.logoText} >LOGO</Text>
@@ -88,8 +89,7 @@ const Login =(props) => {
               <Text style={styles.LoginButton}>Forgot Password</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        
+        </ScrollView>
       </KeyboardAvoidingView>
     );
   }
@@ -127,8 +127,9 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   login:{
-    alignItems: 'center',
-    marginTop: 100,
+   // alignItems: 'center',
+    paddingTop: 50,
+    // marginBottom: 90
 
   //   margin: 100,
   //   marginHorizontal: 20,

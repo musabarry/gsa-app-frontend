@@ -24,9 +24,9 @@ const Profile = (props) =>{
     <View style={styles.container}>
       <ScrollView  style={styles.post}>
           <View >
-              <ProfileInfo  naviSetting={naviSetting}  userInfo={states.userInfo.userInfo}/>
+              {states.userInfo && <ProfileInfo  naviSetting={naviSetting}  userInfo={states.userInfo.userInfo}/>}
           </View>
-            {states.userInfo.userPosts.map(item =>{
+            {states.userInfo && states.userInfo.userPosts.map(item =>{
               return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
                       data={item} key={item._id} 
                       userInfo={states.userInfo.userInfo}
@@ -42,7 +42,7 @@ const Profile = (props) =>{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
   },
   wrapper_top: {
     //backgroundColor: "#DCD6D6",

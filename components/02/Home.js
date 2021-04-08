@@ -10,17 +10,6 @@ const Home = (props) => {
     const [search, setSearch] = useState('');
     const states = useContext(authContext);
 
-
-
-    console.log('====================================');
-    console.log(states.allPost);
-    console.log('====================================');
-    
-    // if(!states.allPost.allPost){
-    //     return(
-    //         <Loading />
-    //     )
-    // }
     return(
         <View style={styles.container}>
             <View>
@@ -31,6 +20,7 @@ const Home = (props) => {
                 onClear={text =>  setSearch('')}
                 placeholder="Search"
                 value={search}
+                containerStyle={{backgroundColor: '#1e1e1f'}}
                 inputStyle={{backgroundColor: 'white'}}
                 inputContainerStyle={{backgroundColor: 'white', borderWidth: 1}}
             />
@@ -56,7 +46,7 @@ const Home = (props) => {
 const styles =  StyleSheet.create({
     container:{
         flex: 1,
-        marginTop: Constants.statusBarHeight,
+        //marginTop: Constants.statusBarHeight,
     }
 })
 

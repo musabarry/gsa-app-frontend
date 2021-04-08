@@ -41,6 +41,9 @@ const Authenticated = ({ navigation }) => {
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
 
+  const update = () =>{
+    return(dataInfo, allPostData)
+  }
 
   
 
@@ -52,39 +55,40 @@ const Authenticated = ({ navigation }) => {
         setAllPost(allPostData)
         setUserID(state.userID)
       }
+      update()
     })()
-  }, [dataInfo, allPostData])
+  }, [update])
 
-  if(loadingInfo || allPostLoading || infoError | allPostError ){
+  if(loadingInfo || allPostLoading || infoError | allPostError || !dataInfo || !allPostData){
     return(
         <Loading />
     )
   }
 
   return (  
-        <authContext.Provider value={{userInfo, userPost, allPost, userID}}>
+        <authContext.Provider value={{userInfo, userPost, allPost, userID, update}}>
           <Tab.Navigator headerMode="none"   >  
             <Tab.Screen name="Home" component={Home}
               options={{
               tabBarIcon: () =>(
-                <Entypo name="home" size={24} color="black" />
+                <Entypo name="home" size={24} color="#1e1e1f" />
               )}} />  
             <Tab.Screen name="Post" component={Post}              
                 options={{
                 tabBarIcon: () =>(
-                  <MaterialIcons name="add-box" size={24} color="black" />
+                  <MaterialIcons name="add-box" size={24} color="#1e1e1f" />
               )}}
              />
             <Tab.Screen name="Message" component={Message}              
                 options={{
                 tabBarIcon: () =>(
-                  <MaterialIcons name="message" size={24} color="black" />
+                  <MaterialIcons name="message" size={24} color="#1e1e1f" />
               )}}
              />
             <Tab.Screen name="Profile" component={profile} 
                options={{
                 tabBarIcon: () =>(
-                  <FontAwesome5 name="user-alt" size={24} color="black" />
+                  <FontAwesome5 name="user-alt" size={24} color="#1e1e1f" />
               )}} /> 
           </Tab.Navigator> 
           </authContext.Provider>

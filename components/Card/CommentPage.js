@@ -8,7 +8,7 @@ import CommentList from './CommentList'
 import { KeyboardAccessoryView } from 'react-native-keyboard-accessory'
 import{useMutation} from '@apollo/client';
 import {CREATECOMMENT} from '../../GraphQl/mutation';
-
+import {ALLPOST, USERINFO} from '../../GraphQl/query';
 const CommentPage = (props) => {
 
     const data= props.route.params.data
@@ -34,7 +34,8 @@ const CommentPage = (props) => {
                 variables:{
                     post: `${props.route.params.id}`,
                     text: commenText
-                }
+                },
+                refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
                 console.log(res);
             }).catch(error =>{
@@ -96,7 +97,7 @@ export default CommentPage;
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        marginTop: Constants.statusBarHeight,
+        //marginTop: Constants.statusBarHeight,
     },
     header:{
         display: 'flex',

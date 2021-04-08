@@ -22,7 +22,6 @@ const ProfileInfo = (props) =>{
                     </View>
                     <View style={styles.name}>
                         <View>
-                       
                             <Text style={styles.textName}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
                         </View>
                         <View style={styles.info}>
@@ -53,8 +52,7 @@ const ProfileInfo = (props) =>{
     )
 }
 
-const wight = Dimensions.get('window').width
-const height = Dimensions.get('window').height
+
 const styles = StyleSheet.create({
     container:{
         flex: 1,

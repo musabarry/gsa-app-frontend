@@ -48,7 +48,7 @@ export default class ForgotPassword extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
   },
   headerView:{
     paddingTop: 10,

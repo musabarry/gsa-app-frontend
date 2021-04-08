@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, {useState, useEffect} from "react";
-import { StyleSheet, Alert } from "react-native";
+import { StyleSheet, Alert, SafeAreaView, StatusBar } from "react-native";
 import RootSreen from "./RootStack/RootStack";
 import { NavigationContainer } from "@react-navigation/native";
 import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink, createHttpLink } from '@apollo/client';
@@ -10,7 +10,7 @@ import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
 import{useQuery} from '@apollo/client';
 import {ALLPOST, USERINFO } from "./GraphQl/query";
-
+import { ThemeProvider } from 'react-native-elements';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>{
@@ -25,7 +25,7 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 
 const link = from([
   errorLink,
-   new HttpLink({uri: "http://192.168.1.83:8080/graphql"}),
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}),
  
   
 ])
@@ -54,7 +54,6 @@ const client = new ApolloClient({
 const App = ({ navigation }) => {
 
   const [authnaticated, setAuthanticated] = useState(false)
-  const [account, setAccount] =  useState(null)
   const [userID, setUserID] =  useState();
   
   client.cache.reset()
@@ -75,13 +74,18 @@ const App = ({ navigation }) => {
   }, []);
 
   return (
-    <checkContext.Provider value={{authnaticated, setAuthanticated, userID, setUserID}}>
-      <ApolloProvider client={client}>
-      <NavigationContainer>
-        <RootSreen />
-      </NavigationContainer>
-      </ApolloProvider>
-    </checkContext.Provider>
+    <ThemeProvider>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={{ flex: 1 }}>
+        <checkContext.Provider value={{authnaticated, setAuthanticated, userID, setUserID}}>
+          <ApolloProvider client={client}>
+          <NavigationContainer>
+            <RootSreen />
+          </NavigationContainer>
+          </ApolloProvider>
+        </checkContext.Provider>
+      </SafeAreaView>
+    </ThemeProvider>
   );
 };
 

@@ -137,7 +137,7 @@ const Info = (props) =>{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
   },
   headerView:{
     top: 0,

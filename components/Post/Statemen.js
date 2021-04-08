@@ -1,15 +1,12 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TextInput, TouchableOpacity, Text, Image, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
-import { EvilIcons } from '@expo/vector-icons';  
+import Constants from 'expo-constants'; 
 const Statemen = (props) => {
 
     return (
         <View style={styles.container}>
             <View style={styles.top}>
-                <TouchableOpacity >
-                    <EvilIcons name="close" size={35} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => props.upload()} >
+                <TouchableOpacity style={styles.btn} onPress={() => props.upload()} >
                     <Text style={styles.post_text}>Post</Text>
                 </TouchableOpacity>
             </View>
@@ -31,13 +28,15 @@ export default Statemen;
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        
     },
     top:{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 5
+        justifyContent: 'flex-end',
+        paddingBottom: 5
+    },
+    btn:{
+        marginRight: 20
     },
     post_wraper:{
         display: 'flex',
@@ -61,6 +60,7 @@ const styles = StyleSheet.create({
     },
     post_text:{
         fontSize: 18,
-        fontWeight: '600'
+        fontWeight: '700',
+        color: '#016191'
     }
 })

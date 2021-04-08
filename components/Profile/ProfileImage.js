@@ -5,13 +5,15 @@ import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
-import { EvilIcons } from '@expo/vector-icons';  
-import { Ionicons } from '@expo/vector-icons';
+import { EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';  
 import{useMutation} from '@apollo/client';
 import { RNS3 } from 'react-native-aws3';
 import {PROFILEIMAGE} from '../../GraphQl/mutation';
 import {aws} from '../../keys'
 import checkContext  from '../../Context/checkContext';
+import { useNavigation } from '@react-navigation/native'
+import authContext  from '../../Context/authContext';
+import {ALLPOST, USERINFO} from '../../GraphQl/query';
 const ProfileImg =(props) => {
 
     const [hasPermission, setHasPermission] = useState(null)
@@ -20,7 +22,9 @@ const ProfileImg =(props) => {
     const [camera, setCamera] = useState(null)
     const [profileImage, {error, loading}] =  useMutation(PROFILEIMAGE)
     const state = useContext(checkContext);
-    
+    const navigation = useNavigation();
+    const update = useContext(authContext);
+
     useEffect(() =>{
         (async () =>{
             if (Platform.OS === 'ios') {
@@ -42,11 +46,10 @@ const ProfileImg =(props) => {
             : Camera.Constants.Type.back
         )
     }
-    
+
     const takePicture = async () => {
         if (camera) {
             let photo = await camera.takePictureAsync().then(res =>{
-                console.log(res.uri);
                 setImage(res.uri)
             }).catch(err =>{
                 setImage('')
@@ -58,7 +61,7 @@ const ProfileImg =(props) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [1, 1],
+            aspect: [4, 1],
             quality: 1,
         }).then(res =>{
             setImage(res.uri)
@@ -88,11 +91,14 @@ const ProfileImg =(props) => {
             profileImage({
                 variables:{
                     image: `${response.body.postResponse.location}`,
-                }
+                },
+                refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{
-            console.log(res);
+            props.setModalVisible(!props.modalVisible)
+            navigation.navigate('homeProfile')
         }).catch(error =>{
             console.log(error);
+            
         })
         })
         .catch(error => {
@@ -116,7 +122,12 @@ const ProfileImg =(props) => {
                             <Text style={styles.post_text}>Post</Text>
                         </TouchableOpacity>
                 </View>
-                 <Camera style={{flex: 1}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+                {
+                    image ? 
+                    <View style={styles.takenImg}>
+                          <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
+                    </View>:
+                    <Camera style={{flex: 1}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
                     <View style={{flex:1, flexDirection:"column",margin:20}}>
                         <View style={{flex:6, flexDirection:"row", justifyContent:"center"}} >
                             <TouchableOpacity  style={styles.camera} onPress={takePicture} >
@@ -125,19 +136,16 @@ const ProfileImg =(props) => {
                         </View>
                         <View style={{flex:1, flexDirection:"row",justifyContent:"space-between"}}>  
                             <TouchableOpacity style={styles.btn} onPress={pickImage}>
-                                <Ionicons name="ios-photos" size={30} color="white" />
+                                <MaterialIcons name="photo-library" size={35} color="white" />
                             </TouchableOpacity>
-                            { image.length != 0 && image.length != undefined?
-                            <TouchableOpacity style={styles.takenImg}>
-                                <Image source={{uri: `${image}`}}  style={{ width: 50, height: 45 }} />
-                            </TouchableOpacity>:<></>
-                            }
                             <TouchableOpacity style={styles.btn} onPress={handleCameraType}>
-                                <Ionicons name="ios-reverse-camera" size={35} color="white" />
+                                <Ionicons name="ios-reverse-camera" size={40} color="white" />
                             </TouchableOpacity>
                         </View> 
                     </View>
                 </Camera>
+                }
+
             </View>
         )
     }
@@ -165,22 +173,20 @@ const styles =  StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 5
+        marginLeft: 5,
+        marginRight: 5
     },
     post_text:{
         fontSize: 18,
         fontWeight: '600'
     },
     takenImg:{
-        backgroundColor: 'red',
-        height: 50,
-        width: 40,
-        alignSelf: 'flex-end',
-        alignItems: 'center',
+      flex: 5,
+        width: '100%',
     },
     btn:{
         alignSelf: 'flex-end',
-        alignItems: 'center',
-        backgroundColor: 'transparent' 
+        marginBottom: 5
+       
     }
 })

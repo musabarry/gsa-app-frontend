@@ -190,7 +190,7 @@ const Signup = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
   },
   headerView:{
     top: 0,
@@ -237,7 +237,8 @@ const styles = StyleSheet.create({
   },
   LoginTitle: {
     fontSize: 16,
-    fontWeight: '900'
+    fontWeight: '900',
+
   },
   LoginButton: {
     fontSize: 18,
