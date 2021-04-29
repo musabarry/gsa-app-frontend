@@ -2,25 +2,25 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Platform, TouchableHighlight} from 'react-native';
 import Loading from '..//01/loading';
 import { AntDesign } from '@expo/vector-icons';
-const CommentList = ({item}) => {
+
+const LikesList = ({item}) => {
     
     return (
         <View style={styles.comment_wrapper}  >
             <View style={styles.info}>
                 <View style={styles.thumbnail_wraper}>
                     {
-                        item.byUser.avatar ?
-                        <Image style={styles.thumbnail} source={{uri: item.byUser.avatar}}/> :
+                        item.avatar ?
+                        <Image style={styles.thumbnail} source={{uri: item.avatar}}/> :
                          <AntDesign name="user" size={24} color="black"/>
                     }
                 </View>
                 <View>
-                    <Text style={styles.name}>{item.byUser.firstname} {item.byUser.lastname}</Text>
-                    <Text>  @{item.byUser.school}</Text>
+                    <Text style={styles.name}>{item.firstname} {item.lastname}</Text>
+                    <Text>  @{item.school}</Text>
                 </View>
             </View>
             <View style={styles.comment}>
-                <Text style={styles.text}>{item.text}</Text>
                 <Text style={styles.date}>{item.date}</Text>
             </View>
         </View>
@@ -31,7 +31,7 @@ const CommentList = ({item}) => {
 
 
 
-export default CommentList;
+export default LikesList;
 
 const styles = StyleSheet.create({
     comment_wrapper:{

@@ -30,14 +30,12 @@ const profile = ({navigation}) =>{
   )
 }
 
-
 const Authenticated = ({ navigation }) => {
   const state = useContext(checkContext);
   const {error: infoError, data: dataInfo, loading: loadingInfo} =  useQuery(USERINFO)
   const {error: allPostError, data: allPostData, loading: allPostLoading} =  useQuery(ALLPOST)
 
   const [userInfo, setUserInfo] =  useState();
-  const [userPost, setUserPost] = useState();
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
 
@@ -45,13 +43,10 @@ const Authenticated = ({ navigation }) => {
     return(dataInfo, allPostData)
   }
 
-  
-
   useEffect(() =>{
     (async() =>{
       if(!loadingInfo || !allPostLoading){
         setUserInfo(dataInfo)
-        setUserPost(dataInfo)
         setAllPost(allPostData)
         setUserID(state.userID)
       }
@@ -59,14 +54,14 @@ const Authenticated = ({ navigation }) => {
     })()
   }, [update])
 
-  if(loadingInfo || allPostLoading || infoError | allPostError || !dataInfo || !allPostData){
+  if(loadingInfo || allPostLoading || infoError | allPostError ){
     return(
         <Loading />
     )
   }
 
   return (  
-        <authContext.Provider value={{userInfo, userPost, allPost, userID, update}}>
+        <authContext.Provider value={{userInfo, allPost, userID, update}}>
           <Tab.Navigator headerMode="none"   >  
             <Tab.Screen name="Home" component={Home}
               options={{

@@ -8,8 +8,6 @@ import {onError} from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-community/async-storage'
 import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
-import{useQuery} from '@apollo/client';
-import {ALLPOST, USERINFO } from "./GraphQl/query";
 import { ThemeProvider } from 'react-native-elements';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
@@ -22,12 +20,9 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
   }
 })
 
-
 const link = from([
   errorLink,
    new HttpLink({uri: "http://192.168.1.32:8080/graphql"}),
- 
-  
 ])
 
 // const httpLink = createHttpLink({
@@ -36,7 +31,6 @@ const link = from([
 
 const authLink = setContext(async (_, { headers }) => {
   const token =await  AsyncStorage.getItem('@token_key')
-
   return {
     headers: {
       ...headers,
@@ -52,12 +46,9 @@ const client = new ApolloClient({
 });
 
 const App = ({ navigation }) => {
-
   const [authnaticated, setAuthanticated] = useState(false)
   const [userID, setUserID] =  useState();
-  
   client.cache.reset()
-
   useEffect(() =>{
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
@@ -67,10 +58,8 @@ const App = ({ navigation }) => {
         setUserID(id)
       }else{
         setAuthanticated(false)
-        //setAccount(false)
       }
     })();
-
   }, []);
 
   return (

@@ -21,7 +21,6 @@ const Login =(props) => {
 
   const state = useContext(checkContext);
   
-
   const onSubmit = () =>{
     if(!email || !password){
       Alert.alert("Email or password is empty")
@@ -38,7 +37,6 @@ const Login =(props) => {
           state.setAuthanticated(true)
         }
       }).catch(error =>{
-        console.log({error});
         Alert.alert('Password wrong')
       })
     }

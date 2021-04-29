@@ -8,11 +8,11 @@ import Constants from 'expo-constants';
 import { EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';  
 import{useMutation} from '@apollo/client';
 import { RNS3 } from 'react-native-aws3';
-import {PROFILEIMAGE} from '../../GraphQl/mutation';
 import {aws} from '../../keys'
 import checkContext  from '../../Context/checkContext';
 import { useNavigation } from '@react-navigation/native'
 import authContext  from '../../Context/authContext';
+import {PROFILEIMAGE} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 const ProfileImg =(props) => {
 

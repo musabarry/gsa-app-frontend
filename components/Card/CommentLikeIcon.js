@@ -6,19 +6,15 @@ import authContext  from '../../Context/authContext';
 const CommentLike = (props) => {
     const navigation = useNavigation();
 
-    
     return (
         <View style={styles.wrap}>
-            <TouchableOpacity style={styles.num} onPress={() => console.log(props.id)}>
+            <TouchableOpacity style={styles.num} onPress={ () => props.updateLike() }>
                 <EvilIcons name="heart" size={props.size}  color="black" /> 
                 <Text>{props.likes}</Text>
             </TouchableOpacity>
             <TouchableOpacity   
-                style={styles.num} 
-                onPress={() => navigation.navigate('Profile', {
-                    screen: 'commentpage',
-                    params: {data: props.data, navHome: props.navHome, navScreen: props.navScreen, id: props.id}
-                })}>
+                style={styles.num}
+                onPress={() => props.comments()}>
                 <EvilIcons name="comment" size={props.size} color={"black"} /> 
                 <Text style={styles.commnets}>{props.commnets}</Text>
             </TouchableOpacity>

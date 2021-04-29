@@ -37,13 +37,13 @@ const ProfileInfo = (props) =>{
                 </View>
                 
             </View>
-            <Modal 
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                setModalVisible(!modalVisible);
-                }}>
+                <Modal 
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                    }}>
                     <ProfileImg  
                     setModalVisible={setModalVisible} 
                     modalVisible={modalVisible}/>

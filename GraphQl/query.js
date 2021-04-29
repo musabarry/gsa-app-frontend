@@ -1,15 +1,5 @@
 import {gql} from '@apollo/client'
 
-export const ALL =  gql`
-    query{
-        all{
-            userSet
-            data
-        
-        }
-    }
-`
-
 export const ALLPOST = gql`
   query{ 
     allPost{
@@ -19,7 +9,6 @@ export const ALLPOST = gql`
         lastname
         avatar
         school
-        
       }
       _id
       date
@@ -39,6 +28,10 @@ export const ALLPOST = gql`
       }
       likes{
         _id
+        firstname
+        lastname
+        school
+        avatar
       }
     }
   }
@@ -66,6 +59,7 @@ query{
     commnets{
       _id
       text
+      date
       byUser{
         _id
         firstname
@@ -75,44 +69,14 @@ query{
       }
     }
     likes{
-      _id
-      firstname
-    }
+        _id
+        firstname
+        lastname
+        school
+        avatar
+      }
   }
 }
 `
-export const USERPOST =  gql`
-query{ 
-  userPosts{
-    _id
-    date
-    text
-    imageAlbum
-    commnets {
-    _id
-    text
-    date
-    byUser{
-      _id
-      firstname
-      lastname
-    }
-    }
-    likes{
-      user
-    }
-  }
-}
-`
-
-
-export const CONNECTION =  gql`
-query{
-    connection{
-    data
-    }
-  }
-`
-
 
 

@@ -9,65 +9,62 @@ import { KeyboardAccessoryView } from 'react-native-keyboard-accessory'
 import{useMutation} from '@apollo/client';
 import {CREATECOMMENT} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
+import LikesList from './LikesList';
 const CommentPage = (props) => {
 
-    const data= props.route.params.data
-    const navScreen = props.route.params.navScreen
-    const navHome = props.route.params.navHome
+    //const data= props.route.params.data
+    //const navScreen = props.route.params.navScreen
+    //const navHome = props.route.params.navHome
     const [createCommnet, {error, loading}] =  useMutation(CREATECOMMENT)
-
-    const navigation = useNavigation();
-
-    const goBack  = () =>{
-        if(navScreen.length > 1){
-             return navigation.goBack() //('Profile', {screen: "homeProfile"})
-        }else{
-           return navigation.reset({index: 0, routes: [{name: 'Home'}],}) //navigate("Home")
-        }
-    }
-
-    const [commenText, setComentText] = useState('');
-
+    const initialText = '';
+    const [commenText, setComentText] = useState(initialText);
+    
     const submit = () =>{
-        //if(commenText.length > 1 && props.route.params.id){
+        
+        if(commenText.length > 1){
             createCommnet({
                 variables:{
-                    post: `${props.route.params.id}`,
+                    post: `${props.id}`,
                     text: commenText
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
-                console.log(res);
+                setComentText(initialText)
             }).catch(error =>{
-                console.log(error);
-            })
+                console.log({error});
+            }) 
         }
-
+    }
     return (
         <View style={styles.container}  >
-            <View style={styles.header}>
-                <View style={styles.btn}>
-                    <TouchableOpacity onPress={goBack} style={styles.back}>
-                        <MaterialCommunityIcons name="less-than" size={30} color="black" />
+            <View style={styles.top}>
+                <TouchableOpacity onPress={() => props.close()}>
+                    <Text style={styles.backText}>Back</Text>
+                </TouchableOpacity>
+                <View style={styles.likeComment}>
+                    <TouchableOpacity style={styles.btn} onPress={() => props.likesBtn()}>
+                        <Text style={styles.btn_text}>Likes</Text>
                     </TouchableOpacity>
-                    <View style={styles.title}>
-                        <Text style={styles.titleText}>Comments</Text>
-                    </View>
-                    <View>
-                    </View>
+                    <TouchableOpacity style={styles.btn} onPress={() => props.commentsBtn()}>
+                        <Text style={styles.btn_text}>Comments</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <ScrollView keyboardShouldPersistTaps="always">
+            <ScrollView  keyboardShouldPersistTaps='handled'>
                 <View>
-                {data.map(item => <CommentList item={item} key={item._id} keys={item._id}/>)} 
+                {  props.showComments && !props.showLikes ? props.comments.map(item => <CommentList item={item} 
+                        key={item._id} keys={item._id}/>) : props.likes.map(item => <LikesList item={item} 
+                        key={item._id} keys={item._id} />) 
+                }
                 </View>
             </ScrollView>
-            <KeyboardAccessoryView 
+            {!props.showLikes && <KeyboardAccessoryView 
                     style={styles.keyboardView} 
                     alwaysVisible={true}
-                    avoidKeyboard>
+                    avoidKeyboard={true}
+                    >
                  {({ isKeyboardVisible }) => (
-            <View style={styles.comment_box}>
+            <View style={styles.comment_box} >
                 <TextInput 
                 placeholder="Add a comment" 
                 style={styles.comment_input}
@@ -76,18 +73,19 @@ const CommentPage = (props) => {
                 autoFocus={true}
                 multiline={true}
                 maxLength={250}
+                value={commenText}
                 onChangeText={(text) =>  setComentText(text)}
                 placeholderTextColor="#243333"
                 spellCheck={true}
                 />
-                 {isKeyboardVisible && (
+                 
                 <TouchableOpacity style={styles.post_btn} onPress={() => submit()}>
                     <Text style={styles.post_text}>Post</Text>
                 </TouchableOpacity>
-                 )}
+                 
             </View>
             )}
-            </KeyboardAccessoryView>
+            </KeyboardAccessoryView>}
         </View>
     );
 }
@@ -97,30 +95,27 @@ export default CommentPage;
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        //marginTop: Constants.statusBarHeight,
+        backgroundColor: "#f2f1ed",
+        marginTop: Constants.statusBarHeight,
     },
     header:{
         display: 'flex',
         flexDirection: 'column',
     },
-    btn:{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: '#d9d9d9',
-        padding: 5
+    // btn:{
+    //     display: 'flex',
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     backgroundColor: '#d9d9d9',
+    //     padding: 5
+    // },
+    back_Btn:{
+        marginLeft: 10,
     },
     back:{
-        borderColor: '#d9d9d5',
-        borderRightWidth: 2,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#016191'
     },
     title:{
         alignSelf: 'center',
@@ -130,18 +125,24 @@ const styles = StyleSheet.create({
         fontSize: 18,
         alignSelf: 'center'
     },
+    keyboardView:{
+        display: 'flex',
+        flexDirection: 'column',
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10
+    },
     comment_box:{
-        padding: 5,
+        margin: 5,
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "flex-end",
         backgroundColor: '#ededed',
-        marginBottom: -75,
-       // display: "flex",
+       // marginBottom: 75,
+       //display: "flex",
       
     },
     comment_input:{
-        //flexGrow: 1,
         borderWidth: 2,
         borderRadius: 10,
         borderColor: "#CCC",
@@ -150,14 +151,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginRight: 10,
         textAlignVertical: "top",
-        
-        // borderWidth: 1,
-        // borderColor: '#595959',
         minHeight: 70,
         maxHeight: 100,
         width: '85%',
-        // borderRadius: 5,
-        // padding: 5,
     },
     post_btn:{
         backgroundColor: '#0076d1',
@@ -166,7 +162,8 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 10,
-        alignSelf: "flex-end",
+    
+        //alignSelf: "flex-end",
         //marginLeft: 2,
     },
     post_text:{
@@ -174,5 +171,35 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '600',
     },
+
+    //
+    top:{
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 5,
+        marginRight: 5,
+        marginBottom: 10
+    },
+    backText:{
+        fontSize: 18,
+        fontWeight: '600'
+    },
+    likeComment:{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderTopWidth: 1,
+        paddingTop: 8
+    },
+    btn:{
+        width: '49%',
+        backgroundColor: '#a6a5a1',
+        alignItems: 'center'
+    },
+    btn_text:{
+        padding: 5,
+        fontSize: 18,
+        fontWeight: '700'
+    }
 
 })

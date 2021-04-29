@@ -20,6 +20,7 @@ const Profile = (props) =>{
   } 
 
 
+
   return (
     <View style={styles.container}>
       <ScrollView  style={styles.post}>

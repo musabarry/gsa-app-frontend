@@ -40,99 +40,98 @@ const  Content = (props) =>  {
       .then(res =>{
         authState.setAuthanticated(false)
         Alert.alert('Logout success')
-        setUserOut(false)
       })
     } catch (error) {
       console.log(error);
     }
-  }
+}
 
-  if(userOut || !data.userInfo){
-    return(
-      <Loading />
-    )
-  }
+if(userOut || !data.userInfo){
+  return(
+    <Loading />
+  )
+}
+if(data.userInfo){
+    return (
+          <KeyboardAvoidingView behavior="padding" style={styles.container}>       
+            <View style={styles.contentsView}>      
+            <View st={styles.top}>
+              <TouchableOpacity style={styles.btn_back} onPress={() => props.navigation.goBack()}>
+                <Text style={styles.back_text}>Back</Text>
+              </TouchableOpacity>
+            </View>
 
-  return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>       
-      <View style={styles.contentsView}>      
-      <View st={styles.top}>
-         <TouchableOpacity style={styles.btn_back} onPress={() => props.navigation.goBack()}>
-           <Text style={styles.back_text}>Back</Text>
-         </TouchableOpacity>
-      </View>
+            {data.userInfo &&     <ScrollView style={styles.infoView}>
+              <View  style={styles.wrapper_img}>
+                  <Image source={{uri: data.userInfo.avatar }}  style={styles.img}/>
+              </View>
+              <View style={styles.info_wrapper}>
+                <Text style={styles.name}>
+                {data.userInfo ? data.userInfo.firstname: ''} {data.userInfo ? data.userInfo.lastname: ''}
+                </Text>
+                <View style={styles.school}>
+                  <FontAwesome5 name="school" size={24} color="black" />
+                  <Text style={styles.text}>{data.userInfo ? data.userInfo.school: ''}</Text>
+                </View>
+                <View style={styles.content}>
+                  <Text style={styles.data}>{data.userInfo ? data.userInfo.major: ''}</Text>
+                </View>
+                <View style={styles.content}>
+                  <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
+                </View>
+                <View>
+                  <Text style={styles.label}>Skills:</Text>
+                  {/* <FlatList
+                  data={data.userInfo.skills}
+                  renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
+                  keyExtractor={(item, index) => index.toString()}/> */}
+                </View>
+                <View>
+                  <Text style={styles.label}>Interest:</Text>
+                  {/* <FlatList
+                  data={data.userInfo ? data.userInfo.interest: []}
+                  renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
+                  keyExtractor={(item, index) => index.toString()}/> */}
+                </View>
+              </View>
+            </ScrollView>}
 
-{ data.userInfo &&     <ScrollView style={styles.infoView}>
-        <View  style={styles.wrapper_img}>
-            <Image source={{uri: data.userInfo.avatar }}  style={styles.img}/>
-        </View>
-        <View style={styles.info_wrapper}>
-          <Text style={styles.name}>
-          {data.userInfo ? data.userInfo.firstname: ''} {data.userInfo ? data.userInfo.lastname: ''}
-          </Text>
-          <View style={styles.school}>
-            <FontAwesome5 name="school" size={24} color="black" />
-            <Text style={styles.text}>{data.userInfo ? data.userInfo.school: ''}</Text>
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.data}>{data.userInfo ? data.userInfo.major: ''}</Text>
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
-          </View>
-          <View>
-            <Text style={styles.label}>Skills:</Text>
-            {/* <FlatList
-            data={data.userInfo.skills}
-            renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}/> */}
-          </View>
-          <View>
-            <Text style={styles.label}>Interest:</Text>
-            {/* <FlatList
-            data={data.userInfo ? data.userInfo.interest: []}
-            renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
-            keyExtractor={(item, index) => index.toString()}/> */}
-          </View>
-        </View>
-      </ScrollView>}
-
-        <View style={styles.logoutView}>
-          <View style={styles.edit_btn}>
-            <TouchableOpacity style={styles.btnPass} 
-            onPress={() => props.navigation.navigate('unAuth')}>
-              <Text style={styles.btnText}>Change Password </Text>
-            </TouchableOpacity>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={toggleSwitch}
-              value={isEnabled}
-              style={styles.edit}
-            />
-          </View>
-          <TouchableOpacity style={styles.btnLoug} 
-            onPress={logout} >
-            <SimpleLineIcons name="logout" size={24} color="black" />
-            <Text style={styles.lougout}>LOGOUT</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Modal 
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                setModalVisible(!modalVisible);
-                }}>
-                    <ProfileImg  
-                    setModalVisible={setModalVisible} 
-                    modalVisible={modalVisible}/>
-                </Modal>
-    </KeyboardAvoidingView>
-  );
-
+              <View style={styles.logoutView}>
+                <View style={styles.edit_btn}>
+                  <TouchableOpacity style={styles.btnPass} 
+                  onPress={() => props.navigation.navigate('unAuth')}>
+                    <Text style={styles.btnText}>Change Password </Text>
+                  </TouchableOpacity>
+                  <Switch
+                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                    style={styles.edit}
+                  />
+                </View>
+                <TouchableOpacity style={styles.btnLoug} 
+                  onPress={logout} >
+                  <SimpleLineIcons name="logout" size={24} color="black" />
+                  <Text style={styles.lougout}>LOGOUT</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+                <Modal 
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}
+                  onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+                  }}>
+                      <ProfileImg  
+                      setModalVisible={setModalVisible} 
+                      modalVisible={modalVisible}/>
+                  </Modal>
+              </KeyboardAvoidingView>
+            );
+    }
 }
 
 const styles = StyleSheet.create({

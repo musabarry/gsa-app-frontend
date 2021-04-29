@@ -9,7 +9,12 @@ import Loading from '../01/loading';
 const Home = (props) => {
     const [search, setSearch] = useState('');
     const states = useContext(authContext);
-
+   
+    if(!states.allPost){
+        return(
+            <Loading />
+        )
+    }
     return(
         <View style={styles.container}>
             <View>
@@ -29,8 +34,7 @@ const Home = (props) => {
            {states.allPost && states.allPost.allPost.map(item =>{
                 return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
                         data={item} key={item._id} 
-                        userInfo={item.owner}
-                        navHome={"Home"} navScreen={""}/>
+                        userInfo={item.owner}/>
               })}
            </ScrollView>
         </View>

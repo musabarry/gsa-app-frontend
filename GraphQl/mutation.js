@@ -38,15 +38,6 @@ mutation signup($email: String!, $password: String!, $firstname: String!, $lastn
 }
 `
 
-export const  CREATEUSER = gql`
- mutation createUser($account: ID!, $firstname: String!, $lastname: String!, $school: String!, $major: String, $role: String, $skills: [String], $interest: [String]) {
-  createUser(userInput: {account: $account, firstname: $firstname, lastname:$lastname, school:$school, major: $major, role: $role, skills: $skills, interest: $interest}) {
-    role,
-    _id
-  }
-}
-`
-
 export const CREATEPOSTTEXT = gql`
 mutation createPostText($owner: ID!, $text: String!){
   createPostText(postTextInput:{owner: $owner, text: $text}){
@@ -63,21 +54,10 @@ export const  CREATEPOSTIMAGE = gql`
     }
 `
 
-//createUser(userInput: {account: $account, firstname: $firstname, lastname:$lastname, school: $school, major:$major, role: $role, interest: $interest})
-
-// export const  CREATEUSER = gql`
-// mutation createUser($account: String, $firstname: String, $lastname: String, $school: String, $major: String, $role: String, $interest: String){
-//   createUser(userInput: {account: "5fb2bc64a6b575035855926b", firstname: "Cellou", lastname:"Diallo", school:"CITY TECH", major:"CST", role:"TEAM member", interest:["CODING"]}) {
-//     role
-//   }
-// }
-// `
-
-
-
-
-
-
-
-
-
+export const CREATELIKE = gql`
+mutation like($post: ID!){
+  like(input:{post: $post}){
+    success
+  }
+}
+`
