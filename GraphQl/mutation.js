@@ -61,3 +61,12 @@ mutation like($post: ID!){
   }
 }
 `
+
+
+export const DELETEPOST  = gql`
+mutation deletePost($post: ID!){
+  deletePost(input:{post: $post}){
+    success
+  }
+}
+`

@@ -76,23 +76,27 @@ if(data.userInfo){
                 <View style={styles.content}>
                   <Text style={styles.data}>{data.userInfo ? data.userInfo.major: ''}</Text>
                 </View>
-                <View style={styles.content}>
-                  <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
-                </View>
-                <View>
-                  <Text style={styles.label}>Skills:</Text>
-                  {/* <FlatList
-                  data={data.userInfo.skills}
-                  renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
-                  keyExtractor={(item, index) => index.toString()}/> */}
-                </View>
-                <View>
-                  <Text style={styles.label}>Interest:</Text>
-                  {/* <FlatList
-                  data={data.userInfo ? data.userInfo.interest: []}
-                  renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
-                  keyExtractor={(item, index) => index.toString()}/> */}
-                </View>
+                  <View style={styles.content}>
+                    <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
+                  </View>
+                  {data.userInfo.skills &&
+                    <View>
+                      <Text style={styles.label}>Skills:</Text>
+                      <FlatList
+                      data={data.userInfo.skills}
+                      renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
+                      keyExtractor={(item, index) => index.toString()}/>
+                    </View>
+                  }
+                  {data.userInfo.interest  &&
+                    <View>
+                      <Text style={styles.label}>Interest:</Text>
+                      <FlatList
+                      data={data.userInfo.interest}
+                      renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
+                      keyExtractor={(item, index) => index.toString()}/>
+                    </View>
+                  }
               </View>
             </ScrollView>}
 

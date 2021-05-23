@@ -3,12 +3,14 @@ import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-nat
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
 import CommentPage from './CommentPage';
 import checkContext  from '../../Context/checkContext';
-import {CREATELIKE} from '../../GraphQl/mutation';
+import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
 
 const PostCard = (props) =>{
     const state = useContext(checkContext);
+
+    //determine if the user liked a post or not
     const userLike = () =>{
         let found = false;
         for(var i = 0; i < props.data.likes.length; i++) {
@@ -23,33 +25,58 @@ const PostCard = (props) =>{
     const [modalVisible, setModalVisible] = useState(false);
     const [showLikes, setShowLikes] = useState(false)
     const [showComments, setShowComments] =  useState(false)
-    const [like, {error, loading}] =  useMutation(CREATELIKE)
-    const [likeIcon , setLikeIcon] = useState( userLike() ? 'heart' : 'heart-outlined' )
-
+    const [like, {error: likeError, loading: likeLoading}] =  useMutation(CREATELIKE)
+    const [deletePost, {error: deleteError, loading: deleteLoading}] = useMutation(DELETEPOST)
+    
+    //like click event
     const likes = () =>{
         setModalVisible(true) 
         setShowComments(false)
         setShowLikes(!showLikes)       
     }
- 
-
+    
+    //comment click event
     const comments = () =>{
         setModalVisible(true)
         setShowLikes(false)
        setShowComments(!showComments)
     }
 
+    const open = () =>{
+        setModalVisible(true)
+    }
+    //close click event
     const close = () =>{
         setModalVisible(false)
         setShowComments(false)
         setShowLikes(false)
     }
 
+    //check card owner
+    const owner  = props.userInfo._id == state.userID ? true : false
+
+    // add or remove like on a post
     const updateLike = () =>{
         const id = state.userID
         const post = props.data._id
         if(id && post){
             like({
+                variables:{
+                    post: post
+                },
+                refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
+            }).then(res =>{
+                userLike()
+            }).catch(error =>{
+                console.log(error);
+            })
+        }
+    }
+    const postDelete = () =>{
+        const id = state.userID
+        const post = props.data._id
+        if(id && post){
+            deletePost({
                 variables:{
                     post: post
                 },
@@ -105,7 +132,7 @@ const PostCard = (props) =>{
                             <TouchableOpacity   
                                 style={styles.num}
                                 onPress={() => comments()}>
-                                <EvilIcons name="comment" size={29} color={"black"} /> 
+                                <FontAwesome5 name="comment" size={24} color="black" />
                                 <Text style={styles.commnets}>{props.data.commnets.length}</Text>
                             </TouchableOpacity>
                         </View>
@@ -116,11 +143,11 @@ const PostCard = (props) =>{
                 </View>
                 <View style={styles.bottomView}>
                     <TouchableOpacity style={styles.likeNum} onPress={() => likes()}>
-                        <Text>{ props.data.likes.length > 0? props.data.likes.length :''}</Text>
+                        <Text>{ props.data.likes.length > 0? props.data.likes.length + ' likes' :''}</Text>
                     </TouchableOpacity>
-                    <View style={styles.more}>
-                                <Feather name="more-horizontal" size={24} color="black" />
-                    </View>
+                    <TouchableOpacity style={styles.more} onPress={() => open()}>
+                        { owner && <Feather name="more-horizontal" size={24} color="black" />}
+                    </TouchableOpacity>
                 </View>
             </View>
                 <Modal 
@@ -130,9 +157,24 @@ const PostCard = (props) =>{
                     onRequestClose={() => {
                     setModalVisible(!modalVisible);
                     }}>
-                    <CommentPage  comments={props.data.commnets} likes={props.data.likes}
+                        { showLikes || showComments ? 
+                    <CommentPage comments={props.data.commnets} likes={props.data.likes}
                          id={props.data._id} close={close} showLikes={showLikes} 
                          showComments={showComments}likesBtn={likes} commentsBtn={comments} />
+                         :
+                         <View style={styles.more_setting}>
+                            <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>
+                                <EvilIcons name="close" size={35} color="black" />
+                            </TouchableOpacity>
+                            <View>
+                                <TouchableOpacity style={styles.deleteBtn} onPress={() => postDelete()}>
+                                    <Text style={styles.deleteText}>Delete</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <Text>{props.data._id}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>}
                 </Modal>
         </View>
     )
@@ -220,15 +262,17 @@ const styles =  StyleSheet.create({
     num:{
         flexDirection: 'row',
         margin: 3,
-    
+        alignItems: 'center'
     },
     commnets:{
-        color: '#000'
+        marginLeft: 5
     },
     bottomView:{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: 5,
+        marginRight: 5
     },
     likeNum:{
         marginLeft: 10
@@ -236,6 +280,26 @@ const styles =  StyleSheet.create({
     more:{
         marginRight: 5
     },
+    more_setting:{
+        backgroundColor: "#f0f0f0",
+        marginTop: 'auto', 
+        marginLeft: 5,
+        marginRight: 5,
+        borderRadius: 25,
+        minHeight: '20%'
+    },
+    close:{
+        margin: 10,
+        alignSelf: 'flex-end'
+    },
+    deleteBtn:{
+        alignSelf: 'center'
+    },
+    deleteText:{
+        fontWeight: '700',
+        fontSize: 21,
+        color: '#d6281c'
+    }
 })
 
 export default PostCard;
