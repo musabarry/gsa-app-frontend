@@ -19,8 +19,6 @@ const Profile = (props) =>{
     return props.navigation.navigate('setting')
   } 
 
-
-
   return (
     <View style={styles.container}>
       <ScrollView  style={styles.post}>

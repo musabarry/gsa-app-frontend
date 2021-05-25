@@ -70,3 +70,14 @@ mutation deletePost($post: ID!){
   }
 }
 `
+
+export const UPDATEPASSWORD =  gql`
+mutation updatePassword($email: String!, $currentPassword: String!, $newPassword: String!){
+  updatePassword(input:{email: $email, currentPassword: $currentPassword, newPassword: $newPassword}){
+    email
+    token
+    success
+    _id
+  }
+}
+`

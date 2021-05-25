@@ -36,7 +36,6 @@ export default class NewPassword extends Component {
             style={styles.email}
             autoCapitalize="none"
             />
-          
           <TouchableOpacity style={styles.send_btn}
            onPress={() => this.props.navigation.navigate("auth")}>
             <Text style={styles.send_text}>Submit</Text>
@@ -50,6 +49,7 @@ export default class NewPassword extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+   
     //marginTop: Constants.statusBarHeight,
   },
 //   headerView:{

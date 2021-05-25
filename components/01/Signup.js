@@ -46,12 +46,9 @@ const Signup = (props) => {
         }
       }).then(async (res) =>{
         if(res.data.signup.success){
-          console.log(res);
           await AsyncStorage.setItem('@token_key', res.data.signup.token)
           await AsyncStorage.setItem('@userID', res.data.signup._id)
-          // await AsyncStorage.setItem('@userSet', res.data.signup.info.toString())
           state.setAuthanticated(true)
-          // state.seAccount(res.data.signup.success)
         }
       })
       .catch(erro =>{
