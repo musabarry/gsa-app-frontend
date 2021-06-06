@@ -1,7 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Platform, TouchableHighlight} from 'react-native';
-import Loading from '..//01/loading';
+import Loading from '../BeforeLogin/loading';
 import { AntDesign } from '@expo/vector-icons';
+
+//component for rendering comment
 const CommentList = ({item}) => {
     
     return (

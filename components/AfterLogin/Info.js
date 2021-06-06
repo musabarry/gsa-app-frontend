@@ -1,3 +1,4 @@
+
 import React, { useState, useContext  } from "react";
 import {
   StyleSheet,
@@ -30,6 +31,8 @@ const Info = (props) =>{
   const [createUser, {error}] =  useMutation(CREATEUSER);
 
   
+
+  // user info POST event
   const onSubmit = async () =>{
     const userID = await AsyncStorage.getItem('@userID')
     if(!firstname || !lastname || !userID || !school){

@@ -11,10 +11,6 @@ const Profile = (props) =>{
 
   const states = useContext(authContext);
   
-  const state ={
-    uri: 'https://media.istockphoto.com/photos/building-a-strong-team-wooden-blocks-with-people-icon-on-pink-human-picture-id1227412970'
-  }
-  
   const naviSetting = () =>{
     return props.navigation.navigate('setting')
   } 
@@ -22,9 +18,11 @@ const Profile = (props) =>{
   return (
     <View style={styles.container}>
       <ScrollView  style={styles.post}>
-          <View >
+          <View>
+              {/* profile image and info component */}
               {states.userInfo && <ProfileInfo  naviSetting={naviSetting}  userInfo={states.userInfo.userInfo}/>}
           </View>
+          {/* render user post */}
             {states.userInfo && states.userInfo.userPosts.map(item =>{
               return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
                       data={item} key={item._id} 
@@ -41,11 +39,8 @@ const Profile = (props) =>{
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //marginTop: Constants.statusBarHeight,
   },
-  wrapper_top: {
-    //backgroundColor: "#DCD6D6",
-  },
+
   hideTow: {
     display:'none'
   },

@@ -10,7 +10,7 @@ import {LOGIN} from '../../GraphQl/mutation';
 import { Alert } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage'
 import checkContext  from '../../Context/checkContext';
-import Loading from '../01/loading';
+import Loading from './loading';
 const Login =(props) => {
 
   const [email, setEmail] = useState('');

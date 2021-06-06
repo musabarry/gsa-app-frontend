@@ -19,6 +19,8 @@ const PostCard = (props) =>{
                 break;
             }
         }
+
+        // user id not in the like array ID
         return found
     }
 
@@ -72,6 +74,8 @@ const PostCard = (props) =>{
             })
         }
     }
+
+    //delete a post 
     const postDelete = () =>{
         const id = state.userID
         const post = props.data._id
@@ -88,8 +92,6 @@ const PostCard = (props) =>{
             })
         }
     }
-
-
 
     return(
         <View>
@@ -150,6 +152,7 @@ const PostCard = (props) =>{
                     </TouchableOpacity>
                 </View>
             </View>
+                {/* modal for deletin a post */}
                 <Modal 
                     animationType="slide"
                     transparent={true}
@@ -169,9 +172,6 @@ const PostCard = (props) =>{
                             <View>
                                 <TouchableOpacity style={styles.deleteBtn} onPress={() => postDelete()}>
                                     <Text style={styles.deleteText}>Delete</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <Text>{props.data._id}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}

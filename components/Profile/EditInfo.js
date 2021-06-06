@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,21 +7,91 @@ import {
   KeyboardAvoidingView,
   TextInput
 } from "react-native";
+import {UPDATEINFO} from '../../GraphQl/mutation';
+import{useMutation} from '@apollo/client';
 
-export default function EditInfo() {
+import {USERINFO} from '../../GraphQl/query';
+const  EditInfo = (props)=>{
+
+
+    //input field state
+    const [role, setRole] = useState([])
+    const [major, setMajor]  = useState('')
+    const  [interest, setInterest] = useState([])
+    const [skills, setSkills] = useState([])
+
+    //grapql mutation for updating user information
+    const [updateUserInfo, {error, loading}] =  useMutation(UPDATEINFO)
+
+    const [newError, setNewError] = useState('')
+
+        /* 
+        update user information
+        -major
+        -role
+        - skills
+        - interest
+        */
+    const submit = () =>{
+        if (!major && !role && !skills && !interest){
+            setNewError("Fields are empty")
+        }else{
+            updateUserInfo({
+                variables:{
+                    major: major,
+                    role: role,
+                    skills: skills,
+                    interest: interest
+                },
+                // refresh user info after post
+                refetchQueries: [{query: USERINFO}]
+            }).then(res =>{
+                console.log(res);
+                props.setModalVisible(false)
+            }).catch(err =>{
+                console.log(error);
+            })
+        }
+    }
+   
     return (
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView behavior="padding"  >
             <View style={styles.center}>
+
                 <TextInput placeholder="Role" 
-                style={styles.input}/>
-                <TextInput placeholder="Major"
-                style={styles.input}/>
-                <TextInput placeholder="Interest"
-                style={styles.input}/>
-                <TextInput placeholder="Skills"
-                style={styles.input}/>
+                style={styles.input}
+                autoCapitalize="words"
+                autoCorrect={true} 
+                autoFocus={true}
+                returnKeyType='next'
+                onChangeText={text => setRole(text)}/>
+
+                <TextInput 
+                placeholder="Major"
+                style={styles.input}
+                autoCapitalize="words"
+                autoCorrect={true} 
+                returnKeyType='next'
+                onChangeText={text => setMajor(text)}/>
+
+                <TextInput 
+                placeholder="Interest"
+                autoCapitalize="words"
+                autoCorrect={true} 
+                style={styles.input}
+                returnKeyType='next'
+                onChangeText={(text) => setInterest(text.split(" "))} />
+
+                <TextInput 
+                placeholder="Skills"
+                autoCapitalize="words"
+                autoCorrect={true} 
+                style={[styles.input, {color: '#0a1112'}]}
+                returnKeyType='done'
+                onChangeText={(text) => setSkills(text.split(" "))}/>
+
                 <TouchableOpacity style={styles.send_btn}
-                onPress={() => this.props.navigation.navigate("auth")}>
+                onPress={() => submit()}>
                     <Text style={styles.send_text}>Submit</Text>
                 </TouchableOpacity>
             </View>
@@ -29,6 +99,7 @@ export default function EditInfo() {
     )
 }
 
+export default EditInfo
 
 const styles = StyleSheet.create({ 
     center:{
@@ -47,8 +118,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         color: '#000',
-        fontSize: 19,
-        fontWeight: '600'
+        fontSize: 15,
+        fontWeight: '400'
     },
     send_btn:{
         backgroundColor: '#1c0f0e',

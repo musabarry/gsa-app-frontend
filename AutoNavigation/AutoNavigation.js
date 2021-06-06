@@ -1,12 +1,12 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import Login from "../components/01/Login";
-import Signup from "../components/01/Signup";
-import About from "../components/01/About";
-import Majorevents from "../components/01/Majorevents";
-import ForgotPassword from "../components/01/ForgotPassword";
-import NewPassword from '../components/01//NewPassword'
-import Home from '../components/01/Home';
+import Login from "../components/BeforeLogin/Login";
+import Signup from "../components/BeforeLogin/Signup";
+import About from "../components/BeforeLogin/About";
+import Majorevents from "../components/BeforeLogin/Majorevents";
+import ForgotPassword from "../components/BeforeLogin/ForgotPassword";
+import NewPassword from '../components/BeforeLogin//NewPassword'
+import Home from '../components/BeforeLogin/Home';
 
 const Stack = createStackNavigator();
 

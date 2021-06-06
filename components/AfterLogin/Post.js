@@ -1,6 +1,5 @@
 import React, {useState,  useContext, useEffect} from 'react'
 import {Text, View, StyleSheet, TouchableOpacity, Modal, Image, Alert, TouchableWithoutFeedback, Keyboard} from 'react-native';
-import Constants from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
@@ -15,18 +14,20 @@ import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
 
 const Post = (props) =>{
-
+  // camera access
   const [hasPermission,  setHasPermission] = useState(null)
   const[cameraType, setCameraType]  =  useState(Camera.Constants.Type.back)
   const [image, setImage] = useState('#.png')
-  const [url, setUrl] = useState('')
+
   const [text, setText] =  useState('')
   const [modalVisible, setModalVisible] =  useState(false)
   const [takeBtn, setTakeBtn] = useState(false)
-  const [selectBtn, setSelectBtn] = useState(false)
+
   const state = useContext(checkContext);
-  const update = useContext(authContext);
+
   const [camera, setCamera] = useState(null)
+
+  //graphql mutation function
   const [createPostImage] =  useMutation(CREATEPOSTIMAGE)
   const [createPostText] =  useMutation(CREATEPOSTTEXT)
 
@@ -44,7 +45,8 @@ const Post = (props) =>{
             
       })();
   })
-
+    
+    //switch between front and back camera
     const handleCameraType=()=>{
       setCameraType(
           cameraType === Camera.Constants.Type.back 
@@ -53,6 +55,8 @@ const Post = (props) =>{
       )
   }
 
+
+  //take a picture event fun
   const takePicture = async () => {
       if (camera) {
           let photo = await camera.takePictureAsync().then(res =>{
@@ -64,6 +68,8 @@ const Post = (props) =>{
       }
   }
 
+
+  //select galary image
   const pickImage = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -77,13 +83,16 @@ const Post = (props) =>{
       })
   }
     
+  //upload picture
   const upload =() =>{
       const file = {
         uri: image,
         name: `${state.userID}-${new Date().getTime()}`,
         type: "image/jpeg"
       };
-  
+      
+
+      //aws authanication keys for S3 bucket
       const options = {
         keyPrefix: "postsImg/",
         bucket: aws.bucket,
@@ -93,16 +102,20 @@ const Post = (props) =>{
         successActionStatus: 201
       };
 
+
+      //upload and post the picture
       if(image != '#.png' && image.length > 7){
       RNS3.put(file, options)
         .then(response => {
           if (response.status !== 201) throw Error('Error uploadting to AWS S3')
+          //else get the image link and save to DB
           createPostImage({
               variables:{
                   owner: `${state.userID}`,
                   imageAlbum: [`${response.body.postResponse.location}`],
                   text: text
               },
+              //refresh post data
               refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
           }).then(res =>{
             return props.navigation.navigate("Home")
@@ -185,6 +198,7 @@ const Post = (props) =>{
     }else{
       return(
         <View style={styles.container}> 
+        {/* modal for  selecting pictures*/}
           <Modal
             animationType="slide"
             transparent={true}
@@ -213,7 +227,6 @@ const Post = (props) =>{
 const styles =  StyleSheet.create({
   container:{
       flex: 1,
-      //marginTop: Constants.statusBarHeight,
   },
   top:{
     display: 'flex',
@@ -226,7 +239,6 @@ const styles =  StyleSheet.create({
     marginBottom: 5
   },
   image_wraper:{
-    //marginTop: Constants.statusBarHeight,
     marginBottom: 40,
     borderRadius: 4
   },
@@ -238,10 +250,6 @@ const styles =  StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // borderBottomWidth: 2,
-    // borderBottomColor: '#fff',
-    // backgroundColor: '#e0e0e0'
   },
   canselBtn:{
     padding: 10,

@@ -81,3 +81,11 @@ mutation updatePassword($email: String!, $currentPassword: String!, $newPassword
   }
 }
 `
+
+export const UPDATEINFO = gql`
+mutation  updateUserInfo($major: String, $role: String, $role: [String], $skills: [String]){
+  updateUserInfo(input:{mahor: $major, role: $role, interest: $interest, skills: $skills}){
+    success
+  }
+}
+`

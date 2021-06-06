@@ -13,7 +13,7 @@ import {UPDATEPASSWORD} from '../../GraphQl/mutation';
 import AsyncStorage from '@react-native-community/async-storage';
 import{useMutation} from '@apollo/client';
 import checkContext  from '../../Context/checkContext';
-import Loading from '..//01/loading';
+import Loading from '../BeforeLogin/loading';
 const ProfileImg =(props) => {
   
   const [currentPassword, setCurrentPassword] = useState('')
@@ -37,7 +37,6 @@ const ProfileImg =(props) => {
           await AsyncStorage.setItem('@userID', res.data.updatePassword._id)
           state.setAuthanticated(true)
           props.setModalVisible(false)
-          console.log(props.modalVisible);
         }
       }).catch(err =>{
         setNewError('Error: Password not saved')
@@ -59,10 +58,12 @@ const ProfileImg =(props) => {
             <View style={styles.center}>
                 <TextInput
                 placeholder="Current Password"
+                autoFocus={true}
                 style={styles.password}
                 autoCapitalize="none"
                 textContentType="password"
                 secureTextEntry={true}
+                returnKeyType='next'
                 onChangeText={(text) => setCurrentPassword(text)}
                 />
                 <TextInput
@@ -71,6 +72,7 @@ const ProfileImg =(props) => {
                 autoCapitalize="none"
                 textContentType="password"
                 secureTextEntry={true}
+                returnKeyType='next'
                 onChangeText={(text) => setNewPassword(text)}
                 />
                 <TextInput
@@ -79,6 +81,7 @@ const ProfileImg =(props) => {
                 autoCapitalize="none"
                 textContentType="password"
                 secureTextEntry={true}
+                returnKeyType='done'
                 onChangeText={(text) => setMatchPassword(text)}
                 />
                 <Text>{props.email}</Text>
@@ -120,8 +123,8 @@ const styles =  StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     color: '#000',
-    fontSize: 19,
-    fontWeight: '600'
+    fontSize: 15,
+    fontWeight: '500'
   },
   send_btn:{
     backgroundColor: '#1c0f0e',

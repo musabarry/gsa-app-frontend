@@ -1,9 +1,9 @@
 import "react-native-gesture-handler";
 import React, {useState, useEffect} from "react";
-import { StyleSheet, Alert, SafeAreaView, StatusBar } from "react-native";
+import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import RootSreen from "./RootStack/RootStack";
 import { NavigationContainer } from "@react-navigation/native";
-import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink, createHttpLink } from '@apollo/client';
+import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
 import AsyncStorage from '@react-native-community/async-storage'
 import checkContext from './Context/checkContext';
@@ -22,13 +22,12 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 
 const link = from([
   errorLink,
-   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}),
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 
-// const httpLink = createHttpLink({
-//   uri: 'http://192.168.1.83:8080/graphql',
-// });
 
+
+//(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {
   const token =await  AsyncStorage.getItem('@token_key')
   return {
@@ -39,6 +38,7 @@ const authLink = setContext(async (_, { headers }) => {
   }
 });
 
+//(GraphqL)
 const client = new ApolloClient({
   link:     authLink.concat(link),
   cache: new InMemoryCache()

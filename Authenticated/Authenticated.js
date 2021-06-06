@@ -2,13 +2,13 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Button, View} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Info from "../components/02/Info";
-import Profile from '../components/02/Profile';
-import Message from '../components/02/Message'
-import Post from '../components/02/Post'
-import Home from '../components/02/Home'
+import Info from "../components/AfterLogin/Info";
+import Profile from '../components/AfterLogin/Profile';
+import Message from '../components/AfterLogin/Message'
+import Post from '../components/AfterLogin/Post'
+import Home from '../components/AfterLogin/Home'
 import { createStackNavigator } from "@react-navigation/stack";
-import Content from '../components/02/Content';
+import Content from '../components/AfterLogin/Content';
 import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
 import CommentPage from '../components/Card/CommentPage'
 const Stack = createStackNavigator();
@@ -17,14 +17,14 @@ import authContext  from '../Context/authContext';
 import checkContext  from '../Context/checkContext';
 import{useQuery} from '@apollo/client';
 import {ALLPOST, USERINFO } from "../GraphQl/query";
-import Loading from '../components/01/loading';
+import Loading from '../components/BeforeLogin/loading';
 const profile = ({navigation}) =>{
 
   return(
     <Stack.Navigator headerMode='none' >
       <Stack.Screen name="homeProfile" component={Profile} />
       <Stack.Screen name="setting" component={Content}/>
-      {/* <Stack.Screen name="fullImage" component={FullImage} /> */}
+     
       <Stack.Screen name="commentpage" component={CommentPage} />
     </Stack.Navigator>
   )
@@ -32,6 +32,8 @@ const profile = ({navigation}) =>{
 
 const Authenticated = ({ navigation }) => {
   const state = useContext(checkContext);
+
+  //(Graphql) get data from the API 
   const {error: infoError, data: dataInfo, loading: loadingInfo} =  useQuery(USERINFO)
   const {error: allPostError, data: allPostData, loading: allPostLoading} =  useQuery(ALLPOST)
 
@@ -54,6 +56,8 @@ const Authenticated = ({ navigation }) => {
     })()
   }, [update])
 
+
+  // if no data or fetch api is loading return Loading Page
   if(loadingInfo || allPostLoading || infoError | allPostError ){
     return(
         <Loading />

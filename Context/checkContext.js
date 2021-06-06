@@ -1,5 +1,5 @@
 import react, {createContext} from 'react'
-// const [authanticated, setAuthanticated] = useState(false)
+// save all info
 const checkContext = createContext()
 
 export default checkContext;

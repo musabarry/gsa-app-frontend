@@ -12,9 +12,7 @@ import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import LikesList from './LikesList';
 const CommentPage = (props) => {
 
-    //const data= props.route.params.data
-    //const navScreen = props.route.params.navScreen
-    //const navHome = props.route.params.navHome
+  
     const [createCommnet, {error, loading}] =  useMutation(CREATECOMMENT)
     const initialText = '';
     const [commenText, setComentText] = useState(initialText);
@@ -35,6 +33,8 @@ const CommentPage = (props) => {
             }) 
         }
     }
+
+    //return either the comments or users like base on which button(like | comment) is clicked
     return (
         <View style={styles.container}  >
             <View style={styles.top}>
@@ -52,12 +52,14 @@ const CommentPage = (props) => {
             </View>
             <ScrollView  keyboardShouldPersistTaps='handled'>
                 <View>
+                {/* return either the comments or users like base on which button(like | comment) is clicked */}
                 {  props.showComments && !props.showLikes ? props.comments.map(item => <CommentList item={item} 
                         key={item._id} keys={item._id}/>) : props.likes.map(item => <LikesList item={item} 
                         key={item._id} keys={item._id} />) 
                 }
                 </View>
             </ScrollView>
+            {/* comment page is true, show comment input*/}
             {!props.showLikes && <KeyboardAccessoryView 
                     style={styles.keyboardView} 
                     alwaysVisible={true}
@@ -68,7 +70,6 @@ const CommentPage = (props) => {
                 <TextInput 
                 placeholder="Add a comment" 
                 style={styles.comment_input}
-                //blurOnSubmit={false}
                 keyboardAppearance="default"
                 autoFocus={true}
                 multiline={true}

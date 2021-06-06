@@ -4,46 +4,49 @@ import {
   Text,
   View,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
   Alert,
-  FlatList,
   Modal,
   Image,
-  Switch,
   ScrollView,
-  SafeAreaView
 } from "react-native";
 import Constants from 'expo-constants';
 import authContext  from '../../Context/authContext';
 import checkContext  from '../../Context/checkContext';
 import AsyncStorage from '@react-native-community/async-storage';
-import {  FontAwesome5, SimpleLineIcons, EvilIcons } from '@expo/vector-icons';
-import ProfileImg from '../Profile/ProfileImage';
+import {  FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import NewPassword from  '../Profile/NewPassword';
 import EditInfo from '../Profile/EditInfo'
-import Loading from '../01/loading';
+import Loading from '../BeforeLogin/loading';
+
 const  Content = (props) =>  {
 
+  //authanicated state
   const authState = useContext(checkContext);
+  //data state
   const dataStates = useContext(authContext);
-  //const {error, data, loading} =  useQuery(USERINFO)
-  const [info, setInfo] = useState([]);
+
+  // signout state
   const [userOut, setUserOut] = useState(false)
+
   const data = dataStates.userInfo
   const [modalVisible, setModalVisible] = useState(false);
+  //editing infor or password state
   const [isEnabled, setIsEnabled] = useState(false);
   
+  //update info event func
   const updateInfo = () =>{
     setModalVisible(true)
     setIsEnabled(true)
   }
   
+  //update password event func
   const updatePassword = () =>{
     setModalVisible(true)
     setIsEnabled(false)
   }
 
+  //logout event func 
   const logout = async () =>{
     try {
       setUserOut(true)
@@ -57,12 +60,16 @@ const  Content = (props) =>  {
     }
 }
 
+
+//render List component 
 const renderList = (listData) =>{
   listData.map(e=> <View >
     <Text>{e}</Text>
   </View>)
 }
 
+
+// if not data or user login out set to True
 if(userOut || !data.userInfo){
   return(
     <Loading />
@@ -131,6 +138,8 @@ if(data.userInfo){
         </TouchableOpacity>
       </View>
       </View>
+
+      {/* modal for updating userInfo and password */}
       <Modal 
         animationType="slide"
         transparent={true}
@@ -148,7 +157,7 @@ if(data.userInfo){
           <View style={styles.editForm}>
             {
             isEnabled ? 
-            <EditInfo /> :
+            <EditInfo setModalVisible={setModalVisible}/> :
             <NewPassword email={data.userInfo.email} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
             }
           </View>
@@ -225,7 +234,6 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   infoView:{
-    //padding: 15,
     backgroundColor: "#e8e8e8",
   },
   passView:{

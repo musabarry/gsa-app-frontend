@@ -4,10 +4,12 @@ import Constants from 'expo-constants';
 import PostCard from '../Card/PostCard';
 import { SearchBar } from 'react-native-elements';
 import authContext  from '../../Context/authContext';
-import Loading from '../01/loading';
+import Loading from '../BeforeLogin/loading';
 
 const Home = (props) => {
     const [search, setSearch] = useState('');
+
+    //state data for post and user info
     const states = useContext(authContext);
    
     if(!states.allPost){
@@ -18,6 +20,7 @@ const Home = (props) => {
     return(
         <View style={styles.container}>
             <View>
+                {/* search bar by user firstname and lastname */}
             <SearchBar
                 round
                 searchIcon={{ size: 24 }}
@@ -30,6 +33,7 @@ const Home = (props) => {
                 inputContainerStyle={{backgroundColor: 'white', borderWidth: 1}}
             />
             </View>
+            {/* render all post */}
            <ScrollView>
            {states.allPost && states.allPost.allPost.map(item =>{
                 return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
@@ -50,7 +54,6 @@ const Home = (props) => {
 const styles =  StyleSheet.create({
     container:{
         flex: 1,
-        //marginTop: Constants.statusBarHeight,
     }
 })
 
