@@ -1,63 +1,106 @@
-import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
+import React, { useState, useContext } from "react";
+import { StyleSheet,
+  Text, View, TouchableOpacity,
+  TextInput,KeyboardAvoidingView, Keyboard, ScrollView
 } from "react-native";
 import Constants from 'expo-constants';
 import { AntDesign} from '@expo/vector-icons';
+import{useMutation} from '@apollo/client';
+import {LOGIN} from '../../GraphQl/mutation';
+import { Alert } from "react-native";
+import AsyncStorage from '@react-native-community/async-storage'
+import checkContext  from '../../Context/checkContext';
+import Loading from './loading';
+const Login =(props) => {
 
-export default class Login extends Component {
-  render() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] =  useState('');
+  const [hidePass, setHidePass] = useState(true)
+  const [errors, setErrors] =  useState('')
+  const [login, {error, loading}] =  useMutation(LOGIN)
+
+  const state = useContext(checkContext);
+  
+  const onSubmit = async () =>{
+    console.log(await login({
+      variables:{
+        email: email,
+        password: password
+      }
+    }));
+    if(!email || !password){
+      Alert.alert("Email or password is empty")
+    }else{
+       login({
+        variables:{
+          email: email,
+          password: password
+        }
+      }).then( async (res) =>{
+        if(res.data.login.success){
+          await AsyncStorage.setItem('@token_key', res.data.login.token)
+          await AsyncStorage.setItem('@userID', res.data.login._id)
+          state.setAuthanticated(true)
+        }
+      }).catch(error =>{
+        console.log({error});
+        Alert.alert('Password wrong')
+      })
+    }
+  }
+
+  if(loading){
+    return(
+      <Loading />
+    )
+  }else{
     return (
+
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        
-        <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')}>
-          <AntDesign name="back" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-       
-        <View style={styles.login}>
+        <ScrollView style={styles.login}>
           <View style={styles.logoView}>
             <View style={styles.logo}>
               <Text style={styles.logoText} >LOGO</Text>
             </View>
             <TouchableOpacity  style={styles.signBtn}
-            onPress={() => this.props.navigation.navigate('Signup')}>
+            onPress={() => props.navigation.navigate('Signup')}>
             <Text style={styles.LoginTitle}>Signup</Text>
             </TouchableOpacity>
           </View>
+          <View>
+            <Text></Text>
+          </View>
           <View  style={styles.input}>
             <TextInput
-              placeholder="Enter username"
+              placeholder="Email"
               style={styles.username}
               autoCapitalize="none"
+              value={email}
+              onChangeText={e => setEmail(e)}
             ></TextInput>
             <TextInput
               placeholder="Password"
-              secureTextEntry
+              secureTextEntry={hidePass}
               style={styles.username}
+              value={password}
+              onChangeText={e => setPassword(e)}
             ></TextInput>
             <TouchableOpacity style={styles.LoginView} 
-            onPress={() => this.props.navigation.navigate('auth', {screen: 'Profile'})}>
+            onPress={onSubmit}>
               <Text style={styles.LoginButton}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.forgotPassword} 
-            onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+            onPress={() => props.navigation.navigate('ForgotPassword')}>
               <Text style={styles.LoginButton}>Forgot Password</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        
+        </ScrollView>
       </KeyboardAvoidingView>
     );
   }
+
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -89,8 +132,9 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   login:{
-    alignItems: 'center',
-    marginTop: 100,
+   // alignItems: 'center',
+    paddingTop: 50,
+    // marginBottom: 90
 
   //   margin: 100,
   //   marginHorizontal: 20,
@@ -141,5 +185,17 @@ const styles = StyleSheet.create({
   ForgotPasswordBttn: {
     textAlign: "center",
   },
+  loading:{
+    flex: 1,
+    backgroundColor: '#c9d9f2',
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
 });
+
+export default Login
 
