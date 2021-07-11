@@ -135,7 +135,7 @@ const ProfileImg =(props) => {
                         </View>
                         <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
                     </View>:
-            <>
+                <>
                 <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
                     <View style={styles.top}>
                          <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
