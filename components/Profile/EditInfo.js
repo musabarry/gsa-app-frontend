@@ -40,11 +40,13 @@ const  EditInfo = (props)=>{
                 role: role,
                 interest: interest,
                 skills: skills
-            }
+            },
+            refetchQueries: [{query: USERINFO}]
         }).then(res =>{
             console.log(res);
+            props.setModalVisible(false)
         }).catch(err =>{
-            console.log({err});
+            // /console.log({err});
         })
     }
    

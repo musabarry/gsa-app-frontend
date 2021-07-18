@@ -55,16 +55,17 @@ const Signup = (props) => {
 
         }
       }).then(async (res) =>{
-        console.log({red});
         if(res.data.signup.success){
           await AsyncStorage.setItem('@token_key', res.data.signup.token)
           await AsyncStorage.setItem('@userID', res.data.signup._id)
           state.setAuthanticated(true)
+          console.log(res.data.signup.token);
+          console.log(res.data.signup._id);
         }
       })
       .catch(erro =>{
-        console.log({erro});
-        console.log(error);
+        // console.log({erro});
+        // console.log(error);
         // Alert.alert('Email already excist')
       })
     }

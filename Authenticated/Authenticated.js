@@ -1,8 +1,6 @@
 
 import React, {useContext, useEffect, useState} from "react";
-import {Button, View} from 'react-native'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Info from "../components/AfterLogin/Info";
 import Profile from '../components/AfterLogin/Profile';
 import Message from '../components/AfterLogin/Message'
 import Post from '../components/AfterLogin/Post'
