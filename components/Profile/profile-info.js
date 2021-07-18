@@ -16,7 +16,8 @@ const ProfileInfo = (props) =>{
                 <View style={styles.top_wrapper}>
                     <View >
                         <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={styles.image_wrape}>
-                         <Image style={styles.image} source={avatar ? {uri: avatar}: user} />
+                            {avatar ? <Image style={styles.image} source={{uri: avatar}} /> :
+                             <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
                         </TouchableOpacity>
                     </View>
                     <View style={styles.name}>

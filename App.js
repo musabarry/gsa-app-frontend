@@ -11,12 +11,12 @@ import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'react-native-elements';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
-    graphqlErrors.map(({message, location, path}) =>{
-      console.log('Path ',{path});
-      console.log('Location ', {location});
-      console.log(`Graphql error ${message}`)
-      console.log(`Network Error: ${networkError}`);
-    })
+    graphqlErrors.map(({message, location, path}) =>
+      console.log('Path ',{path}, 'Location ', {location}, `Graphql error ${message}`)
+      // console.log('Location ', {location});
+      // console.log(`Graphql error ${message}`)
+    )
+    if(networkError) console.log(`Network Error: ${networkError}`);
   }
 })
 
@@ -31,6 +31,7 @@ const link = from([
 //(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {
   const token =await  AsyncStorage.getItem('@token_key')
+
   return {
     headers: {
       ...headers,

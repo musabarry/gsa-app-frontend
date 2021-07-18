@@ -101,7 +101,7 @@ const PostCard = (props) =>{
                         {
                             props.userInfo.avatar ?
                             <Image style={styles.thumbnail} source={{uri: props.userInfo.avatar}}/> :
-                            <FontAwesome5 name="user-alt" size={24} color="black" />
+                            <FontAwesome5 name="user-alt" size={24} color="#01294a" />
                         }
                     </View>
                     <View style={styles.nameBox}>

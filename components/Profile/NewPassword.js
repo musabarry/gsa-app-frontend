@@ -22,7 +22,7 @@ const ProfileImg =(props) => {
   const [updatePassword, {error, loading}] =  useMutation(UPDATEPASSWORD)
   const state = useContext(checkContext);
   const [newError, setNewError] = useState('')
-  const submit = () =>{
+  const onSubmit = () =>{
     if(matchPassword === newPassword){
       updatePassword({
         variables:{
@@ -86,7 +86,7 @@ const ProfileImg =(props) => {
                 />
                 <Text>{props.email}</Text>
                 <TouchableOpacity style={styles.send_btn}
-                onPress={() => submit()}>
+                onPress={() => onSubmit()}>
                     <Text style={styles.send_text}>Submit</Text>
                 </TouchableOpacity>
             </View>

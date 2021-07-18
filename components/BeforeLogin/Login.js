@@ -22,12 +22,12 @@ const Login =(props) => {
   const state = useContext(checkContext);
   
   const onSubmit = async () =>{
-    console.log(await login({
-      variables:{
-        email: email,
-        password: password
-      }
-    }));
+    // console.log(await login({
+    //   variables:{
+    //     email: email,
+    //     password: password
+    //   }
+    // }));
     if(!email || !password){
       Alert.alert("Email or password is empty")
     }else{

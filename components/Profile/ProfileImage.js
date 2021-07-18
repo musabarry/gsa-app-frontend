@@ -58,18 +58,25 @@ const ProfileImg =(props) => {
     }
     
     const pickImage = async () => {
-        console.log('pick');
-       let result = await ImagePicker.launchImageLibraryAsync({
+    //    let result = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //     })
+    //     if(!result.cancelled){
+    //         setImage(result.uri)
+    //     }
+        await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
+        }).then(res =>{
+            setImage(res.uri)
+        }).catch(err =>{ 
+          console.log('error');
         })
-        if(!result.cancelled){
-            setImage(result.uri)
-        }
-            // setImage('')
-            // console.log('error');
         
     }
 
@@ -121,13 +128,13 @@ const ProfileImg =(props) => {
         return(
             // ref={ref => {camera = ref}}
             <View style={styles.container} >
-
+{/* 
                 {
                     image ? 
                     <View style={styles.takenImg}>
                         <View style={styles.top}>
                             <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
-                                <EvilIcons name="close" size={35} color="black" />
+                                <EvilIcons name="close" size={35} color="#01294a" />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => upload()} >
                                 <Text style={styles.post_text}>Post</Text>
@@ -135,11 +142,11 @@ const ProfileImg =(props) => {
                         </View>
                         <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
                     </View>:
-                <>
+                <> */}
                 <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
                     <View style={styles.top}>
                          <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
-                             <EvilIcons name="close" size={35} color="black" />
+                             <EvilIcons name="close" size={35} color="white" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => upload()} >
                             <Text style={styles.post_text}>Post</Text>
@@ -159,8 +166,8 @@ const ProfileImg =(props) => {
                       </TouchableOpacity>
                   </View>
                 </View>
-                </>
-                }
+                {/* </>
+                } */}
 
             </View>
         )

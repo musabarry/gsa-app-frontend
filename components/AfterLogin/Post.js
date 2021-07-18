@@ -71,7 +71,7 @@ const Post = (props) =>{
 
   //select galary image
   const pickImage = async () => {
-      let result = await ImagePicker.launchImageLibraryAsync({
+      await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4, 3],
@@ -159,11 +159,11 @@ const Post = (props) =>{
                 </View>
                 <View style={styles.btns}>
                   <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
-                    <FontAwesome name="camera" size={24} color="black"/>
+                    <FontAwesome name="camera" size={24} color="#01294a"/>
                     <Text style={styles.add_text}>take a photo</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
-                    <MaterialIcons name="photo-library" size={24} color="black" />
+                    <MaterialIcons name="photo-library" size={24} color="#01294a" />
                     <Text style={styles.add_text}>Select a photo</Text>
                   </TouchableOpacity>
                 </View>
@@ -174,7 +174,6 @@ const Post = (props) =>{
                     <TouchableOpacity style={styles.btn} onPress={() => setTakeBtn(!takeBtn)}>
                         <EvilIcons name="close" size={35} color="white" />
                     </TouchableOpacity>
-
                   </View>
                 </Camera>
                 <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>

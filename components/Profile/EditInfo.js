@@ -21,10 +21,10 @@ const  EditInfo = (props)=>{
     const [skills, setSkills] = useState([])
 
     //grapql mutation for updating user information
-    const [updateUserInfo, {error, loading}] =  useMutation(UPDATEINFO)
+    // const [updateUserInfo, {error, loading}] =  useMutation(TEST)
 
     const [newError, setNewError] = useState('')
-
+    const [updateUserInfo, {error, loading}] = useMutation(UPDATEINFO)
         /* 
         update user information
         -major
@@ -32,26 +32,20 @@ const  EditInfo = (props)=>{
         - skills
         - interest
         */
-    const submit = () =>{
-        if (!major && !role && !skills && !interest){
-            setNewError("Fields are empty")
-        }else{
-            updateUserInfo({
-                variables:{
-                    major: major,
-                    role: role,
-                    skills: skills,
-                    interest: interest
-                },
-                // refresh user info after post
-                refetchQueries: [{query: USERINFO}]
-            }).then(res =>{
-                console.log(res);
-                props.setModalVisible(false)
-            }).catch(err =>{
-                console.log(error);
-            })
-        }
+    const onSubmit = async  () =>{
+        console.log('testing____________________________');
+        updateUserInfo({
+            variables:{
+                major: major,
+                role: role,
+                interest: interest,
+                skills: skills
+            }
+        }).then(res =>{
+            console.log(res);
+        }).catch(err =>{
+            console.log({err});
+        })
     }
    
     return (
@@ -91,7 +85,7 @@ const  EditInfo = (props)=>{
                 onChangeText={(text) => setSkills(text.split(" "))}/>
 
                 <TouchableOpacity style={styles.send_btn}
-                onPress={() => submit()}>
+                onPress={() => onSubmit()}>
                     <Text style={styles.send_text}>Submit</Text>
                 </TouchableOpacity>
             </View>
