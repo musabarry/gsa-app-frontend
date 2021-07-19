@@ -39,6 +39,7 @@ const Authenticated = ({ navigation }) => {
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
 
+ 
   const update = () =>{
     return(dataInfo, allPostData)
   }

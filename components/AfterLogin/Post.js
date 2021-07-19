@@ -109,6 +109,7 @@ const Post = (props) =>{
         .then(response => {
           if (response.status !== 201) throw Error('Error uploadting to AWS S3')
           //else get the image link and save to DB
+          console.log(response);
           createPostImage({
               variables:{
                   owner: `${state.userID}`,
@@ -118,8 +119,10 @@ const Post = (props) =>{
               //refresh post data
               refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
           }).then(res =>{
+            console.log({res});
             return props.navigation.navigate("Home")
-          }).catch(error =>{
+          }).catch(err =>{
+            console.log({err});
             console.log({server: error});
           })
         })

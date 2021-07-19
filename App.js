@@ -58,6 +58,7 @@ const App = ({ navigation }) => {
       if(token){
         setAuthanticated(true)
         setUserID(id)
+        console.log(typeof userID);
       }else{
         setAuthanticated(false)
       }

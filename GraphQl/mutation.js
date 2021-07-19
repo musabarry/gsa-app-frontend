@@ -47,9 +47,9 @@ mutation createPostText($owner: ID!, $text: String!){
 `
 
 export const  CREATEPOSTIMAGE = gql`
-  mutation createPostImage($owner: ID!, $imageAlbum:[String!]!, $text: String){
+  mutation createPostImage($owner: ID!, $imageAlbum:[String], $text: String){
       createPostImage(postImage:{owner: $owner, imageAlbum: $imageAlbum, text: $text}){
-        _id
+        success
       }
     }
 `

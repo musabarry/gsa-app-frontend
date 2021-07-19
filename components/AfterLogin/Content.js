@@ -18,7 +18,6 @@ import {  FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import NewPassword from  '../Profile/NewPassword';
 import EditInfo from '../Profile/EditInfo'
 import Loading from '../BeforeLogin/loading';
-
 const  Content = (props) =>  {
 
   //authanicated state
@@ -63,9 +62,11 @@ const  Content = (props) =>  {
 
 //render List component 
 const renderList = (listData) =>{
-  listData.map(e=> <View >
-    <Text>{e}</Text>
-  </View>)
+  listData.map(e=> {
+  <View>
+    <Text>ddd{e}</Text>
+  </View>
+  })
 }
 
 
@@ -77,10 +78,11 @@ if(userOut || !data.userInfo){
 }
 
 if(data.userInfo){
+  const avatar = data.userInfo.avatar
   return (
   <KeyboardAvoidingView behavior="padding" style={styles.container}>       
     <View style={styles.contentsView}>      
-    <View st={styles.top}>
+      <View st={styles.top}>
       <TouchableOpacity style={styles.btn_back} onPress={() => props.navigation.goBack()}>
         <Text style={styles.back_text}>Back</Text>
       </TouchableOpacity>
@@ -88,7 +90,9 @@ if(data.userInfo){
     {data.userInfo &&     
     <ScrollView style={styles.infoView}>
       <View  style={styles.wrapper_img}>
-          <Image source={{uri: data.userInfo.avatar }}  style={styles.img}/>
+          { avatar ? <Image source={{uri: avatar }}  style={styles.img}/>: 
+            <FontAwesome5 name="user-alt" size={330} color="#01294a" style={{marginLeft: 30}}/>
+           }
       </View>
       <View style={styles.info_wrapper}>
         <Text style={styles.name}>
@@ -104,21 +108,22 @@ if(data.userInfo){
           <View style={styles.content}>
             <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
           </View>
-          {/* {data.userInfo.skills &&
             <View>
               <Text style={styles.label}>Skills:</Text>
-              <FlatList
-              data={data.userInfo.skills}
-              renderItem={({item}) => <Text style={styles.list}>{item}</Text>}
-              keyExtractor={(item, index) => index.toString()}/>
-            </View>
-          } */}
-          {data.userInfo.interest  &&
+              {renderList(data.userInfo.skills)}
+            </View>         
+          {/* {data.userInfo.interest  &&
             <View>
               <Text style={styles.label}>Interest:</Text>
               {renderList(data.userInfo.interest)}
             </View>
-          }
+          } */}
+            <View>
+              <Text style={styles.label}>Interest:</Text>
+                <View style={styles.listItem}>
+                  {renderList(["nkjieweu", "iehuree"])}
+                </View>
+            </View>
       </View>
     </ScrollView>}
       <View style={styles.logoutView}>
@@ -140,7 +145,7 @@ if(data.userInfo){
       </View>
 
       {/* modal for updating userInfo and password */}
-      <Modal 
+        <Modal 
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -193,6 +198,7 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize'
   },
   wrapper_img:{
+    backgroundColor: "white",
     width: '100%',
     height: 300,
     padding: 10
@@ -231,7 +237,8 @@ const styles = StyleSheet.create({
       
   },
   contentsView:{
-    height: '100%'
+    height: '100%',
+    backgroundColor: "white",
   },
   infoView:{
     backgroundColor: "#e8e8e8",
@@ -288,6 +295,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#faf9f7",
     marginTop: Constants.statusBarHeight,
+  },
+  listItem:{
+    backgroundColor: "red"
   }
 });
 
