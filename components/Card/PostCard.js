@@ -99,9 +99,9 @@ const PostCard = (props) =>{
                 <View style={styles.top_wrapper}>
                     <View style={styles.thumbnail_wraper}>
                         {
-                            props.userInfo.avatar ?
-                            <Image style={styles.thumbnail} source={{uri: props.userInfo.avatar}}/> :
-                            <FontAwesome5 name="user-alt" size={24} color="#01294a" />
+                            props.userInfo.avatar !== '' &&
+                            <Image style={styles.thumbnail} source={{uri: props.userInfo.avatar}}/> 
+                            // <FontAwesome5 name="user-alt" size={30} color="#01294a" style={{marginLeft: 9, marginTop:5,}}/>
                         }
                     </View>
                     <View style={styles.nameBox}>
@@ -242,7 +242,8 @@ const styles =  StyleSheet.create({
         height: 50,
         borderWidth: 1,
         borderRadius: 100,
-        borderColor: '#CCC'
+        borderColor: '#CCC',
+        backgroundColor: '#01294a'
     },
     thumbnail:{
         width: '100%',

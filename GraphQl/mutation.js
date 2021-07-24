@@ -40,15 +40,15 @@ mutation signup($email: String!, $password: String!, $firstname: String!, $lastn
 
 export const CREATEPOSTTEXT = gql`
 mutation createPostText($owner: ID!, $text: String!){
-  createPostText(postTextInput:{owner: $owner, text: $text}){
-    _id
+  createPostText(input:{owner: $owner, text: $text}){
+    success
   }
 }
 `
 
 export const  CREATEPOSTIMAGE = gql`
   mutation createPostImage($owner: ID!, $imageAlbum:[String], $text: String){
-      createPostImage(postImage:{owner: $owner, imageAlbum: $imageAlbum, text: $text}){
+      createPostImage(input:{owner: $owner, imageAlbum: $imageAlbum, text: $text}){
         success
       }
     }

@@ -7,13 +7,13 @@ import Majorevents from "../components/BeforeLogin/Majorevents";
 import ForgotPassword from "../components/BeforeLogin/ForgotPassword";
 import NewPassword from '../components/BeforeLogin//NewPassword'
 import Home from '../components/BeforeLogin/Home';
-import {connection } from "../GraphQl/query";
-import{useQuery} from '@apollo/client';
+// import {connection } from "../GraphQl/query";
+// import{useQuery} from '@apollo/client';
 const Stack = createStackNavigator();
 
 const AutoNavigation = ({ navigation }) => {
-  const {error: conError, data: conData, loading: conLond} = useQuery(connection)
-  console.log(conData, 'data');
+  // const {error: conError, data: conData, loading: conLond} = useQuery(connection)
+  // console.log(conData, 'data');
   // console.log({conError}, 'error');
   // console.log(conLond, 'loading');
 
