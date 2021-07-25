@@ -16,6 +16,7 @@ import {SIGNUP} from '../../GraphQl/mutation';
 import{useMutation} from '@apollo/client';
 import {Picker} from '@react-native-picker/picker';
 import { EvilIcons } from '@expo/vector-icons'; 
+import { color } from "react-native-reanimated";
 const Signup = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] =  useState('');
@@ -255,6 +256,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     textAlign: "center",
     paddingVertical: 3,
+    color: "#fff"
   },
   MemberLogin: {
     paddingVertical: 10,

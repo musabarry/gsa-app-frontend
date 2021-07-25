@@ -3,6 +3,10 @@ import {gql} from '@apollo/client'
 export const ALLPOST = gql`
  query{ 
     allPost{
+      _id
+      date
+      text
+      imageAlbum
       owner{
         _id
         firstname
@@ -10,12 +14,7 @@ export const ALLPOST = gql`
         email
         school
         avatar
-
       }
-      _id
-      date
-      text
-      imageAlbum
       commnets{
       _id
       text
@@ -27,13 +26,12 @@ export const ALLPOST = gql`
         avatar
         school
       }
-    }
-    likes{
+      }
+      likes{
         _id
         firstname
         lastname
         school
-        avatar
     }
   }
 }
@@ -76,7 +74,7 @@ query{
         lastname
         school
         avatar
-      }
+    }
   }
 }
 `

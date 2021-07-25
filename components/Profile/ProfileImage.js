@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
-import { EvilIcons, MaterialIcons, Ionicons } from '@expo/vector-icons';  
+import { EvilIcons, MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';  
 import{useMutation} from '@apollo/client';
 import { RNS3 } from 'react-native-aws3';
 import {aws} from '../../keys'
@@ -24,7 +24,7 @@ const ProfileImg =(props) => {
     const state = useContext(checkContext);
     const navigation = useNavigation();
     const update = useContext(authContext);
-
+    const [takeBtn, setTakeBtn] = useState(false)
     useEffect(() =>{
         (async () =>{
             if (Platform.OS === 'ios') {
@@ -57,27 +57,22 @@ const ProfileImg =(props) => {
         }
     }
     
-    const pickImage = async () => {
-    //    let result = await ImagePicker.launchImageLibraryAsync({
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         allowsEditing: true,
-    //         aspect: [4, 3],
-    //         quality: 1,
-    //     })
-    //     if(!result.cancelled){
-    //         setImage(result.uri)
-    //     }
-        await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        }).then(res =>{
-            setImage(res.uri)
-        }).catch(err =>{ 
-          console.log('error');
-        })
-        
+      //select galary image
+  const pickImage = async () => {
+        console.log("")
+        const result = await ImagePicker.launchImageLibraryAsync()
+        console.log(result);
+        // await ImagePicker.launchImageLibraryAsync({
+        //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        //     allowsEditing: true,
+        //     aspect: [4, 3],
+        //     quality: 1,
+        // }).then(res =>{
+        //     console.log(res);
+        //     setImage(res.uri)
+        // }).catch(err =>{ 
+        // console.log('error');
+        // })
     }
 
     const upload =  () =>{
@@ -116,19 +111,82 @@ const ProfileImg =(props) => {
         });
     }
 
-    if (hasPermission === null) {
-    return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
-    <Text>No access to camera</Text>
-    </Camera>)
-    } else if (hasPermission === false) {
-    return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+//     if (hasPermission === null) {
+//     return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+//     <Text>No access to camera</Text>
+//     </Camera>)
+//     } else if (hasPermission === false) {
+//     return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+//         <Text>No access to camera</Text>
+//     </Camera>)
+//     } else { 
+//         return(
+//             // ref={ref => {camera = ref}}
+//             <View style={styles.container} >
+// {/* 
+//                 {
+//                     image ? 
+//                     <View style={styles.takenImg}>
+//                         <View style={styles.top}>
+//                             <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
+//                                 <EvilIcons name="close" size={35} color="#01294a" />
+//                             </TouchableOpacity>
+//                             <TouchableOpacity onPress={() => upload()} >
+//                                 <Text style={styles.post_text}>Post</Text>
+//                             </TouchableOpacity>
+//                         </View>
+//                         <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
+//                     </View>:
+//                 <> */}
+//                 {/* <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+//                     <View style={styles.top}>
+//                          <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
+//                              <EvilIcons name="close" size={35} color="white" />
+//                         </TouchableOpacity>
+//                         <TouchableOpacity onPress={() => upload()} >
+//                             <Text style={styles.post_text}>Post</Text>
+//                         </TouchableOpacity>
+//                     </View>
+//                 </Camera> */}
+//                 <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>
+//                   <View style={styles.btn_wrape}>  
+//                       <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+//                         <MaterialIcons name="photo-library" size={40} color="white" />
+//                       </TouchableOpacity>
+//                       <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
+//                         <Ionicons name="ios-camera" size={50} color="white" />
+//                       </TouchableOpacity>
+//                       <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
+//                         <Ionicons name="ios-reverse-camera" size={50} color="white" />
+//                       </TouchableOpacity>
+//                   </View>
+//                 </View>
+//                 {/* </>
+//                 } */}
+
+//             </View>
+//         )
+//     }
+        if (hasPermission === null) {
+        return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
         <Text>No access to camera</Text>
-    </Camera>)
-    } else { 
-        return(
+        </Camera>)
+        } else if (hasPermission === false) {
+        return ( <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
+            <Text>No access to camera</Text>
+        </Camera>)
+        } else { 
+            return(
             // ref={ref => {camera = ref}}
             <View style={styles.container} >
-{/* 
+                <View style={styles.top}>
+                    <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
+                        <EvilIcons name="close" size={35} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => upload()} >
+                        <Text style={styles.post_text}>Post</Text>
+                    </TouchableOpacity>
+                </View>
                 {
                     image ? 
                     <View style={styles.takenImg}>
@@ -141,37 +199,38 @@ const ProfileImg =(props) => {
                             </TouchableOpacity>
                         </View>
                         <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
-                    </View>:
-                <> */}
-                <Camera style={{ flex: 6}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
-                    <View style={styles.top}>
-                         <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
-                             <EvilIcons name="close" size={35} color="white" />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => upload()} >
-                            <Text style={styles.post_text}>Post</Text>
-                        </TouchableOpacity>
                     </View>
-                </Camera>
-                <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>
-                  <View style={styles.btn_wrape}>  
-                      <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
-                        <MaterialIcons name="photo-library" size={40} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
-                        <Ionicons name="ios-camera" size={50} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                        <Ionicons name="ios-reverse-camera" size={50} color="white" />
-                      </TouchableOpacity>
-                  </View>
-                </View>
-                {/* </>
-                } */}
+                    :<>
+                    {!takeBtn ?
+                        <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: '#edf1f7'}}>
+                            <TouchableOpacity style={styles.camaraBtns} onPress={() => setTakeBtn(!takeBtn)}>
+                                <Text style={styles.camaraBtns_text}>Take Photo</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.camaraBtns} onPress={() => pickImage()}>
+                                <Text style={styles.camaraBtns_text}>Choose Photo</Text>
+                            </TouchableOpacity>
+                        </View>:
+                    <>
+                    <Camera style={{ flex: 1}} type={cameraType}   autoFocus="on"  ref={ref => setCamera(ref)}>
 
-            </View>
-        )
-    }
+                    </Camera>
+                    <View style={{ backgroundColor: '#1e1e1f'}}>
+                        <View style={styles.btn_wrape}>  
+                            <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+                            <MaterialIcons name="photo-library" size={40} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
+                            <Ionicons name="ios-camera" size={50} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
+                            <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    </>}</>}
+                </View>
+            )
+        }
 }
 
 export default ProfileImg;
@@ -197,7 +256,8 @@ const styles =  StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginLeft: 5,
-        marginRight: 5
+        marginRight: 5,
+        backgroundColor: '#edf1f7'
     },
     post_text:{
         fontSize: 18,
@@ -229,5 +289,14 @@ const styles =  StyleSheet.create({
       },
       add_text:{
        marginLeft: 10
+      },
+      camaraBtns:{
+          marginTop: 10,
+         alignSelf: 'center'
+      },
+      camaraBtns_text:{
+          fontWeight: '600',
+          fontSize: 19,
+
       }
 })

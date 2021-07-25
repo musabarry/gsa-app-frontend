@@ -11,9 +11,7 @@ const Home = (props) => {
 
     //state data for post and user info
     const states = useContext(authContext);
-    console.log("___________________________#########################################");
-    console.log(states.allPost);
-    console.log("___________________________#########################################");
+
     if(!states.allPost){
         return(
             <Loading />

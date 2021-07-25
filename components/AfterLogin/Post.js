@@ -77,6 +77,7 @@ const Post = (props) =>{
           aspect: [4, 3],
           quality: 1,
       }).then(res =>{
+          console.log(res);
           setImage(res.uri)
       }).catch(err =>{ 
         console.log('error');
@@ -152,7 +153,7 @@ const Post = (props) =>{
     } else if (hasPermission === false) {
       return <Text>No access to camera</Text>;
     } else{
-      if(!modalVisible){
+      // if(!modalVisible){
         return(
           <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
             <View style={styles.container}  >
@@ -175,56 +176,56 @@ const Post = (props) =>{
                 </>:
               <>
                 <Camera style={{ flex: 6}} type={switchCamera}  autoFocus="on"  ref={ref => setCamera(ref)}>
-                <View style={styles.top}>
-                    <TouchableOpacity style={styles.btn} onPress={() => setTakeBtn(!takeBtn)}>
-                        <EvilIcons name="close" size={35} color="white" />
-                    </TouchableOpacity>
-                  </View>
+                  <View style={styles.top}>
+                      <TouchableOpacity style={styles.btn} onPress={() => setTakeBtn(!takeBtn)}>
+                          <EvilIcons name="close" size={35} color="white" />
+                      </TouchableOpacity>
+                    </View>
                 </Camera>
                 <View style={{flex: 1,  backgroundColor: '#1e1e1f'}}>
-                  <View style={styles.btn_wrape}>  
-                      <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
-                        <MaterialIcons name="photo-library" size={40} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
-                        <Ionicons name="ios-camera" size={50} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                        <Ionicons name="ios-reverse-camera" size={50} color="white" />
-                      </TouchableOpacity>
-                  </View>
+                    <View style={styles.btn_wrape}>  
+                        <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
+                          <MaterialIcons name="photo-library" size={40} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
+                          <Ionicons name="ios-camera" size={50} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
+                          <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
               </>
             }
           </View>
         </TouchableWithoutFeedback>
       )
-    }else{
-      return(
-        <View style={styles.container}> 
-        {/* modal for  selecting pictures*/}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible)
-            }}>
-                <View style={styles.image_wraper}>
-                  <View style={styles.top}>
-                    <TouchableOpacity onPress={() =>  setModalVisible(!modalVisible)}>
-                        <EvilIcons name="close" size={35} color="black" />
-                    </TouchableOpacity>
-                    <TouchableOpacity >
-                        <Text style={styles.select_text}>Select</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Image source={{uri: image}}  style={styles.image} /> 
-                </View>
-          </Modal>
-        </View>
-      )
-    }
+    // }else{
+    //   return(
+    //     <View style={styles.container}> 
+    //     {/* modal for  selecting pictures*/}
+    //       {/* <Modal
+    //         animationType="slide"
+    //         transparent={true}
+    //         visible={modalVisible}
+    //         onRequestClose={() => {
+    //           setModalVisible(!modalVisible)
+    //         }}>
+    //             <View style={styles.image_wraper}>
+    //               <View style={styles.top}>
+    //                 <TouchableOpacity onPress={() =>  setModalVisible(!modalVisible)}>
+    //                     <EvilIcons name="close" size={35} color="black" />
+    //                 </TouchableOpacity>
+    //                 <TouchableOpacity >
+    //                     <Text style={styles.select_text}>Select</Text>
+    //                 </TouchableOpacity>
+    //               </View>
+    //               <Image source={{uri: image}}  style={styles.image} /> 
+    //             </View>
+    //       </Modal> */}
+    //     </View>
+    //   )
+    // }
   }
 }
 
