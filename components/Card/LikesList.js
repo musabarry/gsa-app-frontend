@@ -12,9 +12,8 @@ const LikesList = ({item}) => {
             <View style={styles.info}>
                 <View style={styles.thumbnail_wraper}>
                     {
-                        item.avatar ?
-                        <Image style={styles.thumbnail} source={{uri: item.avatar}}/> :
-                         <AntDesign name="user" size={24} color="black"/>
+                        item.avatar !== '' &&
+                        <Image style={styles.thumbnail} source={{uri: item.avatar}}/> 
                     }
                 </View>
                 <View>
@@ -76,7 +75,8 @@ const styles = StyleSheet.create({
         height: 50,
         borderWidth: 1,
         borderRadius: 100,
-        borderColor: '#CCC'
+        borderColor: '#CCC',
+        backgroundColor: '#01294a'
     },
     thumbnail:{
         width: '100%',

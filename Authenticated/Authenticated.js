@@ -38,9 +38,9 @@ const Authenticated = ({ navigation }) => {
   const [userInfo, setUserInfo] =  useState();
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
-  console.log("________________________________");
-  console.log(allPostError);
-  console.log("________________________________");
+  // console.log("________________________________");
+  // console.log(allPostError);
+  // console.log("________________________________");
   const update = () =>{
     return(dataInfo, allPostData)
   }

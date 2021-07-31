@@ -163,9 +163,6 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         paddingRight: 12,
         borderRadius: 10,
-    
-        //alignSelf: "flex-end",
-        //marginLeft: 2,
     },
     post_text:{
         fontSize: 16,
@@ -183,7 +180,8 @@ const styles = StyleSheet.create({
     },
     backText:{
         fontSize: 18,
-        fontWeight: '600'
+        fontWeight: '600',
+        color: '#5cacf7'
     },
     likeComment:{
         display: 'flex',
