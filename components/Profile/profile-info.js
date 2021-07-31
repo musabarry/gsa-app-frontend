@@ -4,13 +4,48 @@ import {TouchableOpacity,StyleSheet,Text,
 import {  Feather, FontAwesome5 } from '@expo/vector-icons';
 import ProfileImg from './ProfileImage';
 import user from '../images/user.png'
-
+import * as ImagePicker from 'expo-image-picker';
+import { Camera } from 'expo-camera';
 const ProfileInfo = (props) =>{
 
     const [modalVisible, setModalVisible] = useState(false);
-    
+    const [testImage, setImage] = useState('')
+    const [camera, setCamera] = useState(null)
+    const handleCameraType=()=>{
+        setCameraType(
+            cameraType === Camera.Constants.Type.back 
+            ? Camera.Constants.Type.front
+            : Camera.Constants.Type.back
+        )
+    }
+    const takePicture = async () => {
+        if (camera) {
+            let photo = await camera.takePictureAsync().then(res =>{
+                setImage(res.uri)
+            }).catch(err =>{
+                setImage('')
+            });
+        }
+    }
+    const pickImage = async () => {
+        setModalVisible(!modalVisible)
+        await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        })
+        .then(res =>{
+            console.log(res);
+            setImage(res.uri)
+        }).catch(err =>{ 
+        console.log('error');
+        })
+        // setModalVisible(!modalVisible)
+       
+    }
     const avatar = props.userInfo.avatar
-    return(
+    return(//setModalVisible(!modalVisible)
         <View>
             <View style={styles.container}>
                 <View style={styles.top_wrapper}>
@@ -44,9 +79,19 @@ const ProfileInfo = (props) =>{
                     onRequestClose={() => {
                     setModalVisible(!modalVisible);
                     }}>
-                    <ProfileImg  
+                        {!testImage &&
+                        <View style={styles.testPic}>
+                            <TouchableOpacity onPress={() => pickImage()} style={{height:45}}>
+                                <Text>Choose Image</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{height:45}}>
+                                <Text>Camera</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                    {/* <ProfileImg  
                     setModalVisible={setModalVisible} 
-                    modalVisible={modalVisible}/>
+                    modalVisible={modalVisible}/> */}
                 </Modal>
         </View>
     )
@@ -62,6 +107,13 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 25,
         borderBottomLeftRadius: 25,
     
+    },
+    testPic:{
+            backgroundColor: "#ffffff",
+            marginTop: 'auto', 
+            marginLeft: 5,
+            marginRight: 5,
+            borderRadius: 20,
     },
     top_wrapper: {
         alignItems: 'center',
