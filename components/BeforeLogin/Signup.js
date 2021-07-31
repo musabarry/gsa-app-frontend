@@ -64,9 +64,10 @@ const Signup = (props) => {
           console.log(res.data.signup._id);
         }
       })
-      .catch(erro =>{
-        // console.log({erro});
-        // console.log(error);
+      .catch(err =>{
+        console.log("____________________");
+        console.log({err});
+        console.log(error);
         // Alert.alert('Email already excist')
       })
     }
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   signp_btn: {
-    backgroundColor: '#fff',
+    backgroundColor: '#01294a',
     borderRadius: 18,
     overflow: 'hidden',
     height: 37,
@@ -286,17 +287,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderRadius: 20,
-
-    // padding: 35,
-    // alignItems: "center",
-    // shadowColor: "#000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 2
-    // },
-    // shadowOpacity: 0.25,
-    // shadowRadius: 4,
-    // elevation: 5
   },
   close:{
     //backgroundColor: 'red'
