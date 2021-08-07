@@ -26,7 +26,7 @@ const Post = (props) =>{
   const state = useContext(checkContext);
 
   const [camera, setCamera] = useState(null)
-  console.log("__________");
+
   //graphql mutation function
   const [createPostImage] =  useMutation(CREATEPOSTIMAGE)
   const [createPostText] =  useMutation(CREATEPOSTTEXT)
@@ -119,7 +119,8 @@ const Post = (props) =>{
               //refresh post data
               refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
           }).then(res =>{
-            console.log({res});
+            setImage('#.png')
+            setText('')
             return props.navigation.navigate("Home")
           }).catch(err =>{
             setText('')
@@ -144,8 +145,6 @@ const Post = (props) =>{
         })
       }
     }
-
-   
     if (hasPermission === null) {
       return <View />;
     } else if (hasPermission === false) {
