@@ -12,7 +12,7 @@ import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import checkContext  from '../../Context/checkContext';
 import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const Post = (props) =>{
   // camera access
   const [hasPermission,  setHasPermission] = useState(null)
@@ -26,7 +26,7 @@ const Post = (props) =>{
   const state = useContext(checkContext);
 
   const [camera, setCamera] = useState(null)
-
+  console.log("__________");
   //graphql mutation function
   const [createPostImage] =  useMutation(CREATEPOSTIMAGE)
   const [createPostText] =  useMutation(CREATEPOSTTEXT)
@@ -83,16 +83,16 @@ const Post = (props) =>{
         console.log('error');
       })
   }
-    
+
   //upload picture
-  const upload =() =>{
+  const upload = async () =>{
       const file = {
         uri: image,
         name: `${state.userID}-${new Date().getTime()}`,
         type: "image/jpeg"
       };
       
-
+      const userID =   await AsyncStorage.getItem("@userID")
       //aws authanication keys for S3 bucket
       const options = {
         keyPrefix: "postsImg/",
@@ -103,7 +103,6 @@ const Post = (props) =>{
         successActionStatus: 201
       };
 
-
       //upload and post the picture
       if(image != '#.png' && image.length > 7){
       RNS3.put(file, options)
@@ -113,7 +112,7 @@ const Post = (props) =>{
          
           createPostImage({
               variables:{
-                  owner: `${state.userID}`,
+                  owner: `${userID}`,
                   imageAlbum: [`${response.body.postResponse.location}`],
                   text: text
               },
@@ -123,7 +122,7 @@ const Post = (props) =>{
             console.log({res});
             return props.navigation.navigate("Home")
           }).catch(err =>{
-            console.log({err});
+            setText('')
             console.log({server: error});
           })
         })
@@ -131,15 +130,14 @@ const Post = (props) =>{
           console.log(error);
         });
       }else{
-        console.log(`${state.userID}`);
         createPostText({
           variables:{
-            owner: `${state.userID}`,
+            owner: `${userID}`,
             text: text
           },
           refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{
-          console.log(res);
+          setText('')
           props.navigation.navigate("Home")
         }).catch(error =>{
           console.log(error);

@@ -7,7 +7,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   ScrollView,
-  Modal
+  Modal,
+  Alert
 } from "react-native";
 import Constants from 'expo-constants';
 import checkContext  from '../../Context/checkContext';
@@ -60,15 +61,11 @@ const Signup = (props) => {
           await AsyncStorage.setItem('@token_key', res.data.signup.token)
           await AsyncStorage.setItem('@userID', res.data.signup._id)
           state.setAuthanticated(true)
-          console.log(res.data.signup.token);
-          console.log(res.data.signup._id);
         }
       })
       .catch(err =>{
-        console.log("____________________");
-        console.log({err});
-        console.log(error);
-        // Alert.alert('Email already excist')
+        // console.log("____________________");
+        Alert.alert('Email already excist')
       })
     }
   }
