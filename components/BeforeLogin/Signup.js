@@ -83,7 +83,7 @@ const Signup = (props) => {
       
       <View style={styles.headerView}>
         <TouchableOpacity onPress={() => props.navigation.goBack()} style={styles.back_btn}>
-        <Text style={styles.back_text}>back</Text>
+        <Text style={styles.back_text}>Back</Text>
         </TouchableOpacity>
       </View>
       
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   signp_btn: {
-    backgroundColor: '#fff',
+    backgroundColor: '#01294a',
     borderRadius: 18,
     overflow: 'hidden',
     height: 37,
@@ -302,6 +302,11 @@ const styles = StyleSheet.create({
     //backgroundColor: 'red'
     margin: 10,
     alignSelf: 'flex-end'
+  },
+  back_text:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#5cacf7'
   }
 });
 

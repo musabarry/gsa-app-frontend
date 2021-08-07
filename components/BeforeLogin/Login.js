@@ -51,6 +51,11 @@ const Login =(props) => {
     return (
 
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <View style={styles.headerView}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()} style={styles.back_btn}>
+            <Text style={styles.back_text}>Back</Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView style={styles.login}>
           <View style={styles.logoView}>
             <View style={styles.logo}>
@@ -83,9 +88,9 @@ const Login =(props) => {
             onPress={onSubmit}>
               <Text style={styles.LoginButton}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.forgotPassword} 
+            <TouchableOpacity style={styles.ForgotPasswordView} 
             onPress={() => props.navigation.navigate('ForgotPassword')}>
-              <Text style={styles.LoginButton}>Forgot Password</Text>
+              <Text style={styles.ForgotPasswordBttn}>Forgot Password</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -99,13 +104,11 @@ const Login =(props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    //marginTop: Constants.statusBarHeight,
+
   },
   headerView:{
-    top: 0,
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: "#DCD6D6",
+    top: 0
   },
   logoView:{
     alignItems: 'center',
@@ -176,10 +179,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   ForgotPasswordView: {
-    paddingVertical: 5,
+    borderRadius: 18,
+    overflow: 'hidden',
+    height: 37,
+    width: 165,
+    color: '#000',
+    marginTop: 5,
+    marginBottom: 5,
+    justifyContent:'center',
+    alignSelf: 'center'
   },
   ForgotPasswordBttn: {
+    fontSize: 12,
+    fontWeight: '600',
     textAlign: "center",
+    paddingVertical: 3,
+    color: "#000"
   },
   loading:{
     flex: 1,
@@ -190,6 +205,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 10,
+  },
+  back_text:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#5cacf7'
   },
 });
 

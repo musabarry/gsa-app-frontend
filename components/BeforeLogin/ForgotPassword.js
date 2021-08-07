@@ -16,8 +16,8 @@ export default class ForgotPassword extends Component {
     return (
       <KeyboardAvoidingView  behavior="padding" style={styles.container}>
          <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
-          <AntDesign name="back" size={24} color="black" />
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={styles.back_btn}>
+          <Text style={styles.back_text}>Back</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.center}>
@@ -108,6 +108,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingVertical: 3,
   },
+  back_text:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#5cacf7'
+  }
   // login_btn:{
   //   justifyContent: 'center',
   //   backgroundColor: '#fff',
