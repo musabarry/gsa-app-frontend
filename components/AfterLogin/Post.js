@@ -68,7 +68,6 @@ const Post = (props) =>{
       }
   }
 
-
   //select galary image
   const pickImage = async () => {
       await ImagePicker.launchImageLibraryAsync({
