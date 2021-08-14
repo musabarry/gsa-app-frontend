@@ -5,18 +5,19 @@ const Statemen = (props) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.top}>
+            {(props.image.length > 7  || props.text.length > 1) &&<View style={styles.top}>
                 <TouchableOpacity style={styles.btn} onPress={() => props.upload()} >
                     <Text style={styles.post_text}>Post</Text>
                 </TouchableOpacity>
-            </View>
+            </View>}
             <View style={styles.post_wraper}> 
                 <TextInput style={styles.input}
                 multiline={true}
+                value={props.text}
                 placeholder="What do you want to say!"
                 placeholderTextColor="#7a7a7a"
                 onChangeText={(text) => props.setText(text)}/>
-                <Image source={{uri: props.img}}  style={{width: '100%', height: '40%', }} /> 
+                <Image source={{uri: props.image}}  style={{width: '100%', height: '40%', }} /> 
             </View>
       </View>
       

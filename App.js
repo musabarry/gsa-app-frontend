@@ -22,7 +22,7 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 
 const link = from([
   errorLink,
-   new HttpLink({uri: "http://10.204.122.81:8080/graphql"}), //server(api) link
+   new HttpLink({uri: "http://172.20.10.4:8080/graphql"}), //server(api) link
 ])
 
 
@@ -55,6 +55,7 @@ const App = ({ navigation }) => {
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
       const id =  await AsyncStorage.getItem('@userID')
+      
       if(token){
         setAuthanticated(true)
         setUserID(id)

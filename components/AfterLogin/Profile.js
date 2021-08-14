@@ -13,14 +13,19 @@ const Profile = (props) =>{
   
   const naviSetting = () =>{
     return props.navigation.navigate('setting')
-  } 
+  }
+
+  const naviChangeImg = () =>{
+    return props.navigation.navigate('changeImg')
+  }
 
   return (
     <View style={styles.container}>
       <ScrollView  style={styles.post}>
           <View>
               {/* profile image and info component */}
-              {states.userInfo && <ProfileInfo  naviSetting={naviSetting}  userInfo={states.userInfo.userInfo}/>}
+              {states.userInfo && <ProfileInfo  naviSetting={naviSetting}  
+               naviChangeImg={naviChangeImg} userInfo={states.userInfo.userInfo}/>}
           </View>
           {/* render user post */}
             {states.userInfo && states.userInfo.userPosts.map(item =>{

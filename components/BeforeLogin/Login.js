@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
 
   },
   headerView:{
-    top: 0
+    top: 0,
+    paddingLeft: 10
   },
   logoView:{
     alignItems: 'center',

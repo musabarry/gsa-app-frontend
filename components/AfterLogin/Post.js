@@ -12,7 +12,7 @@ import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import checkContext  from '../../Context/checkContext';
 import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const Post = (props) =>{
   // camera access
   const [hasPermission,  setHasPermission] = useState(null)
@@ -68,7 +68,6 @@ const Post = (props) =>{
       }
   }
 
-
   //select galary image
   const pickImage = async () => {
       await ImagePicker.launchImageLibraryAsync({
@@ -83,16 +82,16 @@ const Post = (props) =>{
         console.log('error');
       })
   }
-    
+
   //upload picture
-  const upload =() =>{
+  const upload = async () =>{
       const file = {
         uri: image,
         name: `${state.userID}-${new Date().getTime()}`,
         type: "image/jpeg"
       };
       
-
+      const userID =   await AsyncStorage.getItem("@userID")
       //aws authanication keys for S3 bucket
       const options = {
         keyPrefix: "postsImg/",
@@ -103,7 +102,6 @@ const Post = (props) =>{
         successActionStatus: 201
       };
 
-
       //upload and post the picture
       if(image != '#.png' && image.length > 7){
       RNS3.put(file, options)
@@ -113,17 +111,17 @@ const Post = (props) =>{
          
           createPostImage({
               variables:{
-                  owner: `${state.userID}`,
+                  owner: `${userID}`,
                   imageAlbum: [`${response.body.postResponse.location}`],
                   text: text
               },
               //refresh post data
               refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
           }).then(res =>{
-            console.log({res});
+            setImage('#.png')
+            setText('')
             return props.navigation.navigate("Home")
           }).catch(err =>{
-            console.log({err});
             console.log({server: error});
           })
         })
@@ -131,23 +129,20 @@ const Post = (props) =>{
           console.log(error);
         });
       }else{
-        console.log(`${state.userID}`);
         createPostText({
           variables:{
-            owner: `${state.userID}`,
+            owner: `${userID}`,
             text: text
           },
           refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{
-          console.log(res);
+          setText('')
           props.navigation.navigate("Home")
         }).catch(error =>{
           console.log(error);
         })
       }
     }
-
-   
     if (hasPermission === null) {
       return <View />;
     } else if (hasPermission === false) {
@@ -161,7 +156,7 @@ const Post = (props) =>{
               {!takeBtn  ?
               <>
                 <View style={styles.statement_box}>
-                  <Statemen  img={image} setText={setText} upload={upload}/>
+                  <Statemen  image={image} setText={setText} text={text} upload={upload}/>
                 </View>
                 <View style={styles.btns}>
                   <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
@@ -200,32 +195,6 @@ const Post = (props) =>{
           </View>
         </TouchableWithoutFeedback>
       )
-    // }else{
-    //   return(
-    //     <View style={styles.container}> 
-    //     {/* modal for  selecting pictures*/}
-    //       {/* <Modal
-    //         animationType="slide"
-    //         transparent={true}
-    //         visible={modalVisible}
-    //         onRequestClose={() => {
-    //           setModalVisible(!modalVisible)
-    //         }}>
-    //             <View style={styles.image_wraper}>
-    //               <View style={styles.top}>
-    //                 <TouchableOpacity onPress={() =>  setModalVisible(!modalVisible)}>
-    //                     <EvilIcons name="close" size={35} color="black" />
-    //                 </TouchableOpacity>
-    //                 <TouchableOpacity >
-    //                     <Text style={styles.select_text}>Select</Text>
-    //                 </TouchableOpacity>
-    //               </View>
-    //               <Image source={{uri: image}}  style={styles.image} /> 
-    //             </View>
-    //       </Modal> */}
-    //     </View>
-    //   )
-    // }
   }
 }
 

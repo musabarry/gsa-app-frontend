@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     //marginTop: Constants.statusBarHeight,
   },
   headerView:{
-    paddingTop: 10,
-    paddingBottom: 10,
+    top: 0,
+    paddingLeft: 10
   },
   center:{
     alignItems: 'center',
