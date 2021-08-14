@@ -3,10 +3,12 @@ import React, {useContext, useEffect, useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from '../components/AfterLogin/Profile';
 import Message from '../components/AfterLogin/Message'
-import Post from '../components/AfterLogin/Post'
-import Home from '../components/AfterLogin/Home'
+import Post from '../components/AfterLogin/Post';
+import Home from '../components/AfterLogin/Home';
 import { createStackNavigator } from "@react-navigation/stack";
 import Content from '../components/AfterLogin/Content';
+// import ProfileImg from '../components/AfterLogin/ProfileImg'
+import ChangeAvater from '../components/AfterLogin/ChangeAvater'
 import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
 import CommentPage from '../components/Card/CommentPage'
 const Stack = createStackNavigator();
@@ -22,7 +24,7 @@ const profile = ({navigation}) =>{
     <Stack.Navigator headerMode='none' >
       <Stack.Screen name="homeProfile" component={Profile} />
       <Stack.Screen name="setting" component={Content}/>
-     
+      <Stack.Screen name="changeImg" component={ChangeAvater} />
       <Stack.Screen name="commentpage" component={CommentPage} />
     </Stack.Navigator>
   )
@@ -38,9 +40,6 @@ const Authenticated = ({ navigation }) => {
   const [userInfo, setUserInfo] =  useState();
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
-  // console.log("________________________________");
-  // console.log(allPostError);
-  // console.log("________________________________");
   const update = () =>{
     return(dataInfo, allPostData)
   }

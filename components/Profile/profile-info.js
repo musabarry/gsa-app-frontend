@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {TouchableOpacity,StyleSheet,Text,
         View,Dimensions,Image, Modal} from "react-native";
 import {  Feather, FontAwesome5 } from '@expo/vector-icons';
-import ProfileImg from './ProfileImage';
 import user from '../images/user.png'
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
@@ -50,7 +49,7 @@ const ProfileInfo = (props) =>{
             <View style={styles.container}>
                 <View style={styles.top_wrapper}>
                     <View >
-                        <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={styles.image_wrape}>
+                        <TouchableOpacity onPress={props.naviChangeImg} style={styles.image_wrape}>
                             {avatar ? <Image style={styles.image} source={{uri: avatar}} /> :
                              <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
                         </TouchableOpacity>
@@ -72,27 +71,6 @@ const ProfileInfo = (props) =>{
                 </View>
                 
             </View>
-                <Modal 
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                    }}>
-                        {!testImage &&
-                        <View style={styles.testPic}>
-                            <TouchableOpacity onPress={() => pickImage()} style={{height:45}}>
-                                <Text>Choose Image</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{height:45}}>
-                                <Text>Camera</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }
-                    {/* <ProfileImg  
-                    setModalVisible={setModalVisible} 
-                    modalVisible={modalVisible}/> */}
-                </Modal>
         </View>
     )
 }

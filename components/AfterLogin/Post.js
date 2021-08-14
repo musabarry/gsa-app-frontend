@@ -122,7 +122,6 @@ const Post = (props) =>{
             setText('')
             return props.navigation.navigate("Home")
           }).catch(err =>{
-            setText('')
             console.log({server: error});
           })
         })
@@ -157,7 +156,7 @@ const Post = (props) =>{
               {!takeBtn  ?
               <>
                 <View style={styles.statement_box}>
-                  <Statemen  img={image} setText={setText} upload={upload}/>
+                  <Statemen  image={image} setText={setText} text={text} upload={upload}/>
                 </View>
                 <View style={styles.btns}>
                   <TouchableOpacity style={styles.add} onPress={() => setTakeBtn(!takeBtn)}>
@@ -196,32 +195,6 @@ const Post = (props) =>{
           </View>
         </TouchableWithoutFeedback>
       )
-    // }else{
-    //   return(
-    //     <View style={styles.container}> 
-    //     {/* modal for  selecting pictures*/}
-    //       {/* <Modal
-    //         animationType="slide"
-    //         transparent={true}
-    //         visible={modalVisible}
-    //         onRequestClose={() => {
-    //           setModalVisible(!modalVisible)
-    //         }}>
-    //             <View style={styles.image_wraper}>
-    //               <View style={styles.top}>
-    //                 <TouchableOpacity onPress={() =>  setModalVisible(!modalVisible)}>
-    //                     <EvilIcons name="close" size={35} color="black" />
-    //                 </TouchableOpacity>
-    //                 <TouchableOpacity >
-    //                     <Text style={styles.select_text}>Select</Text>
-    //                 </TouchableOpacity>
-    //               </View>
-    //               <Image source={{uri: image}}  style={styles.image} /> 
-    //             </View>
-    //       </Modal> */}
-    //     </View>
-    //   )
-    // }
   }
 }
 
