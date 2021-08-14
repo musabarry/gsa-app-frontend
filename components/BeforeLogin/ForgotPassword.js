@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   headerView:{
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: "#DCD6D6",
   },
   center:{
     alignItems: 'center',
