@@ -57,6 +57,22 @@ const PostCard = (props) =>{
     //check card owner
     const owner  = props.userInfo._id == state.userID ? true : false
 
+
+    //double tap image like
+    let lastImagePress = 0
+    const doubleLike = ()=>{
+    const time = new Date().getTime();
+    const delta = time - lastImagePress
+    const double_press_delay = 300;
+        if (delta < double_press_delay) {
+            console.log('Double');
+            updateLike()
+        }
+        else {
+            lastImagePress = time;
+        }
+    }
+
     // add or remove like on a post
     const updateLike = () =>{
         const id = state.userID
@@ -71,6 +87,7 @@ const PostCard = (props) =>{
                 userLike()
             }).catch(error =>{
                 console.log(error);
+                userLike()
             })
         }
     }
@@ -117,7 +134,8 @@ const PostCard = (props) =>{
                         <Text style={styles.textPost}>
                             {props.data.text}
                         </Text>
-                        <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}>
+                        <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}
+                         onPress={() => doubleLike()}>
                             <Image style={styles.img} source={{uri: props.uri[0]}}/>
                         </TouchableOpacity></>
                         ):(

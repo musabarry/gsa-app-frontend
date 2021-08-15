@@ -22,7 +22,7 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 
 const link = from([
   errorLink,
-   new HttpLink({uri: "http://172.20.10.4:8080/graphql"}), //server(api) link
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 
 
@@ -51,6 +51,11 @@ const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [userID, setUserID] =  useState();
   client.cache.reset()
+  client.cache.modify({
+    notifications(list, { readField }) {
+      return list.filter(n => readField("id", n) !== id);
+    },
+  });
   useEffect(() =>{
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
