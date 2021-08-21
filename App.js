@@ -22,11 +22,8 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 
 const link = from([
   errorLink,
-   new HttpLink({uri: "http://172.20.10.4:8080/graphql"}), //server(api) link
+   new HttpLink({uri: "http://192.168.1.3:8080/graphql"}), //server(api) link
 ])
-
-
-
 
 //(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {
