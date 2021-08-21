@@ -102,28 +102,31 @@ if(data.userInfo){
           <FontAwesome5 name="school" size={24} color="black" />
           <Text style={styles.text}>{data.userInfo ? data.userInfo.school: ''}</Text>
         </View>
-        <View style={styles.content}>
-          <Text style={styles.data}>{data.userInfo ? data.userInfo.major: ''}</Text>
-        </View>
-          <View style={styles.content}>
-            <Text style={styles.data}>{data.userInfo ? data.userInfo.role: ''}</Text>
+
+        <View>
+          <View style={styles.candidateInformations}>
+            <Text style={styles.label}>Skills:</Text>
+            {data.userInfo.skills.map( skill => <Text key={skill}> {skill} </Text>)}
+          </View>         
+          <View>
+            <Text style={styles.label}>Interest:</Text>
+              <View >
+                {data.userInfo.interest.map(interest => <Text key={interest}> {interest}</Text>)}
+              </View>
           </View>
-            <View>
-              <Text style={styles.label}>Skills:</Text>
-              {renderList(data.userInfo.skills)}
-            </View>         
-          {/* {data.userInfo.interest  &&
-            <View>
-              <Text style={styles.label}>Interest:</Text>
-              {renderList(data.userInfo.interest)}
-            </View>
-          } */}
-            <View>
-              <Text style={styles.label}>Interest:</Text>
-                <View style={styles.listItem}>
-                  {renderList(["nkjieweu", "iehuree"])}
-                </View>
-            </View>
+          <View>
+            <Text style={styles.label}>Role:</Text>
+              <View >
+                <Text>{data.userInfo.role}</Text>
+              </View>
+          </View>
+          <Text style={styles.label}>Major:</Text>
+          <View>
+              <View >
+                <Text>{data.userInfo.major}</Text>
+              </View>
+          </View>
+        </View>
       </View>
     </ScrollView>}
       <View style={styles.logoutView}>
@@ -174,6 +177,9 @@ if(data.userInfo){
 }
 
 const styles = StyleSheet.create({
+  candidateInformations: {
+    paddingTop: 10
+  },
   container: {
     flex: 1,
   },
