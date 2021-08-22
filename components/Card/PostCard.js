@@ -6,7 +6,7 @@ import checkContext  from '../../Context/checkContext';
 import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
-
+import AsyncStorage from '@react-native-community/async-storage'
 const PostCard = (props) =>{
     const state = useContext(checkContext);
 
@@ -24,6 +24,7 @@ const PostCard = (props) =>{
         return found
     }
 
+    console.log(userLike());
     const [modalVisible, setModalVisible] = useState(false);
     const [showLikes, setShowLikes] = useState(false)
     const [showComments, setShowComments] =  useState(false)
@@ -74,8 +75,8 @@ const PostCard = (props) =>{
     }
 
     // add or remove like on a post
-    const updateLike = () =>{
-        const id = state.userID
+    const updateLike = async () =>{
+        const id =  await AsyncStorage.getItem('@userID')
         const post = props.data._id
         if(id && post){
             like({
@@ -86,8 +87,9 @@ const PostCard = (props) =>{
             }).then(res =>{
                 userLike()
             }).catch(error =>{
-                console.log(error);
                 userLike()
+                // console.log(error);
+
             })
         }
     }
@@ -96,6 +98,7 @@ const PostCard = (props) =>{
     const postDelete = () =>{
         const id = state.userID
         const post = props.data._id
+
         if(id && post){
             deletePost({
                 variables:{
@@ -146,7 +149,7 @@ const PostCard = (props) =>{
                     </View>
                     <View style={styles.bottom_wrapper}>
                         <View style={styles.wrap}>
-                            <TouchableOpacity style={styles.num} onPress={ () => updateLike()}>
+                            <TouchableOpacity style={styles.num} onPress={() => updateLike()}>
                                 <Entypo name={userLike() ? 'heart' : 'heart-outlined'} size={26} color={userLike() ? 'red' : 'black'} />
                             </TouchableOpacity>
                             <TouchableOpacity   
