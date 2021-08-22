@@ -33,7 +33,6 @@ const  EditInfo = (props)=>{
         - interest
         */
     const onSubmit = async  () =>{
-        console.log('testing____________________________');
         updateUserInfo({
             variables:{
                 major: major,
@@ -43,7 +42,6 @@ const  EditInfo = (props)=>{
             },
             refetchQueries: [{query: USERINFO}]
         }).then(res =>{
-            console.log(res);
             props.setModalVisible(false)
         }).catch(err =>{
             // /console.log({err});

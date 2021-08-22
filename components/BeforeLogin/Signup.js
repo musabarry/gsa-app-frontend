@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Modal,
-  Alert
+  Alert,
 } from "react-native";
 import Constants from 'expo-constants';
 import checkContext  from '../../Context/checkContext';
@@ -29,15 +29,81 @@ const Signup = (props) => {
   const [school, setSchool] = useState('Pick a School')
   const [errors, setErrors] =  useState('')
   const [modalVisible, setModalVisible] = useState(false);
+  const [passStrength, setPassStrength] =  useState()
+  const [passStrengthColor, setPassStrengthColor] = useState('#000')
+  const [matchPass, setMatchPass] = useState(false)
   const state = useContext(checkContext);
- 
+  const [emptyField, setEmptyField] = useState(false)
+  const [pressSubmit, setPressSubmit] = useState(false)
+
+  const [emptyMsg, setEmptyMsg] = useState()
+  const [matchMas, setMatchMasg] = useState()
+  
+  const Passmatch = (pass, rePass) =>{
+    if(rePass.length > 2){
+      if(pass != rePass){
+        setMatchPass(true)
+        setMatchMasg("Password does not match")
+      }else{
+        setMatchPass(false)
+        setMatchMasg()
+      }
+    }else{
+      setMatchPass(false)
+      setMatchMasg()
+    }
+  }
+
+  const fieldCheck = () =>{
+    if(pressSubmit){
+      if(!email || !password || !confirPass || !school || !firstName || !lastName){
+       setEmptyMsg('Some of the input are empty')
+       setEmptyField(true)
+      }else{
+        setEmptyMsg('')
+        setEmptyField(false)
+      }
+    }
+
+  }
+
+  const  StrengthChecker = (PasswordParameter) =>{
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{10,20})')
+    let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
+  
+    if(strongPassword.test(PasswordParameter)) {
+        setPassStrength('Strong')
+        setPassStrengthColor('#00f040')
+    }if(mediumPassword.test(PasswordParameter) && !strongPassword.test(PasswordParameter)){
+      setPassStrength('Meduim')
+      setPassStrengthColor('#5a18ab')
+    }
+    if(!strongPassword.test(PasswordParameter) && !mediumPassword.test(PasswordParameter) && password.length > 1){
+        setPassStrength('Weak')
+        setPassStrengthColor('#d40b0b')
+    }
+    setPassword(PasswordParameter)
+  }
+
+  useEffect(() =>{
+    if(password.length < 1){
+      setPassStrength()
+    }
+    if(pressSubmit){
+      setTimeout(() => { 
+        setPressSubmit(false)
+        setEmptyMsg('')
+      }, 10000)
+    }
+    Passmatch(password, confirPass)
+    fieldCheck()
+
+  })
 
   const onSubmit = async () =>{
-    if(!email || !password || !confirPass){
-      console.log('Empty field');
-    }if(password != confirPass){
-      console.log("Password does not match");
-    }else{
+    setPressSubmit(true)
+    if(!matchPass &&   !(!email || !password || !confirPass || !school || !firstName || !lastName)){
+      setPressSubmit(false)
       signup({
         variables:{
           email: email,
@@ -59,6 +125,7 @@ const Signup = (props) => {
       })
     }
   }
+
 
   if(loading){
     return(
@@ -126,18 +193,24 @@ const Signup = (props) => {
               returnKeyType="next"
               blurOnSubmit={true}
             />
+            <View style={{alignSelf: 'flex-end', marginRight: 20}}>
+             <Text style={{color: passStrengthColor, fontWeight: '800'}}>{passStrength}</Text>
+            </View>
             <TextInput
               placeholder="Password"
               secureTextEntry
               style={styles.input}
               value={password}
-              onChangeText={e => setPassword(e)}
+              onChangeText={e => StrengthChecker(e)}
               returnKeyType="next"
               textContentType="password"
               blurOnSubmit={true}
             />
+            <View style={{alignSelf: 'flex-end', marginRight: 20}}>
+              <Text style={{color: '#ad0000', fontWeight: '800'}}>{matchMas}</Text>
+            </View>
             <TextInput
-              placeholder="Password"
+              placeholder="Reenter Password"
               secureTextEntry
               style={styles.input}
               value={confirPass}
@@ -151,6 +224,10 @@ const Signup = (props) => {
               <Text style={styles.LoginButton}>Signup</Text>
             </TouchableOpacity>
 
+           {(emptyField === true) && 
+            <View>
+              <Text style={styles.emptyError}>{emptyMsg}</Text>
+             </View>}
           </View>
           <Modal 
           animationType="slide"
@@ -278,7 +355,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#5cacf7'
-  }
+  },
+  emptyError:{
+    color: '#d91111',
+    fontWeight: '800',
+    padding: 20,
+    fontSize: 16
+  },
 });
 
 export default Signup;
