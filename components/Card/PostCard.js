@@ -57,11 +57,9 @@ const PostCard = (props) =>{
         setShowComments(false)
         setShowLikes(false)
     }
-
     //check card owner
     const owner  = props.userInfo._id == state.userID ? true : false
-
-
+    
     //double tap image like
     let lastImagePress = 0
     const doubleLike = ()=>{
