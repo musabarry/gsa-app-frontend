@@ -58,6 +58,7 @@ export const CREATELIKE = gql`
 mutation like($post: ID!){
   like(input:{post: $post}){
     success
+    _id
   }
 }
 `

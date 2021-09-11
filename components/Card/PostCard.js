@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-native';
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
 import CommentPage from './CommentPage';
@@ -24,13 +24,16 @@ const PostCard = (props) =>{
         return found
     }
 
-    console.log(userLike());
     const [modalVisible, setModalVisible] = useState(false);
     const [showLikes, setShowLikes] = useState(false)
     const [showComments, setShowComments] =  useState(false)
     const [like, {error: likeError, loading: likeLoading}] =  useMutation(CREATELIKE)
     const [deletePost, {error: deleteError, loading: deleteLoading}] = useMutation(DELETEPOST)
     
+
+    useEffect(() =>{
+        userLike()
+    }, [updateLike])
     //like click event
     const likes = () =>{
         setModalVisible(true) 
@@ -66,7 +69,6 @@ const PostCard = (props) =>{
     const delta = time - lastImagePress
     const double_press_delay = 300;
         if (delta < double_press_delay) {
-            console.log('Double');
             updateLike()
         }
         else {
@@ -88,7 +90,6 @@ const PostCard = (props) =>{
                 userLike()
             }).catch(error =>{
                 userLike()
-                // console.log(error);
 
             })
         }
@@ -121,7 +122,6 @@ const PostCard = (props) =>{
                         {
                             props.userInfo.avatar !== '' &&
                             <Image style={styles.thumbnail} source={{uri: props.userInfo.avatar}}/> 
-                            // <FontAwesome5 name="user-alt" size={30} color="#01294a" style={{marginLeft: 9, marginTop:5,}}/>
                         }
                     </View>
                     <View style={styles.nameBox}>
