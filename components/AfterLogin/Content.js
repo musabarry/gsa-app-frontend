@@ -52,10 +52,11 @@ const  Content = (props) =>  {
       await AsyncStorage.multiRemove(['@token_key', '@userID'])
       .then(res =>{
         authState.setAuthanticated(false)
+        authState.setVerifyUser(false)
         Alert.alert('Logout success')
       })
     } catch (error) {
-      console.log(error);
+      
     }
 }
 

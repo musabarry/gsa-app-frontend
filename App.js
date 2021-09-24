@@ -12,14 +12,17 @@ import { ThemeProvider } from 'react-native-elements';
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>
-      console.log('Path ',{path}, 'Location ', {location}, `Graphql error ${message}`)
+    console.log(
+      " [GraphQL error]: Message", message, ", Location: ", locations, ", Path: ", path)
+      //console.log('Path ',{path}, 'Location ', {location}, `Graphql error ${message}`)
       // console.log('Location ', {location});
       // console.log(`Graphql error ${message}`)
+   
     )
-    if(networkError) console.log(`Network Error: ${networkError}`);
+    if(networkError)  console.log(" [Network error]:", networkError);
   }
 })
-
+//10.15.85.21
 const link = from([
   errorLink,
    new HttpLink({uri: "http://10.15.85.21:8080/graphql"}), //server(api) link
@@ -47,6 +50,7 @@ const client = new ApolloClient({
 const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [userID, setUserID] =  useState();
+  const [verifyUser, setVerifyUser] = useState(true)
   client.cache.reset()
   client.cache.modify({
     notifications(list, { readField }) {
@@ -57,13 +61,18 @@ const App = ({ navigation }) => {
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
       const id =  await AsyncStorage.getItem('@userID')
-      
+
       if(token){
         setAuthanticated(true)
+        setVerifyUser(false)
         setUserID(id)
-        console.log(typeof userID);
+      }else if(id){
+        setVerifyUser(true)
+        setUserID(id)
       }else{
         setAuthanticated(false)
+        setVerifyUser(false)
+        setUserID()
       }
     })();
   }, []);
@@ -72,7 +81,8 @@ const App = ({ navigation }) => {
     <ThemeProvider>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }}>
-        <checkContext.Provider value={{authnaticated, setAuthanticated, userID, setUserID}}>
+        <checkContext.Provider value={{authnaticated, verifyUser,
+          setVerifyUser, setAuthanticated, userID, setUserID}}>
           <ApolloProvider client={client}>
           <NavigationContainer>
             <RootSreen />

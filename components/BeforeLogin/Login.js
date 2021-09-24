@@ -31,13 +31,18 @@ const Login =(props) => {
           password: password
         }
       }).then( async (res) =>{
+       
+        if(!res.data.login.success){
+          Alert.alert('Confirm your email addreed. code sent to your email address')
+          await AsyncStorage.setItem('@userID', res.data.login._id)
+          state.setVerifyUser(true)
+        }
         if(res.data.login.success){
           await AsyncStorage.setItem('@token_key', res.data.login.token)
           await AsyncStorage.setItem('@userID', res.data.login._id)
           state.setAuthanticated(true)
         }
       }).catch(error =>{
-        console.log({error});
         Alert.alert('Password wrong')
       })
     }

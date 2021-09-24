@@ -27,13 +27,31 @@ mutation createCommnet($post: ID!, $text: String!){
 }
 `
 
-export const  SIGNUP = gql`
-mutation signup($email: String!, $password: String!, $firstname: String!, $lastname: String!, $school: String!){
-  signup(input:{email: $email, password: $password, firstname: $firstname, lastname: $lastname, school: $school}){
+export const VERIFY  = gql`
+mutation verifyUser($user: ID!, $code: String!){
+  verifyUser(input:{user: $user, code: $code}){
     token
     success
     _id
     email
+  }
+}
+`
+export const SENDCODE =  gql`
+mutation sendCode($user: ID!){
+  sendCode(input:{user: $user}) {
+    success
+    _id
+  }
+}
+`
+
+
+export const  SIGNUP = gql`
+mutation signup($email: String!, $password: String!, $firstname: String!, $lastname: String!, $school: String!){
+  signup(input:{email: $email, password: $password, firstname: $firstname, lastname: $lastname, school: $school}){
+    _id
+    success
   }
 }
 `

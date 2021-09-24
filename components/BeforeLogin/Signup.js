@@ -124,9 +124,9 @@ const Signup = (props) => {
           }
         }).then(async (res) =>{
           if(res.data.signup.success){
-            await AsyncStorage.setItem('@token_key', res.data.signup.token)
             await AsyncStorage.setItem('@userID', res.data.signup._id)
-            state.setAuthanticated(true)
+            state.setVerifyUser(true)
+            //return props.navigation.navigate('Signup')
           }
         })
         .catch(err =>{
