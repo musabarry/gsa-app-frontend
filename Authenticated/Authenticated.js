@@ -45,6 +45,7 @@ const Authenticated = ({ navigation }) => {
   }
 
   useEffect(() =>{
+    
     (async() =>{
       if(!loadingInfo || !allPostLoading){
         setUserInfo(dataInfo)
@@ -61,37 +62,36 @@ const Authenticated = ({ navigation }) => {
     return(
         <Loading />
     )
+  }else{
+    return (  
+          <authContext.Provider value={{userInfo, allPost, userID, update}}>
+            <Tab.Navigator headerMode="none"   >  
+              <Tab.Screen name="Home" component={Home}
+                options={{
+                tabBarIcon: () =>(
+                  <Entypo name="home" size={24} color="#1e1e1f" />
+                )}} />  
+              <Tab.Screen name="Post" component={Post}              
+                  options={{
+                  tabBarIcon: () =>(
+                    <MaterialIcons name="add-box" size={24} color="#1e1e1f" />
+                )}}
+              />
+              <Tab.Screen name="Message" component={Message}              
+                  options={{
+                  tabBarIcon: () =>(
+                    <MaterialIcons name="message" size={24} color="#1e1e1f" />
+                )}}
+              />
+              <Tab.Screen name="Profile" component={profile} 
+                options={{
+                  tabBarIcon: () =>(
+                    <FontAwesome5 name="user-alt" size={24} color="#1e1e1f" />
+                )}} /> 
+            </Tab.Navigator> 
+            </authContext.Provider>
+    );
   }
-
-  return (  
-        <authContext.Provider value={{userInfo, allPost, userID, update}}>
-          <Tab.Navigator headerMode="none"   >  
-            <Tab.Screen name="Home" component={Home}
-              options={{
-              tabBarIcon: () =>(
-                <Entypo name="home" size={24} color="#1e1e1f" />
-              )}} />  
-            <Tab.Screen name="Post" component={Post}              
-                options={{
-                tabBarIcon: () =>(
-                  <MaterialIcons name="add-box" size={24} color="#1e1e1f" />
-              )}}
-             />
-            <Tab.Screen name="Message" component={Message}              
-                options={{
-                tabBarIcon: () =>(
-                  <MaterialIcons name="message" size={24} color="#1e1e1f" />
-              )}}
-             />
-            <Tab.Screen name="Profile" component={profile} 
-               options={{
-                tabBarIcon: () =>(
-                  <FontAwesome5 name="user-alt" size={24} color="#1e1e1f" />
-              )}} /> 
-          </Tab.Navigator> 
-          </authContext.Provider>
-          //)
-  );
 };
 
 export default Authenticated;

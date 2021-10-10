@@ -1,56 +1,17 @@
-import React, {useState} from "react";
+import React from "react";
 import {TouchableOpacity,StyleSheet,Text,
-        View,Dimensions,Image, Modal} from "react-native";
+        View,Image} from "react-native";
 import {  Feather, FontAwesome5 } from '@expo/vector-icons';
-import user from '../images/user.png'
-import * as ImagePicker from 'expo-image-picker';
-import { Camera } from 'expo-camera';
 const ProfileInfo = (props) =>{
-
-    const [modalVisible, setModalVisible] = useState(false);
-    const [testImage, setImage] = useState('')
-    const [camera, setCamera] = useState(null)
-    const handleCameraType=()=>{
-        setCameraType(
-            cameraType === Camera.Constants.Type.back 
-            ? Camera.Constants.Type.front
-            : Camera.Constants.Type.back
-        )
-    }
-    const takePicture = async () => {
-        if (camera) {
-            let photo = await camera.takePictureAsync().then(res =>{
-                setImage(res.uri)
-            }).catch(err =>{
-                setImage('')
-            });
-        }
-    }
-    const pickImage = async () => {
-        setModalVisible(!modalVisible)
-        await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        })
-        .then(res =>{
-            console.log(res);
-            setImage(res.uri)
-        }).catch(err =>{ 
-        console.log('error');
-        })
-        // setModalVisible(!modalVisible)
-       
-    }
-    const avatar = props.userInfo.avatar
-    return(//setModalVisible(!modalVisible)
+    const avatar = props.avatar
+    
+    return(
         <View>
             <View style={styles.container}>
                 <View style={styles.top_wrapper}>
                     <View >
                         <TouchableOpacity onPress={props.naviChangeImg} style={styles.image_wrape}>
-                            {avatar ? <Image style={styles.image} source={{uri: avatar}} /> :
+                            {avatar ? <Image style={styles.image} source={{uri: `data:image/jpeg;base64,${avatar}`}} /> :
                              <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
                         </TouchableOpacity>
                     </View>

@@ -14,19 +14,21 @@ import { useNavigation } from '@react-navigation/native'
 import authContext  from '../../Context/authContext';
 import {PROFILEIMAGE} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
-import * as FaceDetector from 'expo-face-detector';
+import Loading from '../BeforeLogin/loading';
+
 const ChangeAvater =(props) => {
 
     const [hasPermission, setHasPermission] = useState(null)
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
     const [image, setImage] = useState('')
     const [camera, setCamera] = useState(null)
-    const [profileImage, {error, loading}] =  useMutation(PROFILEIMAGE)
+    const [profileImage] =  useMutation(PROFILEIMAGE)
     const state = useContext(checkContext);
     const navigation = useNavigation();
     const update = useContext(authContext);
     const [takeBtn, setTakeBtn] = useState(false)
     const [flash, setFlash] = useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(() =>{
         (async () =>{
             if (Platform.OS === 'ios') {
@@ -64,22 +66,22 @@ const ChangeAvater =(props) => {
         }
     }
     
-      //select galary image
-  const pickImage = async () => {
-        console.log("")
-        const result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        })
-        if(!result.cancelled){
-            setImage(result.uri)
-            setTakeBtn(false)
+    //select galary image
+    const pickImage = async () => {
+            console.log("")
+            const result = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            })
+            if(!result.cancelled){
+                setImage(result.uri)
+                setTakeBtn(false)
+            }
         }
-    }
     
-
     const upload =  () =>{
+        setLoading(true)
         const file = {
           uri: image,
           name: `${state.userID}-${new Date().getTime()}`,
@@ -87,33 +89,31 @@ const ChangeAvater =(props) => {
         };
 
         const options = {
-            keyPrefix: "profileImg/",
-            bucket: aws.bucket,
+            bucket: aws.bucketProfile,
             region: aws.region,
             accessKey: aws.accessKey,
             secretKey: aws.secretKey,
             successActionStatus: 201
         };
+        
         RNS3.put(file, options)
         .then(response => {
             if (response.status !== 201) throw Error('Error uploadting to AWS S3')
             profileImage({
                 variables:{
-                    image: `${response.body.postResponse.location}`,
+                    image: `${response.body.postResponse.key}`,
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
-        }).then(res =>{
-            setTakeBtn(false)
-            setImage('')
-            navigation.navigate('homeProfile')
-
-        }).catch(error =>{
-            console.log(error);
-            
-        })
-        })
-        .catch(error => {
-            console.log(error);
+            }).then(res =>{
+                setTakeBtn(false)
+                setImage('')
+                setLoading(false)
+                return navigation.navigate('homeProfile')
+            }).catch(error =>{
+                setLoading(false)
+            })
+        }).catch(error => {
+            setLoading(false)
         });
     }
 
@@ -130,6 +130,10 @@ const ChangeAvater =(props) => {
         return ( <Camera style={{ flex: 1}} type={cameraType}  autoFocus="on"  ref={ref => setCamera(ref)}>
             <Text>No access to camera</Text>
         </Camera>)
+        } else if(loading){
+            return(
+                <Loading />
+            )
         } else { 
             return(
             // ref={ref => {camera = ref}}

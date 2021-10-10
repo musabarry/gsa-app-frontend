@@ -11,6 +11,15 @@ mutation login($email: String!, $password: String!){
   }
 `
 
+
+export const GETIMAGE =  gql`
+mutation getImage($key: String!, $from: String!){
+  getImage(input:{key: $key, from: $from}){
+    image
+  }
+}
+`
+
 export const PROFILEIMAGE = gql`
   mutation profileImage($image: String!){
     profileImage(input:{image: $image}){
@@ -86,6 +95,7 @@ export const DELETEPOST  = gql`
 mutation deletePost($post: ID!){
   deletePost(input:{post: $post}){
     success
+    type
   }
 }
 `

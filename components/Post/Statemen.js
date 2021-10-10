@@ -5,7 +5,7 @@ const Statemen = (props) => {
 
     return (
         <View style={styles.container}>
-            {(props.image.length > 7  || props.text.length > 1) &&<View style={styles.top}>
+            {(props.image.length > 7  || props.text.length > 1) && <View style={styles.top}>
                 <TouchableOpacity style={styles.btn} onPress={() => props.upload()} >
                     <Text style={styles.post_text}>Post</Text>
                 </TouchableOpacity>
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     post_text:{
-        fontSize: 18,
-        fontWeight: '700',
+        fontSize: 21,
+        fontWeight: '800',
         color: '#016191'
     }
 })

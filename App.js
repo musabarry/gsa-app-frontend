@@ -19,19 +19,19 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
       // console.log(`Graphql error ${message}`)
    
     )
-    if(networkError)  console.log(" [Network error]:", networkError);
+    //if(networkError)  console.log(" [Network error]:", networkError);
   }
 })
+
 //10.15.85.21
-const link = from([
+const link = from([//172.20.10.4   //10.15.85.21
   errorLink,
-   new HttpLink({uri: "http://10.15.85.21:8080/graphql"}), //server(api) link
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 
 //(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {
-  const token =await  AsyncStorage.getItem('@token_key')
-
+  const token =await  AsyncStorage.getItem('@token_key');
   return {
     headers: {
       ...headers,
@@ -50,7 +50,7 @@ const client = new ApolloClient({
 const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [userID, setUserID] =  useState();
-  const [verifyUser, setVerifyUser] = useState(true)
+  const [verifyUser, setVerifyUser] = useState(false)
   client.cache.reset()
   client.cache.modify({
     notifications(list, { readField }) {
@@ -66,7 +66,7 @@ const App = ({ navigation }) => {
         setAuthanticated(true)
         setVerifyUser(false)
         setUserID(id)
-      }else if(id){
+      }else if(id && !token){
         setVerifyUser(true)
         setUserID(id)
       }else{

@@ -13,6 +13,7 @@ import checkContext  from '../../Context/checkContext';
 import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
 import AsyncStorage from '@react-native-community/async-storage';
+import Loading from '../BeforeLogin/loading';
 const Post = (props) =>{
   // camera access
   const [hasPermission,  setHasPermission] = useState(null)
@@ -24,7 +25,7 @@ const Post = (props) =>{
   const [takeBtn, setTakeBtn] = useState(false)
 
   const state = useContext(checkContext);
-
+  const [loading, setLoading] =  useState(false)
   const [camera, setCamera] = useState(null)
 
   //graphql mutation function
@@ -60,8 +61,8 @@ const Post = (props) =>{
   const takePicture = async () => {
       if (camera) {
           let photo = await camera.takePictureAsync().then(res =>{
-              console.log(res.uri);
               setImage(res.uri)
+              setTakeBtn(false)
           }).catch(err =>{
             console.log('error');
           });
@@ -70,21 +71,21 @@ const Post = (props) =>{
 
   //select galary image
   const pickImage = async () => {
-      await ImagePicker.launchImageLibraryAsync({
+      const result  = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
-          aspect: [4, 3],
+          aspect: [1, 1],
           quality: 1,
-      }).then(res =>{
-          console.log(res);
-          setImage(res.uri)
-      }).catch(err =>{ 
-        console.log('error');
       })
+
+      if(!result.cancelled) {
+        setImage(result.uri);
+      }
   }
 
   //upload picture
   const upload = async () =>{
+      setLoading(true)
       const file = {
         uri: image,
         name: `${state.userID}-${new Date().getTime()}`,
@@ -94,8 +95,8 @@ const Post = (props) =>{
       const userID =   await AsyncStorage.getItem("@userID")
       //aws authanication keys for S3 bucket
       const options = {
-        keyPrefix: "postsImg/",
-        bucket: aws.bucket,
+        // keyPrefix: "postsImg/",
+        bucket: aws.bucketPost,
         region: aws.region,
         accessKey: aws.accessKey,
         secretKey: aws.secretKey,
@@ -108,11 +109,10 @@ const Post = (props) =>{
         .then(response => {
           if (response.status !== 201) throw Error('Error uploadting to AWS S3')
           //else get the image link and save to DB
-         
           createPostImage({
               variables:{
                   owner: `${userID}`,
-                  imageAlbum: [`${response.body.postResponse.location}`],
+                  imageAlbum: [`${response.body.postResponse.key}`],
                   text: text
               },
               //refresh post data
@@ -120,13 +120,14 @@ const Post = (props) =>{
           }).then(res =>{
             setImage('#.png')
             setText('')
+            setLoading(false)
             return props.navigation.navigate("Home")
           }).catch(err =>{
-            console.log({server: error});
+            setLoading(false)
           })
         })
         .catch(error => {
-          console.log(error);
+          setLoading(false)
         });
       }else{
         createPostText({
@@ -137,18 +138,28 @@ const Post = (props) =>{
           refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{
           setText('')
-          props.navigation.navigate("Home")
+          setLoading(false)
+          return props.navigation.navigate("Home")
+         
         }).catch(error =>{
+          setLoading(false)
           console.log(error);
         })
       }
+      
+      //setInterval(() => { setLoading(false)}, 1000);
     }
+
+
     if (hasPermission === null) {
       return <View />;
     } else if (hasPermission === false) {
       return <Text>No access to camera</Text>;
-    } else{
-      // if(!modalVisible){
+    } else if(loading){
+      return(
+          <Loading />
+      )
+    }else{
         return(
           <TouchableWithoutFeedback onPress={() => {Keyboard.dismiss()}}>
             <View style={styles.container}  >

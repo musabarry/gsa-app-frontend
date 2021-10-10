@@ -11,7 +11,6 @@ const RootStack = createStackNavigator();
 
 const RootSreen = ({ navigation }) => {
   
-
   const state = useContext(checkContext);  
 
   return (

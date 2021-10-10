@@ -23,15 +23,15 @@ const Loading = () =>{
 
     return (
       <View style={styles.loading}>
-        <View style={[styles.center, {backgroundColor: `${out}`}]}>
+        {/* <View style={[styles.center, {backgroundColor: `${out}`}]}>
             <View style={[styles.circle, {backgroundColor: `${inner+out}`}]}>
               <View style={[styles.innerSmal, {backgroundColor:`${out}`}]}>
-                <View style={[styles.innerXSmal, {backgroundColor:`${inner}`}]}>
-                  <ActivityIndicator size="large" color={actiColor}  animating={true}/>
-                </View>
+                <View style={[styles.innerXSmal, {backgroundColor:`${inner}`}]}> */}
+                  <ActivityIndicator size="large" color='#0866ff'  animating={true}/>
+                {/* </View>
               </View>
             </View>
-        </View>
+        </View> */}
       </View>
     )
 }
@@ -41,7 +41,9 @@ const styles = StyleSheet.create({
       flex: 1,
       alignItems: 'center',
       marginTop: Constants.statusBarHeight,
-      opacity: 0.8
+      opacity: 0.8,
+      alignItems:'center',
+      justifyContent:"center"  
       },
       center: {
         marginTop: 200,

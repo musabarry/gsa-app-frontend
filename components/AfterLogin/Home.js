@@ -36,7 +36,7 @@ const Home = (props) => {
             {/* render all post */}
            <ScrollView>
            {states.allPost && states.allPost.allPost.map(item =>{
-                return <PostCard uri={item.imageAlbum ? item.imageAlbum : ''} 
+                return <PostCard uri={item.imageAlbum ? item.imageAlbum[0] : null} 
                         data={item} key={item._id} 
                         userInfo={item.owner}/>
               })}
