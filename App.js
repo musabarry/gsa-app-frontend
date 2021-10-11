@@ -28,6 +28,8 @@ const link = from([//172.20.10.4   //10.15.85.21
   errorLink,
    new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
+//https://gsabackend.herokuapp.com/graphql
+//http://192.168.1.6:8080/graphql
 
 //(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {

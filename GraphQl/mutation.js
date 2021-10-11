@@ -13,8 +13,8 @@ mutation login($email: String!, $password: String!){
 
 
 export const GETIMAGE =  gql`
-mutation getImage($key: String!, $from: String!){
-  getImage(input:{key: $key, from: $from}){
+mutation getImage($key: String!){
+  getImage(input:{key: $key}){
     image
   }
 }

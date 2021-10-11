@@ -3,15 +3,15 @@ import {TouchableOpacity,StyleSheet,Text,
         View,Image} from "react-native";
 import {  Feather, FontAwesome5 } from '@expo/vector-icons';
 const ProfileInfo = (props) =>{
-    const avatar = props.avatar
-    
+    const avatar = props.userInfo.avatar
+
     return(
         <View>
             <View style={styles.container}>
                 <View style={styles.top_wrapper}>
                     <View >
                         <TouchableOpacity onPress={props.naviChangeImg} style={styles.image_wrape}>
-                            {avatar ? <Image style={styles.image} source={{uri: `data:image/jpeg;base64,${avatar}`}} /> :
+                            {avatar ? <Image style={styles.image} source={{uri: `${avatar}`}} /> :
                              <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
                         </TouchableOpacity>
                     </View>

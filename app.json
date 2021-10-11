@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "gsafront",
-    "slug": "gsafront",
+    "name": "GSA Portal",
+    "slug": "gsa-portal",
+    "description": "GSA Portal App, use only for club members",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

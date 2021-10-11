@@ -1,6 +1,5 @@
 import React, {useState, useContext} from 'react'
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
-import Constants from 'expo-constants';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import PostCard from '../Card/PostCard';
 import { SearchBar } from 'react-native-elements';
 import authContext  from '../../Context/authContext';

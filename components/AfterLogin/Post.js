@@ -1,5 +1,5 @@
 import React, {useState,  useContext, useEffect} from 'react'
-import {Text, View, StyleSheet, TouchableOpacity, Modal, Image, Alert, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
@@ -10,7 +10,6 @@ import{useMutation} from '@apollo/client';
 import {CREATEPOSTIMAGE, CREATEPOSTTEXT} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import checkContext  from '../../Context/checkContext';
-import authContext  from '../../Context/authContext';
 import { RNS3 } from 'react-native-aws3';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loading from '../BeforeLogin/loading';
@@ -21,7 +20,6 @@ const Post = (props) =>{
   const [image, setImage] = useState('#.png')
 
   const [text, setText] =  useState('')
-  const [modalVisible, setModalVisible] =  useState(false)
   const [takeBtn, setTakeBtn] = useState(false)
 
   const state = useContext(checkContext);
@@ -55,7 +53,6 @@ const Post = (props) =>{
           : Camera.Constants.Type.back
       )
   }
-
 
   //take a picture event fun
   const takePicture = async () => {

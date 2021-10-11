@@ -1,9 +1,9 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Modal, ActivityIndicator}  from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-native';
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
 import CommentPage from './CommentPage';
 import checkContext  from '../../Context/checkContext';
-import {CREATELIKE, DELETEPOST, GETIMAGE} from '../../GraphQl/mutation';
+import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -31,44 +31,8 @@ const PostCard = (props) =>{
     const [showComments, setShowComments] =  useState(false)
     const [like, {error: likeError, loading: likeLoading}] =  useMutation(CREATELIKE)
     const [deletePost, {error: deleteError, loading: deleteLoading}] = useMutation(DELETEPOST)
-    const [getImage, {error: imageError, loading: imageLoading}] = useMutation(GETIMAGE)
-    const [avatar, setAvatar] = useState()
-    const [postImage, setPostImage] = useState()
-
-    const getPostImageFromS3 =  () =>{
-        if(props.uri !== null){
-            getImage({
-                variables:{
-                    key: props.uri,
-                    from: 'gsa-image-store'
-                }
-            }).then(res =>{
-                setPostImage(res.data.getImage.image);
-            }).catch(error =>{
-                
-            })
-
-        }
-    }
-    const getAvatarFromS3 =  () =>{
-        if(props.userInfo.avatar !== null){
-            getImage({
-                variables:{
-                    key: props.userInfo.avatar,
-                    from: 'gsa-profile-image'
-                }
-            }).then(res =>{
-                setAvatar(res.data.getImage.image);
-            }).catch(error =>{
-                console.log(error);
-            })
-
-        }
-    }
 
     useEffect(() =>{
-        getPostImageFromS3()
-        getAvatarFromS3()
         userLike()
     }, [updateLike])
     //like click event
@@ -149,16 +113,14 @@ const PostCard = (props) =>{
         }
     }
 
-    
-
     return(
         <View>
             <View style={styles.card_wrapper}>
                 <View style={styles.top_wrapper}>
                     <View style={styles.thumbnail_wraper}>
                         {
-                            avatar !== '' &&
-                            <Image style={styles.thumbnail} source={{uri: `data:image/jpeg;base64,${avatar}`}}/> 
+                            props.userInfo.avatar !== '' &&
+                            <Image style={styles.thumbnail} source={{uri: `${props.userInfo.avatar}`}}/> 
                         }
                     </View>
                     <View style={styles.nameBox}>
@@ -176,10 +138,8 @@ const PostCard = (props) =>{
                         </Text>
                         <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}
                          onPress={() => doubleLike()}>
-                             {imageLoading ?
-                                <ActivityIndicator size="large"  color="#0000ff"   animating={true}/> 
-                                :
-                                <Image style={styles.img} source={{uri: `data:image/jpeg;base64,${postImage}`}}/>
+                             {
+                                <Image style={styles.img} source={{uri: `${props.uri}`}}/>
                              }
                         </TouchableOpacity></>
                         ):(
@@ -225,7 +185,7 @@ const PostCard = (props) =>{
                         { showLikes || showComments ? 
                     <CommentPage comments={props.data.commnets} likes={props.data.likes}
                          id={props.data._id} close={close} showLikes={showLikes} 
-                         showComments={showComments}likesBtn={likes} commentsBtn={comments} />
+                         showComments={showComments} likesBtn={likes} commentsBtn={comments} />
                          :
                          <View style={styles.more_setting}>
                             <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>

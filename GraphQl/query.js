@@ -32,6 +32,7 @@ export const ALLPOST = gql`
         firstname
         lastname
         school
+        avatar
     }
   }
 }

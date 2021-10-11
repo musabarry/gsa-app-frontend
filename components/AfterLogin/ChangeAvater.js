@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {TouchableOpacity,StyleSheet,Text, Platform,
-    View,Dimensions,Image, Modal} from "react-native";
+    View,Image} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
-import { EvilIcons, MaterialIcons, Ionicons, FontAwesome, Entypo,MaterialCommunityIcons } from '@expo/vector-icons';  
+import { EvilIcons, MaterialIcons, Ionicons,MaterialCommunityIcons } from '@expo/vector-icons';  
 import{useMutation} from '@apollo/client';
 import { RNS3 } from 'react-native-aws3';
 import {aws} from '../../keys'
@@ -185,47 +184,6 @@ const ChangeAvater =(props) => {
                 {image.length > 1 && !takeBtn && <View style={styles.takenImg}>
                     <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
                 </View>}
-                {/* {
-                    image ? 
-                    <View style={styles.takenImg}>
-                        <View style={styles.top}>
-                            <TouchableOpacity onPress={() => props.setModalVisible(!props.modalVisible)}>
-                                <EvilIcons name="close" size={35} color="#01294a" />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => upload()} >
-                                <Text style={styles.post_text}>Post</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Image source={{uri: `${image}`}}  style={{ width: '100%', height: '100%' }} />
-                    </View>
-                    :<>
-                    {!takeBtn ?
-                        <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center', backgroundColor: '#edf1f7'}}>
-                            <TouchableOpacity style={styles.camaraBtns} onPress={() => setTakeBtn(!takeBtn)}>
-                                <Text style={styles.camaraBtns_text}>Take Photo</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.camaraBtns} onPress={() => pickImage()}>
-                                <Text style={styles.camaraBtns_text}>Choose Photo</Text>
-                            </TouchableOpacity>
-                        </View>:
-                    <>
-                    <Camera style={{ flex: 1}} type={cameraType}   autoFocus="on"  ref={ref => setCamera(ref)}>
-
-                    </Camera>
-                    <View style={{ backgroundColor: '#1e1e1f'}}>
-                        <View style={styles.btn_wrape}>  
-                            <TouchableOpacity style={styles.add} onPress={() => pickImage()}>
-                            <MaterialIcons name="photo-library" size={40} color="white" />
-                            </TouchableOpacity>
-                            <TouchableOpacity  style={styles.snap} onPress={()=>  takePicture()} >
-                            <Ionicons name="ios-camera" size={50} color="white" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                            <Ionicons name="ios-reverse-camera" size={50} color="white" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    </>}</>} */}
                 </View>
             )
         }

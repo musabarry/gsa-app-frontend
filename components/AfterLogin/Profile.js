@@ -1,17 +1,13 @@
-import React, { useContext, Component, useState, useEffect } from "react";
-import {StyleSheet, Text,
+import React, { useContext } from "react";
+import {StyleSheet,
   View, ScrollView} from "react-native";
-import Constants from 'expo-constants';
 import ProfileInfo from '../Profile/profile-info'
 import PostCard from '../Card/PostCard';
 import authContext  from '../../Context/authContext';
-import {GETIMAGE} from '../../GraphQl/mutation';
-import{useMutation} from '@apollo/client';
 const Profile = (props) =>{
 
   const states = useContext(authContext);
-  const [getImage, {error: imageError, loading: imageLoading}] = useMutation(GETIMAGE)
-  const [image, setImage] = useState()
+
   const naviSetting = () =>{
     return props.navigation.navigate('setting')
   }
@@ -19,28 +15,6 @@ const Profile = (props) =>{
   const naviChangeImg = () =>{
     return props.navigation.navigate('changeImg')
   }
-  const avatar = states.userInfo.userInfo.avatar
-  const getImageFromS3 =  () =>{
-    if(avatar){
-        getImage({
-            variables:{
-                key: avatar,
-                from: 'gsa-profile-image'
-            }
-        }).then(res =>{
-            setImage(res.data.getImage.image);
-        }).catch(error =>{
-          console.log(error);
-        })
-
-    }
-}
-
-  useEffect(()=>{
-    getImageFromS3()
-  }, [])
-
-
 
   return (
     <View style={styles.container}>
@@ -48,7 +22,7 @@ const Profile = (props) =>{
           <View>
               {/* profile image and info component */}
               {states.userInfo && <ProfileInfo  naviSetting={naviSetting} naviChangeImg={naviChangeImg}
-               userInfo={states.userInfo.userInfo} avatar={avatar ? image : ''}/>}
+               userInfo={states.userInfo.userInfo} />}
           </View>
           {/* render user post */}
             {states.userInfo && states.userInfo.userPosts.map(item =>{

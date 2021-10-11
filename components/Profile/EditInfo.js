@@ -12,8 +12,6 @@ import{useMutation} from '@apollo/client';
 
 import {USERINFO} from '../../GraphQl/query';
 const  EditInfo = (props)=>{
-
-
     //input field state
     const [role, setRole] = useState([])
     const [major, setMajor]  = useState('')
