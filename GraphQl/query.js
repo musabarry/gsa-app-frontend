@@ -38,8 +38,52 @@ export const ALLPOST = gql`
 }
 `
 
+export const GETUSER = gql`
+query getUser($user: String!){
+  getUser(user: $user){
+    info{
+      _id
+      avatar
+      firstname 
+      lastname 
+      school 
+      email
+      major
+      role
+      interest
+      skills
+      }
+      posts{
+    _id
+    date
+    text
+    imageAlbum
+    commnets{
+      _id
+      text
+      date
+      byUser{
+        _id
+        firstname
+        lastname
+        avatar
+        school
+      }
+    }
+    likes{
+        _id
+        firstname
+        lastname
+        school
+        avatar
+    }
+    }
+    }
+  }
+`
+
 export const USERINFO = gql`
-query{ 
+query { 
   userInfo{
     _id
     avatar

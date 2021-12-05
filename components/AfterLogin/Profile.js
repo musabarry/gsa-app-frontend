@@ -16,12 +16,13 @@ const Profile = (props) =>{
     return props.navigation.navigate('changeImg')
   }
 
+
   return (
     <View style={styles.container}>
       <ScrollView  style={styles.post}>
           <View>
               {/* profile image and info component */}
-              {states.userInfo && <ProfileInfo  naviSetting={naviSetting} naviChangeImg={naviChangeImg}
+              {states.userInfo && <ProfileInfo naviSetting={naviSetting} naviChangeImg={naviChangeImg}
                userInfo={states.userInfo.userInfo} />}
           </View>
           {/* render user post */}

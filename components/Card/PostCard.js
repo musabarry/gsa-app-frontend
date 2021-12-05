@@ -7,12 +7,14 @@ import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { useNavigation } from '@react-navigation/native';
 
 const PostCard = (props) =>{
     const state = useContext(checkContext);
-
+    const navigation = useNavigation();
     //determine if the user liked a post or not
+
+
     const userLike = () =>{
         let found = false;
         for(var i = 0; i < props.data.likes.length; i++) {
@@ -113,6 +115,18 @@ const PostCard = (props) =>{
         }
     }
 
+    const getUserInfo = ()=>{
+        let home =  props.fromHome
+        if(!owner && home){
+            return navigation.navigate('User',{
+                userID: props.userInfo._id
+            })
+        }else{
+            return navigation.navigate('Profile')
+        }
+    }
+
+
     return(
         <View>
             <View style={styles.card_wrapper}>
@@ -124,7 +138,9 @@ const PostCard = (props) =>{
                         }
                     </View>
                     <View style={styles.nameBox}>
-                        <Text style={styles.name}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
+                        <TouchableOpacity style={styles.NameContainer} onPress={() => getUserInfo()}>
+                            <Text style={styles.name}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
+                        </TouchableOpacity>
                         <Text style={styles.school}>@{props.userInfo.school}</Text>
                     </View>
                 </View >
@@ -324,6 +340,13 @@ const styles =  StyleSheet.create({
         fontWeight: '700',
         fontSize: 21,
         color: '#d6281c'
+    },
+    name:{
+        fontWeight: '700',
+        color: '#0263eb'
+    },
+    NameContainer:{
+        marginBottom: 5
     }
 })
 

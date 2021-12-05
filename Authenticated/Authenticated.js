@@ -18,6 +18,7 @@ import checkContext  from '../Context/checkContext';
 import{useQuery} from '@apollo/client';
 import {ALLPOST, USERINFO } from "../GraphQl/query";
 import Loading from '../components/BeforeLogin/loading';
+import HomeProfile from '../components/AfterLogin/HomeProfile'
 const profile = ({navigation}) =>{
 
   return(
@@ -26,6 +27,16 @@ const profile = ({navigation}) =>{
       <Stack.Screen name="setting" component={Content}/>
       <Stack.Screen name="changeImg" component={ChangeAvater} />
       <Stack.Screen name="commentpage" component={CommentPage} />
+    </Stack.Navigator>
+  )
+}
+
+const HomeCom = ({navigation}) =>{
+
+  return(
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name="Home" component={Home}/>
+      <Stack.Screen name="User" component={HomeProfile}/>
     </Stack.Navigator>
   )
 }
@@ -66,7 +77,7 @@ const Authenticated = ({ navigation }) => {
     return (  
           <authContext.Provider value={{userInfo, allPost, userID, update}}>
             <Tab.Navigator headerMode="none"   >  
-              <Tab.Screen name="Home" component={Home}
+              <Tab.Screen name="Home" component={HomeCom}
                 options={{
                 tabBarIcon: () =>(
                   <Entypo name="home" size={24} color="#1e1e1f" />

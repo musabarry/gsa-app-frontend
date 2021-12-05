@@ -14,10 +14,10 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
     graphqlErrors.map(({message, location, path}) =>
     console.log(
       " [GraphQL error]: Message", message, ", Location: ", locations, ", Path: ", path)
-      //console.log('Path ',{path}, 'Location ', {location}, `Graphql error ${message}`)
-      // console.log('Location ', {location});
+      // console.log('Path ',{path}, 'Location ', {location}, `Graphql error ${message}`),
+      // console.log('Location ', {location}),
       // console.log(`Graphql error ${message}`)
-   
+    
     )
     //if(networkError)  console.log(" [Network error]:", networkError);
   }
@@ -29,7 +29,8 @@ const link = from([//172.20.10.4   //10.15.85.21
    new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 //https://gsabackend.herokuapp.com/graphql
-//http://192.168.1.6:8080/graphql
+//http://192.168.1.32:8080/graphql s=home
+//http://10.15.85.21:8080/graphql library
 
 //(GraphqL)  setup header information
 const authLink = setContext(async (_, { headers }) => {
@@ -54,11 +55,11 @@ const App = ({ navigation }) => {
   const [userID, setUserID] =  useState();
   const [verifyUser, setVerifyUser] = useState(false)
   client.cache.reset()
-  client.cache.modify({
-    notifications(list, { readField }) {
-      return list.filter(n => readField("id", n) !== id);
-    },
-  });
+  // client.cache.modify({
+  //   notifications(list, { readField }) {
+  //     return list.filter(n => readField("id", n) !== id);
+  //   },
+  // });
   useEffect(() =>{
     ( async () =>{
       const token = await AsyncStorage.getItem('@token_key')
@@ -78,6 +79,7 @@ const App = ({ navigation }) => {
       }
     })();
   }, []);
+
 
   return (
     <ThemeProvider>

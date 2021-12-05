@@ -16,6 +16,8 @@ const Home = (props) => {
             <Loading />
         )
     }
+
+
     return(
         <View style={styles.container}>
             <View>
@@ -37,7 +39,7 @@ const Home = (props) => {
            {states.allPost && states.allPost.allPost.map(item =>{
                 return <PostCard uri={item.imageAlbum ? item.imageAlbum[0] : null} 
                         data={item} key={item._id} 
-                        userInfo={item.owner}/>
+                        userInfo={item.owner} fromHome={true}/>
               })}
            </ScrollView>
         </View>

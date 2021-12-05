@@ -21,7 +21,7 @@ const ProfileInfo = (props) =>{
                         </View>
                         <View style={styles.info}>
                             <View style={styles.school}>
-                                <FontAwesome5 name="school" size={24} color="black" />
+                                <FontAwesome5 name="school" size={24} color="#0051ff" />
                                 <Text style={styles.schoolName}>{props.userInfo.school}</Text>
                             </View>
                             <TouchableOpacity style={styles.btn_setting} onPress={props.naviSetting}>
