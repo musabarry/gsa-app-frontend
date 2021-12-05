@@ -1,12 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import {EvilIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import authContext  from '../../Context/authContext';
 
 //comment & like button component
 const CommentLike = (props) => {
-    const navigation = useNavigation();
+
     
     return (
         <View style={styles.wrap}>
