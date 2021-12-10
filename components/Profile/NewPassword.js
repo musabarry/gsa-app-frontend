@@ -10,7 +10,7 @@ import {
 import Constants from 'expo-constants';
 import { EvilIcons} from '@expo/vector-icons';
 import {UPDATEPASSWORD} from '../../GraphQl/mutation';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import{useMutation} from '@apollo/client';
 import checkContext  from '../../Context/checkContext';
 import Loading from '../BeforeLogin/loading';

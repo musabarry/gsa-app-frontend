@@ -5,7 +5,7 @@ import RootSreen from "./RootStack/RootStack";
 import { NavigationContainer } from "@react-navigation/native";
 import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink } from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'react-native-elements';
