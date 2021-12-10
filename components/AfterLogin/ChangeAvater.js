@@ -30,15 +30,16 @@ const ChangeAvater =(props) => {
     const [loading, setLoading] = useState(false)
     useEffect(() =>{
         (async () =>{
-            if (Platform.OS === 'ios') {
-                const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-                if (status !== 'granted') {
-                  alert('Sorry, we need camera roll permissions to make this work!');
-                }
-              }
+            // if (Platform.OS === 'ios') {
+                const { status } = await Camera.requestCameraPermissionsAsync();
+                setHasPermission(status === 'granted');
+            //     if (status !== 'granted') {
+            //       alert('Sorry, we need camera roll permissions to make this work!');
+            //     }
+            //   }
               // Camera Permission
-              const { status } = await Permissions.askAsync(Permissions.CAMERA);
-              setHasPermission(status === 'granted')
+            //   const { status } = await Permissions.askAsync(Permissions.CAMERA);
+            //   setHasPermission(status === 'granted')
         })();
     })
 
@@ -175,7 +176,7 @@ const ChangeAvater =(props) => {
                             <Ionicons name="ios-camera" size={50} color="white" />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                            <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                            <Ionicons name="camera-reverse" size={50} color="white" />
                             </TouchableOpacity>
                         </View>
                     </View>

@@ -1,16 +1,16 @@
 import React, { useState, useContext } from "react";
-import { StyleSheet,
+import { FormStylesheet,
   Text, View, TouchableOpacity,
-  TextInput,KeyboardAvoidingView, Keyboard, ScrollView
+  TextInput,KeyboardAvoidingView, SafeAreaView, ScrollView, Image
 } from "react-native";
-import Constants from 'expo-constants';
-import { AntDesign} from '@expo/vector-icons';
+import logo from '../images/logo.png'
 import{useMutation} from '@apollo/client';
 import {LOGIN} from '../../GraphQl/mutation';
 import { Alert } from "react-native";
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import checkContext  from '../../Context/checkContext';
 import Loading from './loading';
+import FormStyles from "./Styles/FormStyles";
 const Login =(props) => {
 
   const [email, setEmail] = useState('');
@@ -25,6 +25,7 @@ const Login =(props) => {
     if(!email || !password){
       Alert.alert("Email or password is empty")
     }else{
+      console.log(email, password);
        login({
         variables:{
           email: email,
@@ -43,6 +44,7 @@ const Login =(props) => {
           state.setAuthanticated(true)
         }
       }).catch(error =>{
+        console.log(error);
         Alert.alert('Password wrong')
       })
     }
@@ -54,170 +56,55 @@ const Login =(props) => {
     )
   }else{
     return (
-
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()} style={styles.back_btn}>
-            <Text style={styles.back_text}>Back</Text>
+      <SafeAreaView style={FormStyles.container}>
+        <View style={FormStyles.headerView}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()} style={FormStyles.back_btn}>
+            <Text style={FormStyles.back_text}>Back</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView style={styles.login}>
-          <View style={styles.logoView}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText} >LOGO</Text>
+        <ScrollView style={FormStyles.login}>
+          <View style={FormStyles.logoWraper}>
+            <View style={FormStyles.logoView}>
+              <Image source={logo} style={FormStyles.logo} />
             </View>
-            <TouchableOpacity  style={styles.signBtn}
+            <TouchableOpacity  style={FormStyles.logoTextView}
             onPress={() => props.navigation.navigate('Signup')}>
-            <Text style={styles.LoginTitle}>Signup</Text>
+              <Text style={FormStyles.logoText}>Signup</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            <Text></Text>
-          </View>
-          <View  style={styles.input}>
-            <TextInput
-              placeholder="Email"
-              style={styles.username}
-              autoCapitalize="none"
-              value={email}
-              onChangeText={e => setEmail(e)}
-            ></TextInput>
-            <TextInput
-              placeholder="Password"
-              secureTextEntry={hidePass}
-              style={styles.username}
-              value={password}
-              onChangeText={e => setPassword(e)}
-            ></TextInput>
-            <TouchableOpacity style={styles.LoginView} 
-            onPress={onSubmit}>
-              <Text style={styles.LoginButton}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ForgotPasswordView} 
-            onPress={() => props.navigation.navigate('ForgotPassword')}>
-              <Text style={styles.ForgotPasswordBttn}>Forgot Password</Text>
-            </TouchableOpacity>
+          <View  style={FormStyles.inputs}>
+              <TextInput
+                placeholder="Email"
+                style={FormStyles.input}
+                autoCapitalize="none"
+                value={email}
+                onChangeText={e => setEmail(e)}
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                returnKeyType="next"
+              />
+              <TextInput
+                placeholder="Password"
+                secureTextEntry
+                style={FormStyles.input}
+                value={password}
+                onChangeText={e => setPassword(e)}
+                returnKeyType="done"
+              />
+              <TouchableOpacity style={FormStyles.submitView} 
+              onPress={onSubmit}>
+                <Text style={FormStyles.submitText}>Login</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={FormStyles.ForgotPasswordView} 
+              onPress={() => props.navigation.navigate('ForgotPassword')}>
+                <Text style={FormStyles.ForgotPasswordBttn}>Forgot Password</Text>
+              </TouchableOpacity>
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </SafeAreaView>
     );
   }
 
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //marginTop: Constants.statusBarHeight,
-
-  },
-  headerView:{
-    top: 0,
-    paddingLeft: 10
-  },
-  logoView:{
-    alignItems: 'center',
-    marginTop: 100,
-  },
-  logo:{
-    height: 100,
-    backgroundColor: '#000',
-    width: 100,
-    borderRadius: 25,
-    justifyContent: 'center'
-  },
-  logoText:{
-    color: '#fff',
-    textAlign: 'center'
-  },
-  input:{
-    marginTop: 20
-  },
-  login:{
-   // alignItems: 'center',
-    paddingTop: 50,
-    // marginBottom: 90
-
-  //   margin: 100,
-  //   marginHorizontal: 20,
-  //  justifyContent: 'center',
-  //  alignContent: 'center',
-  //  height: 100
-  },
-  username: {
-    height: 40,
-    backgroundColor: "rgba(225, 229, 235,0.8)",
-    paddingLeft: 10,
-    marginBottom: 5,
-    borderRadius: 23,
-    width: 400
-  },
-  signBtn:{
-    marginTop: 10,
-    marginBottom: 10
-  },
-  LoginTitle: {
-    fontSize: 16,
-    fontWeight: '900'
-  },
-  LoginButton: {
-    fontSize: 18,
-    fontWeight: '800',
-    textAlign: "center",
-    paddingVertical: 3,
-    backgroundColor: '#01294a',
-    color: "#fff"
-  },
-  MemberLogin: {
-    paddingVertical: 10,
-  },
-  LoginView: {
-    backgroundColor: '#fff',
-    borderRadius: 18,
-    overflow: 'hidden',
-    height: 37,
-    width: 125,
-    color: '#000',
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent:'center',
-    alignSelf: 'center'
-  },
-  ForgotPasswordView: {
-    borderRadius: 18,
-    overflow: 'hidden',
-    height: 37,
-    width: 165,
-    color: '#000',
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent:'center',
-    alignSelf: 'center'
-  },
-  ForgotPasswordBttn: {
-    fontSize: 12,
-    fontWeight: '600',
-    textAlign: "center",
-    paddingVertical: 3,
-    color: "#000"
-  },
-  loading:{
-    flex: 1,
-    backgroundColor: '#c9d9f2',
-    justifyContent: "center",
-  },
-  horizontal: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-  },
-  back_text:{
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#5cacf7'
-  },
-});
-
 export default Login
-

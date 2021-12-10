@@ -6,14 +6,13 @@ import checkContext  from '../../Context/checkContext';
 import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 const PostCard = (props) =>{
     const state = useContext(checkContext);
     const navigation = useNavigation();
     //determine if the user liked a post or not
-
 
     const userLike = () =>{
         let found = false;

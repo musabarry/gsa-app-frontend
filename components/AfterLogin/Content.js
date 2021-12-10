@@ -13,7 +13,7 @@ import {
 import Constants from 'expo-constants';
 import authContext  from '../../Context/authContext';
 import checkContext  from '../../Context/checkContext';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {  FontAwesome5, SimpleLineIcons } from '@expo/vector-icons';
 import NewPassword from  '../Profile/NewPassword';
 import EditInfo from '../Profile/EditInfo'

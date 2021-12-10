@@ -6,7 +6,7 @@ import { StyleSheet,
 import{useMutation} from '@apollo/client';
 import {VERIFY, SENDCODE} from '../../GraphQl/mutation';
 import { Alert } from "react-native";
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import checkContext  from '../../Context/checkContext';
 import Loading from './loading';
 import { color } from "react-native-reanimated";

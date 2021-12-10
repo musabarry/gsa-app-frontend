@@ -1,16 +1,17 @@
 import React, {useState, useContext, useEffect } from "react";
-import { StyleSheet, Text, View,TouchableOpacity,
-  TextInput, KeyboardAvoidingView, ScrollView,Modal,Alert} from "react-native";
-import Constants from 'expo-constants';
+import { Text, View,TouchableOpacity,
+  TextInput, KeyboardAvoidingView, ScrollView,Modal,Alert, Image, SafeAreaView, Platform} from "react-native";
 import checkContext  from '../../Context/checkContext';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SIGNUP} from '../../GraphQl/mutation';
 import{useMutation} from '@apollo/client';
 import {Picker} from '@react-native-picker/picker';
 import { EvilIcons } from '@expo/vector-icons'; 
-
+import FormStyles from "./Styles/FormStyles";
 import Loading from './loading';
+import logo from '../images/logo.png'
 const Signup = (props) => {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] =  useState('');
   const [confirPass, setConfirPass] = useState('');
@@ -22,7 +23,7 @@ const Signup = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [passStrength, setPassStrength] =  useState()
   const [passStrengthColor, setPassStrengthColor] = useState('#000')
-  const [validEmail, setValidEmail] = useState('')
+  const [validEmail, setValidEmail] = useState()
   const [validEmailColor, setValidEmailColor] = useState('#000')
   const [matchPass, setMatchPass] = useState(false)
   const state = useContext(checkContext);
@@ -42,7 +43,7 @@ const Signup = (props) => {
         setValidEmailColor('#d40b0b')
       }
     }else{
-      setValidEmail('')
+      setValidEmail()
     }
     setEmail(email)
   }
@@ -142,28 +143,30 @@ const Signup = (props) => {
     )
   }else{
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        
-        <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()} style={styles.back_btn}>
-          <Text style={styles.back_text}>Back</Text>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? 'padding': null} 
+                          keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
+                            style={FormStyles.container}>
+
+        <View style={FormStyles.headerView}>
+          <TouchableOpacity onPress={() => props.navigation.goBack()} style={FormStyles.back_btn}>
+          <Text style={FormStyles.back_text}>Back</Text>
           </TouchableOpacity>
         </View>
         
-        <ScrollView style={styles.login}>
-          <View style={styles.logoView}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText} >LOGO</Text>
+        <ScrollView style={FormStyles.login}>
+          <View style={FormStyles.logoWraper}>
+            <View style={FormStyles.logoView}>
+              <Image source={logo} style={FormStyles.logo} />
             </View>
-            <TouchableOpacity  style={styles.signBtn}
+            <TouchableOpacity  style={FormStyles.logoTextView}
             onPress={() => props.navigation.navigate('Login')}>
-            <Text style={styles.LoginTitle}>Login</Text>
+              <Text style={FormStyles.logoText}>Login</Text>
             </TouchableOpacity>
           </View>
-          <View  style={styles.inputs}>
+          <View  style={FormStyles.inputs}>
             <TextInput
               placeholder="Firstname"
-              style={styles.input}
+              style={FormStyles.input}
               autoCapitalize="none"
               keyboardType="default"
               textContentType="givenName"
@@ -175,7 +178,7 @@ const Signup = (props) => {
             />
             <TextInput
               placeholder="Lastname"
-              style={styles.input}
+              style={FormStyles.input}
               autoCapitalize="none"
               keyboardType="default"
               textContentType="familyName"
@@ -185,16 +188,16 @@ const Signup = (props) => {
               blurOnSubmit={true}
             />
             <TouchableOpacity
-              style={styles.input}
+              style={FormStyles.input}
               onPress={() => setModalVisible(!modalVisible)}>
                 <Text>{school}</Text>
-              </TouchableOpacity>
-            <View style={{alignSelf: 'flex-end', marginRight: 20}}>
-             <Text style={{color: validEmailColor, fontWeight: '800'}}>{validEmail}</Text>
-            </View>
+            </TouchableOpacity>
+            {validEmail && <View style={{alignSelf: 'flex-end', marginRight: 20}}>
+              <Text style={{color: validEmailColor, fontWeight: '800'}}>{validEmail}</Text>
+              </View>}
             <TextInput
               placeholder="Enter Email"
-              style={styles.input}
+              style={FormStyles.input}
               autoCapitalize="none"
               keyboardType="email-address"
               textContentType="emailAddress"
@@ -203,51 +206,53 @@ const Signup = (props) => {
               returnKeyType="next"
               blurOnSubmit={true}
             />
-            <View style={{alignSelf: 'flex-end', marginRight: 20}}>
+            {passStrength && <View style={{alignSelf: 'flex-end', marginRight: 20}}>
              <Text style={{color: passStrengthColor, fontWeight: '800'}}>{passStrength}</Text>
-            </View>
+            </View>}
             <TextInput
               placeholder="Password"
               secureTextEntry
-              style={styles.input}
+              style={FormStyles.input}
               value={password}
+              textContentType="password"
               onChangeText={e => StrengthChecker(e)}
               returnKeyType="next"
               textContentType="password"
               blurOnSubmit={true}
             />
-            <View style={{alignSelf: 'flex-end', marginRight: 20}}>
+            {matchMas && <View style={{alignSelf: 'flex-end', marginRight: 20}}>
               <Text style={{color: '#ad0000', fontWeight: '800'}}>{matchMas}</Text>
-            </View>
+            </View>}
             <TextInput
               placeholder="Reenter Password"
               secureTextEntry
-              style={styles.input}
+              style={FormStyles.input}
               value={confirPass}
               onChangeText={e => setConfirPass(e)}
-              returnKeyType="next"
+              returnKeyType="done"
               textContentType="password"
               blurOnSubmit={true}
             />
-            <TouchableOpacity style={styles.signp_btn} 
+            <TouchableOpacity style={FormStyles.submitView} 
               onPress={onSubmit}>
-              <Text style={styles.LoginButton}>Signup</Text>
+              <Text style={FormStyles.submitText}>Signup</Text>
             </TouchableOpacity>
 
            {(emptyField === true) && 
-            <View>
-              <Text style={styles.emptyError}>{emptyMsg}</Text>
+            <View style={FormStyles.errorView}>
+              <Text style={FormStyles.emptyError}>{emptyMsg}</Text>
              </View>}
           </View>
           <Modal 
           animationType="slide"
           transparent={true}
           visible={modalVisible}
+          hardwareAccelerated={true}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}>
-            <View style={styles.picker}>
-              <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>
+            <View style={FormStyles.picker}>
+              <TouchableOpacity style={FormStyles.close} onPress={() => setModalVisible(!modalVisible)}>
                   <EvilIcons name="close" size={35} color="black" />
               </TouchableOpacity>
             <Picker
@@ -269,109 +274,109 @@ const Signup = (props) => {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //marginTop: Constants.statusBarHeight,
-  },
-  headerView:{
-    top: 0,
-    paddingLeft: 10
-  },
-  logoView:{
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  logo:{
-    height: 100,
-    backgroundColor: '#000',
-    width: 100,
-    borderRadius: 25,
-    justifyContent: 'center'
-  },
-  logoText:{
-    color: '#fff',
-    textAlign: 'center'
-  },
-  inputs:{
-    display: 'flex',
-    flexDirection:"column",
-    alignItems: 'center'
-  },
-  input: {
-    height: 50,
-    backgroundColor: "#f5f5f5",
-    paddingLeft: 10,
-    marginBottom: 5,
-    borderRadius: 10,
-    borderColor: "#CCC",
-    borderWidth: 1,
-    width: 400,
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent: 'center'
-  },
-  signBtn:{
-    marginTop: 10,
-    marginBottom: 10
-  },
-  LoginTitle: {
-    fontSize: 16,
-    fontWeight: '900',
+// const FormStyles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     //marginTop: Constants.statusBarHeight,
+//   },
+//   headerView:{
+//     top: 0,
+//     paddingLeft: 10
+//   },
+//   logoView:{
+//     alignItems: 'center',
+//     marginTop: 50,
+//   },
+//   logo:{
+//     height: 100,
+//     backgroundColor: '#000',
+//     width: 100,
+//     borderRadius: 25,
+//     justifyContent: 'center'
+//   },
+//   logoText:{
+//     color: '#fff',
+//     textAlign: 'center'
+//   },
+//   inputs:{
+//     display: 'flex',
+//     flexDirection:"column",
+//     alignItems: 'center'
+//   },
+//   input: {
+//     height: 50,
+//     backgroundColor: "#f5f5f5",
+//     paddingLeft: 10,
+//     marginBottom: 5,
+//     borderRadius: 10,
+//     borderColor: "#CCC",
+//     borderWidth: 1,
+//     width: 400,
+//     marginTop: 5,
+//     marginBottom: 5,
+//     justifyContent: 'center'
+//   },
+//   signBtn:{
+//     marginTop: 10,
+//     marginBottom: 10
+//   },
+//   LoginTitle: {
+//     fontSize: 16,
+//     fontWeight: '900',
 
-  },
-  LoginButton: {
-    fontSize: 18,
-    fontWeight: '800',
-    textAlign: "center",
-    paddingVertical: 3,
-    color: "#fff"
-  },
-  MemberLogin: {
-    paddingVertical: 10,
-  },
-  signp_btn: {
-    backgroundColor: '#01294a',
-    borderRadius: 18,
-    overflow: 'hidden',
-    height: 37,
-    width: 125,
-    color: '#000',
-    marginTop: 10,
-    marginBottom: 5,
-    justifyContent:'center',
-    alignSelf: 'center'
-  },
-  ForgotPasswordView: {
-    paddingVertical: 5,
-  },
-  ForgotPasswordBttn: {
-    textAlign: "center",
-  },
-  picker:{
-    //margin: 20,
-    backgroundColor: "#bdbdbd",
-    marginTop: 'auto', 
-    marginLeft: 5,
-    marginRight: 5,
-    borderRadius: 20,
-  },
-  close:{
-    //backgroundColor: 'red'
-    margin: 10,
-    alignSelf: 'flex-end'
-  },
-  back_text:{
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#5cacf7'
-  },
-  emptyError:{
-    color: '#d91111',
-    fontWeight: '800',
-    padding: 20,
-    fontSize: 16
-  },
-});
+//   },
+//   LoginButton: {
+//     fontSize: 18,
+//     fontWeight: '800',
+//     textAlign: "center",
+//     paddingVertical: 3,
+//     color: "#fff"
+//   },
+//   MemberLogin: {
+//     paddingVertical: 10,
+//   },
+//   signp_btn: {
+//     backgroundColor: '#01294a',
+//     borderRadius: 18,
+//     overflow: 'hidden',
+//     height: 37,
+//     width: 125,
+//     color: '#000',
+//     marginTop: 10,
+//     marginBottom: 5,
+//     justifyContent:'center',
+//     alignSelf: 'center'
+//   },
+//   ForgotPasswordView: {
+//     paddingVertical: 5,
+//   },
+//   ForgotPasswordBttn: {
+//     textAlign: "center",
+//   },
+//   picker:{
+//     //margin: 20,
+//     backgroundColor: "#bdbdbd",
+//     marginTop: 'auto', 
+//     marginLeft: 5,
+//     marginRight: 5,
+//     borderRadius: 20,
+//   },
+//   close:{
+//     //backgroundColor: 'red'
+//     margin: 10,
+//     alignSelf: 'flex-end'
+//   },
+//   back_text:{
+//     fontSize: 18,
+//     fontWeight: '600',
+//     color: '#5cacf7'
+//   },
+//   emptyError:{
+//     color: '#d91111',
+//     fontWeight: '800',
+//     padding: 20,
+//     fontSize: 16
+//   },
+// });
 
 export default Signup;

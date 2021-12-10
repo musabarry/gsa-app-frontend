@@ -11,7 +11,7 @@ import {CREATEPOSTIMAGE, CREATEPOSTTEXT} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import checkContext  from '../../Context/checkContext';
 import { RNS3 } from 'react-native-aws3';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '../BeforeLogin/loading';
 const Post = (props) =>{
   // camera access
@@ -32,18 +32,19 @@ const Post = (props) =>{
 
   useEffect(() =>{
       (async () =>{
-          if (Platform.OS === 'ios') {
-              const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-              if (status !== 'granted') {
-                alert('Sorry, we need camera roll permissions to make this work!');
-              }
-            }
+          // if (Platform.OS === 'ios') {
+          const { status } = await Camera.requestCameraPermissionsAsync();
+          setHasPermission(status === 'granted');
+          // if (status !== 'granted') {
+          //   alert('Sorry, we need camera roll permissions to make this work!');
+          // }
+            // }
             // Camera Permission
-            const { status } = await Permissions.askAsync(Permissions.CAMERA);
-            setHasPermission(status === 'granted')
+          // const { status } = await Permissions.askAsync(Permissions.CAMERA);
+          // setHasPermission(status === 'granted')
             
       })();
-  })
+  }, [])
     
     //switch between front and back camera
     const handleCameraType=()=>{
@@ -194,7 +195,7 @@ const Post = (props) =>{
                           <Ionicons name="ios-camera" size={50} color="white" />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.flip} onPress={()=> handleCameraType()}>
-                          <Ionicons name="ios-reverse-camera" size={50} color="white" />
+                          <Ionicons name="camera-reverse" size={50} color="white" />
                         </TouchableOpacity>
                     </View>
                 </View>
