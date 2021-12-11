@@ -66,7 +66,7 @@ const Authenticated = ({ navigation }) => {
       update()
     })()
   }, [update])
-
+  console.log(allPostError);
 
   // if no data or fetch api is loading return Loading Page
   if(loadingInfo || allPostLoading || infoError | allPostError ){
