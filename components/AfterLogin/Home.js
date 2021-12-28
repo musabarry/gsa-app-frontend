@@ -12,7 +12,7 @@ const Home = (props) => {
     
     const [search, setSearch] = useState('');
     const [searResult, setSearchResult] = useState([])
-    const [showResult, setShowResult] = useState(false);
+
 
     const [clicked, setClicked] = useState(false);
 
@@ -30,13 +30,8 @@ const Home = (props) => {
         if(data){
             setSearchResult(data.searchUser)
         }
-        (async () =>{
-            await Keyboard.addListener('keyboardDidShow', () =>{
-                setShowResult(true)
-        })
-        })()
         
-    },[search, showResult, data])
+    },[search, data])
     
     
     return(
@@ -47,25 +42,11 @@ const Home = (props) => {
                 setSearch={setSearch}
                 clicked={clicked}
                 setClicked={setClicked}
-                setShowResult={setShowResult}
             />
-            {/* <SearchBar
-                round
-                searchIcon={{ size: 24 }}
-                onChangeText={(text) => setSearch(text)}
-                onClear={() =>  setSearch('')}
-                placeholder="Search"
-                value={search}
-                containerStyle={{backgroundColor: '#1e1e1f'}}
-                inputStyle={{backgroundColor: 'white'}}
-                autoCorrect={false}
-                inputContainerStyle={{backgroundColor: 'white', borderWidth: 1}}
-                onCancel={() => setShowResult(false)}
-                //cancelIcon={platform=""}
-            /> */}
+
             {(!states.allPost) ?  <Loading /> :
             <ScrollView>
-                {showResult && 
+                {clicked && 
                     <View style={states.result}>
                         {
                             loading? 
@@ -74,7 +55,7 @@ const Home = (props) => {
                         }
                     </View>
                 }
-                {!showResult && <View>
+                {!clicked && <View>
                     {states.allPost && states.allPost.allPost.map(item =>{
                         return <PostCard uri={item.imageAlbum ? item.imageAlbum[0] : null} 
                                 data={item} key={item._id} 

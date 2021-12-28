@@ -8,7 +8,6 @@ const SearchBar = (props) => {
 
         Keyboard.dismiss();
         props.setClicked(false);
-        props.setShowResult(false);
     }
  
     return (
