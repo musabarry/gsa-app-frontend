@@ -107,6 +107,7 @@ const Post = (props) =>{
         .then(response => {
           if (response.status !== 201) throw Error('Error uploadting to AWS S3')
           //else get the image link and save to DB
+          
           createPostImage({
               variables:{
                   owner: `${userID}`,

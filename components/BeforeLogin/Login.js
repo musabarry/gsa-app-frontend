@@ -25,7 +25,6 @@ const Login =(props) => {
     if(!email || !password){
       Alert.alert("Email or password is empty")
     }else{
-      console.log(email, password);
        login({
         variables:{
           email: email,
@@ -44,7 +43,7 @@ const Login =(props) => {
           state.setAuthanticated(true)
         }
       }).catch(error =>{
-        console.log(error);
+        //console.log(error);
         Alert.alert('Password wrong')
       })
     }

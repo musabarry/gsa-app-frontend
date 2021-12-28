@@ -87,7 +87,7 @@ const ChangeAvater =(props) => {
           name: `${state.userID}-${new Date().getTime()}`,
           type: "profile/jpeg"
         };
-
+        
         const options = {
             bucket: aws.bucketProfile,
             region: aws.region,
@@ -95,10 +95,13 @@ const ChangeAvater =(props) => {
             secretKey: aws.secretKey,
             successActionStatus: 201
         };
-        
+       
         RNS3.put(file, options)
         .then(response => {
-            if (response.status !== 201) throw Error('Error uploadting to AWS S3')
+            if (response.status !== 201){
+                console.log(image);
+                throw Error('Error uploadting to AWS S3')
+            } 
             profileImage({
                 variables:{
                     image: `${response.body.postResponse.key}`,
@@ -110,6 +113,7 @@ const ChangeAvater =(props) => {
                 setLoading(false)
                 return navigation.navigate('homeProfile')
             }).catch(error =>{
+                console.log(error);
                 setLoading(false)
             })
         }).catch(error => {

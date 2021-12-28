@@ -7,7 +7,6 @@ import Post from '../components/AfterLogin/Post';
 import Home from '../components/AfterLogin/Home';
 import { createStackNavigator } from "@react-navigation/stack";
 import Content from '../components/AfterLogin/Content';
-// import ProfileImg from '../components/AfterLogin/ProfileImg'
 import ChangeAvater from '../components/AfterLogin/ChangeAvater'
 import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
 import CommentPage from '../components/Card/CommentPage'
@@ -18,7 +17,7 @@ import checkContext  from '../Context/checkContext';
 import{useQuery} from '@apollo/client';
 import {ALLPOST, USERINFO } from "../GraphQl/query";
 import Loading from '../components/BeforeLogin/loading';
-import HomeProfile from '../components/AfterLogin/HomeProfile'
+import HomeProfile from '../components/AfterLogin/HomeProfile';
 const profile = ({navigation}) =>{
 
   return(
@@ -48,6 +47,7 @@ const Authenticated = ({ navigation }) => {
   const {error: infoError, data: dataInfo, loading: loadingInfo} =  useQuery(USERINFO)
   const {error: allPostError, data: allPostData, loading: allPostLoading} =  useQuery(ALLPOST)
 
+
   const [userInfo, setUserInfo] =  useState();
   const [allPost, setAllPost] = useState([])
   const [userID, setUserID] = useState()
@@ -66,7 +66,6 @@ const Authenticated = ({ navigation }) => {
       update()
     })()
   }, [update])
-
 
   // if no data or fetch api is loading return Loading Page
   if(loadingInfo || allPostLoading || infoError | allPostError ){

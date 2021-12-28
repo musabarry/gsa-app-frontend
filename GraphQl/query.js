@@ -34,6 +34,7 @@ export const ALLPOST = gql`
         school
         avatar
     }
+    userLiked
   }
 }
 `
@@ -77,6 +78,7 @@ query getUser($user: String!){
         school
         avatar
     }
+    
     }
     }
   }
@@ -120,15 +122,20 @@ query {
         school
         avatar
     }
+    userLiked
   }
 }
 `
 
 
-// export const connection = gql`
-// query{
-//   connection{
-//     success
-//   }
-// }
-// `
+export const SEARCHUSER = gql`
+query searchUser($name: String){
+  searchUser(name: $name){
+    _id
+    firstname
+    lastname
+    avatar
+    school
+  }
+}
+`

@@ -61,7 +61,9 @@ const App = ({ navigation }) => {
   //   },
   // });
   useEffect(() =>{
+    
     ( async () =>{
+      
       const token = await AsyncStorage.getItem('@token_key')
       const id =  await AsyncStorage.getItem('@userID')
 

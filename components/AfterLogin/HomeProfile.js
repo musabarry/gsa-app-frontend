@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button} from 'react-native';
-import{useQuery, useLazyQuery} from '@apollo/client';
+import{useQuery} from '@apollo/client';
 import {GETUSER} from "../../GraphQl/query";
 import Loading from '../BeforeLogin/loading'
-import {  Feather, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import PostCard from '../Card/PostCard';
 const HomeProfile = (props) => {
 
@@ -49,7 +49,7 @@ const HomeProfile = (props) => {
                     <View style={styles.userInfo}>
                         <View style={styles.image_wrape}>
                             {personalInfo.avatar ? <Image style={styles.image} source={{uri: `${personalInfo.avatar}`}} />:
-                             <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
+                             <FontAwesome5 name="user-alt" size={250} color="#01294a" />}
                         </View>
                         <View style={styles.details}>
                             <View style={styles.info}>
@@ -102,8 +102,10 @@ const styles = StyleSheet.create({
         color: '#82b5ff'
     },
     image_wrape:{
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
-        height: 260
+        height: 240
     },
     image:{
         borderRadius: 5,
