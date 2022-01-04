@@ -39,8 +39,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#e6e6e6',
         display: 'flex',
         flexDirection: 'column',
+        alignSelf: 'center',
         borderColor: '#cccccc',
         borderWidth: 1,
+        padding: 5,
         shadowOffset:{
             width: 0,
             height: 2,
@@ -48,10 +50,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        width: '90%',
+        borderRadius: 10,
+        marginBottom: 4,
     },
     info:{
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     name:{
         marginLeft: 10,

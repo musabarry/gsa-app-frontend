@@ -1,7 +1,6 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-native';
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
-import CommentPage from './CommentPage';
 import checkContext  from '../../Context/checkContext';
 import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
@@ -15,50 +14,42 @@ const PostCard = (props) =>{
     //determine if the user liked a post or not
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [showLikes, setShowLikes] = useState(false)
-    const [showComments, setShowComments] =  useState(false)
     const [like, {error: likeError, loading: likeLoading}] =  useMutation(CREATELIKE)
     const [deletePost, {error: deleteError, loading: deleteLoading}] = useMutation(DELETEPOST)
 
     useEffect(() =>{
  
     }, [updateLike])
-    //like click event
-    const likes = () =>{
-        setModalVisible(true) 
-        setShowComments(false)
-        setShowLikes(!showLikes)       
+
+
+
+    const routeToComment = async ()=>{
+        return navigation.navigate('commentpage',{
+             id: props.data._id,
+        })
+
     }
 
-    //comment click event
-    const comments = () =>{
-        setModalVisible(true)
-        setShowLikes(false)
-       setShowComments(!showComments)
+    const routeToLikes =  async () =>{
+        return navigation.navigate('likepage',{
+             likes: props.data.likes,
+             id: props.data._id,
+        })
     }
 
-    const open = () =>{
-        setModalVisible(true)
-    }
-    //close click event
-    const close = () =>{
-        setModalVisible(false)
-        setShowComments(false)
-        setShowLikes(false)
-    }
     //check card owner
     const owner  = props.userInfo._id == state.userID ? true : false
     
     //double tap image like
     let lastImagePress = 0
     const doubleLike = ()=>{
-    const time = new Date().getTime();
-    const delta = time - lastImagePress
-    const double_press_delay = 300;
+        const time = new Date().getTime();
+        const delta = time - lastImagePress
+
+        const double_press_delay = 300;
         if (delta < double_press_delay) {
             updateLike()
-        }
-        else {
+        }else {
             lastImagePress = time;
         }
     }
@@ -111,7 +102,6 @@ const PostCard = (props) =>{
         }
     }
 
-
 return(
     <View>
         <View style={styles.card_wrapper}>
@@ -156,9 +146,9 @@ return(
                         </TouchableOpacity>
                         <TouchableOpacity   
                             style={styles.num}
-                            onPress={() => comments()}>
+                            onPress={() => routeToComment()}>
                             <FontAwesome5 name="comment" size={24} color="black" />
-                            <Text style={styles.commnets}>{props.data.commnets.length}</Text>
+                            <Text style={styles.commnets}>{props.data.commnets}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.timeOption}>
@@ -167,10 +157,10 @@ return(
                 </View>
             </View>
             <View style={styles.bottomView}>
-                <TouchableOpacity style={styles.likeNum} onPress={() => likes()}>
+                <TouchableOpacity style={styles.likeNum} onPress={() => routeToLikes()}>
                     <Text>{ props.data.likes.length > 0? props.data.likes.length + ' likes' :''}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.more} onPress={() => open()}>
+                <TouchableOpacity style={styles.more} onPress={() => setModalVisible(!modalVisible)}>
                     { owner && <Feather name="more-horizontal" size={24} color="black" />}
                 </TouchableOpacity>
             </View>
@@ -183,11 +173,6 @@ return(
                 onRequestClose={() => {
                 setModalVisible(!modalVisible);
                 }}>
-                    { showLikes || showComments ? 
-                <CommentPage comments={props.data.commnets} likes={props.data.likes}
-                        id={props.data._id} close={close} showLikes={showLikes} 
-                        showComments={showComments} likesBtn={likes} commentsBtn={comments} />
-                        :
                         <View style={styles.more_setting}>
                         <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>
                             <EvilIcons name="close" size={35} color="black" />
@@ -197,7 +182,8 @@ return(
                                 <Text style={styles.deleteText}>Delete</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>}
+                    </View>
+                    {/* // } */}
             </Modal>
     </View>
     )

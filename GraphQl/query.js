@@ -15,18 +15,7 @@ export const ALLPOST = gql`
         school
         avatar
       }
-      commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-      }
+      commnets
       likes{
         _id
         firstname
@@ -59,18 +48,7 @@ query getUser($user: String!){
     date
     text
     imageAlbum
-    commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-    }
+    commnets
     likes{
         _id
         firstname
@@ -103,18 +81,7 @@ query {
     date
     text
     imageAlbum
-    commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-    }
+    commnets
     likes{
         _id
         firstname
@@ -138,4 +105,34 @@ query searchUser($name: String){
     school
   }
 }
+`
+
+export const LOOKUP = gql`
+query lookUp($name: String){
+  lookUp(name: $name){
+    _id
+    firstname
+    lastname
+    avatar
+    school
+  }
+}`
+
+export const GETCOMMENTS  = gql`
+query getComments($post: ID!){
+  getComments(post: $post){
+    _id
+    post
+    text
+    byUser{
+      _id
+      avatar
+      firstname
+      lastname
+      school
+    }
+    date
+  }
+}
+
 `

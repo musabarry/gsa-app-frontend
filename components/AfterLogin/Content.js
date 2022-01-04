@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   contentsView:{
     height: '100%',
-    backgroundColor: "white",
+    backgroundColor: '#ededed',
   },
   infoView:{
     backgroundColor: "#e8e8e8",

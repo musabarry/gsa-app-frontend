@@ -2,14 +2,15 @@
 import React, {useContext, useEffect, useState} from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Profile from '../components/AfterLogin/Profile';
-import Message from '../components/AfterLogin/Message'
+import Message from '../components/AfterLogin/Message/Message';
 import Post from '../components/AfterLogin/Post';
 import Home from '../components/AfterLogin/Home';
 import { createStackNavigator } from "@react-navigation/stack";
 import Content from '../components/AfterLogin/Content';
 import ChangeAvater from '../components/AfterLogin/ChangeAvater'
 import { MaterialIcons, Entypo, FontAwesome5 } from '@expo/vector-icons'; 
-import CommentPage from '../components/Card/CommentPage'
+import CommentPage from '../components/Card/CommentPage';
+import LikesPages from '../components/Card/LikesPages';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 import authContext  from '../Context/authContext';
@@ -18,6 +19,7 @@ import{useQuery} from '@apollo/client';
 import {ALLPOST, USERINFO } from "../GraphQl/query";
 import Loading from '../components/BeforeLogin/loading';
 import HomeProfile from '../components/AfterLogin/HomeProfile';
+import WriteMessage from "../components/AfterLogin/Message/WriteMessage";
 const profile = ({navigation}) =>{
 
   return(
@@ -36,6 +38,17 @@ const HomeCom = ({navigation}) =>{
     <Stack.Navigator headerMode="none">
       <Stack.Screen name="Home" component={Home}/>
       <Stack.Screen name="User" component={HomeProfile}/>
+      <Stack.Screen name='commentpage'  component={CommentPage} />
+      <Stack.Screen name='likepage'  component={LikesPages} />
+    </Stack.Navigator>
+  )
+}
+
+const MessageCom = ({navigation}) =>{
+  return(
+    <Stack.Navigator headerMode="none">
+      <Stack.Screen name='List'  component={Message}/>
+      <Stack.Screen name="write" component={WriteMessage}/>
     </Stack.Navigator>
   )
 }
@@ -67,6 +80,7 @@ const Authenticated = ({ navigation }) => {
     })()
   }, [update])
 
+ 
   // if no data or fetch api is loading return Loading Page
   if(loadingInfo || allPostLoading || infoError | allPostError ){
     return(
@@ -87,7 +101,7 @@ const Authenticated = ({ navigation }) => {
                     <MaterialIcons name="add-box" size={24} color="#1e1e1f" />
                 )}}
               />
-              <Tab.Screen name="Message" component={Message}              
+              <Tab.Screen name="Message" component={MessageCom}              
                   options={{
                   tabBarIcon: () =>(
                     <MaterialIcons name="message" size={24} color="#1e1e1f" />

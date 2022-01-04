@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react'
-import {View, StyleSheet, ScrollView, Keyboard, Text, Platform} from 'react-native';
+import {View, StyleSheet, ScrollView, Text} from 'react-native';
 import PostCard from '../Card/PostCard';
 //import { SearchBar } from 'react-native-elements';
 import authContext  from '../../Context/authContext';
@@ -12,7 +12,6 @@ const Home = (props) => {
     
     const [search, setSearch] = useState('');
     const [searResult, setSearchResult] = useState([])
-
 
     const [clicked, setClicked] = useState(false);
 
@@ -30,9 +29,7 @@ const Home = (props) => {
         if(data){
             setSearchResult(data.searchUser)
         }
-        
     },[search, data])
-    
     
     return(
         <View style={styles.container}>
@@ -43,15 +40,14 @@ const Home = (props) => {
                 clicked={clicked}
                 setClicked={setClicked}
             />
-
             {(!states.allPost) ?  <Loading /> :
             <ScrollView>
                 {clicked && 
                     <View style={states.result}>
                         {
-                            loading? 
-                            <Loading />:
-                            searResult.map(item=><SearchResult key={item._id}  searResult={item}/>)
+                        loading? 
+                        <Loading />:
+                        searResult.map(item=><SearchResult key={item._id}  searResult={item}/>)
                         }
                     </View>
                 }
@@ -80,11 +76,6 @@ const Home = (props) => {
 const styles =  StyleSheet.create({
     container:{
         flex: 1,
-    },
-    searchResult:{
-        backgroundColor: '#000',
-        width: '100%',
-        minHeight: 100
     },
     result:{
         marginTop: 20

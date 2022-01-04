@@ -1,93 +1,91 @@
-import React, {useState, useContext} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity,
- TextInput, ScrollView} from 'react-native';
-import Constants from 'expo-constants';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity,ScrollView, 
+    SafeAreaView, KeyboardAvoidingView, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CommentList from './CommentList'
-import { KeyboardAccessoryView } from 'react-native-keyboard-accessory'
 import{useMutation} from '@apollo/client';
 import {CREATECOMMENT} from '../../GraphQl/mutation';
-import {ALLPOST, USERINFO} from '../../GraphQl/query';
-import LikesList from './LikesList';
+import {ALLPOST, USERINFO, GETCOMMENTS} from '../../GraphQl/query';
+import InputCom from '../InputCom';
+import{useQuery} from '@apollo/client';
+import Loading from '../BeforeLogin/loading';
+
 const CommentPage = (props) => {
 
-  
-    const [createCommnet, {error, loading}] =  useMutation(CREATECOMMENT)
-    const initialText = '';
-    const [commenText, setComentText] = useState(initialText);
-    
+    const navigation = useNavigation();
+    const [createCommnet, {error: createError , loading: createLoading}] =  useMutation(CREATECOMMENT)
+    const [msgText, setMsgText] = useState('');
+    const [comments, setComments] = useState([])
+    const postID = props.route.params.id
+    const navBarHeight = (Platform.OS === 'ios') ? 47 : 100;
+    //const comments = props.route.params.comments
+
+    const {data, error, loading} = useQuery(GETCOMMENTS, 
+        {
+            variables:{post: postID}
+        }
+    )
+
     const submit = () =>{
-        
-        if(commenText.length > 1){
+        if(msgText.length > 1){
             createCommnet({
                 variables:{
-                    post: `${props.id}`,
-                    text: commenText
+                    post: `${postID}`,
+                    text: msgText
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
-                setComentText(initialText)
+                console.log(res);
+                setMsgText('')
             }).catch(error =>{
                 console.log({error});
             }) 
         }
     }
 
+    useEffect(() =>{
+        if(data){
+            setComments(data.getComments)
+        }
+    }, [data, postID])
+
+    const goBack =() =>{
+        return navigation.goBack()
+    }
+
     //return either the comments or users like base on which button(like | comment) is clicked
     return (
-        <View style={styles.container}  >
-            <View style={styles.top}>
-                <TouchableOpacity onPress={() => props.close()}>
+        <SafeAreaView style={styles.container}  >
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => goBack()}>
                     <Text style={styles.backText}>Back</Text>
                 </TouchableOpacity>
-                <View style={styles.likeComment}>
-                    <TouchableOpacity style={styles.btn} onPress={() => props.likesBtn()}>
-                        <Text style={styles.btn_text}>Likes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={() => props.commentsBtn()}>
-                        <Text style={styles.btn_text}>Comments</Text>
-                    </TouchableOpacity>
+                <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
+                    <Text style={{textAlign: 'center', 
+                    textAlignVertical: 'center',
+                     fontSize: 21,
+                     fontWeight: 'bold'}}>Comments</Text>
                 </View>
             </View>
-            <ScrollView  keyboardShouldPersistTaps='handled'>
-                <View>
+            <ScrollView>
+             
                 {/* return either the comments or users like base on which button(like | comment) is clicked */}
-                {  props.showComments && !props.showLikes ? props.comments.map(item => <CommentList item={item} 
-                        key={item._id} keys={item._id}/>) : props.likes.map(item => <LikesList item={item} 
-                        key={item._id} keys={item._id} />) 
+                { loading?   <Loading /> :  comments.map(item => <CommentList item={item} 
+                        key={item._id} keys={item._id}/>)
                 }
-                </View>
             </ScrollView>
             {/* comment page is true, show comment input*/}
-            {!props.showLikes && <KeyboardAccessoryView 
-                    style={styles.keyboardView} 
-                    alwaysVisible={true}
-                    avoidKeyboard={true}
-                    >
-                 {({ isKeyboardVisible }) => (
-            <View style={styles.comment_box} >
-                <TextInput 
-                placeholder="Add a comment" 
-                style={styles.comment_input}
-                keyboardAppearance="default"
-                autoFocus={true}
-                multiline={true}
-                maxLength={250}
-                value={commenText}
-                onChangeText={(text) =>  setComentText(text)}
-                placeholderTextColor="#243333"
-                spellCheck={true}
-                />
-                 
-                <TouchableOpacity style={styles.post_btn} onPress={() => submit()}>
-                    <Text style={styles.post_text}>Post</Text>
-                </TouchableOpacity>
-                 
-            </View>
-            )}
-            </KeyboardAccessoryView>}
-        </View>
+            <KeyboardAvoidingView 
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={navBarHeight}>
+                <InputCom 
+                    textPlaceholder={'Add a comment'}
+                    msgText={msgText}
+                    setMsgText={setMsgText}
+                    submit={submit}
+                    btnText={'Post'}/>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     );
 }
 
@@ -96,20 +94,19 @@ export default CommentPage;
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: "#f2f1ed",
-        marginTop: Constants.statusBarHeight,
     },
-    header:{
+    header:{      
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        backgroundColor: '#ededed',
+        borderBottomWidth: 1,
+        borderBottomColor: '#cae8e8',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity:  0.3,
+        shadowRadius: 3,
+        marginBottom: 10,
     },
-    // btn:{
-    //     display: 'flex',
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     backgroundColor: '#d9d9d9',
-    //     padding: 5
-    // },
     back_Btn:{
         marginLeft: 10,
     },
@@ -126,62 +123,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         alignSelf: 'center'
     },
-    keyboardView:{
-        display: 'flex',
-        flexDirection: 'column',
-        marginBottom: 10,
-        marginLeft: 10,
-        marginRight: 10
-    },
-    comment_box:{
-        margin: 5,
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "flex-end",
-        backgroundColor: '#ededed',
-       // marginBottom: 75,
-       //display: "flex",
-      
-    },
-    comment_input:{
-        borderWidth: 2,
-        borderRadius: 10,
-        borderColor: "#CCC",
-        backgroundColor: "#f0eded",
-        padding: 10,
-        fontSize: 16,
-        marginRight: 10,
-        textAlignVertical: "top",
-        minHeight: 70,
-        maxHeight: 100,
-        width: '85%',
-    },
-    post_btn:{
-        backgroundColor: '#0076d1',
-        paddingTop: 6,
-        paddingBottom: 6,
-        paddingLeft: 12,
-        paddingRight: 12,
-        borderRadius: 10,
-    },
-    post_text:{
-        fontSize: 16,
-        textAlign: 'center',
-        fontWeight: '600',
-    },
-
-    //
-    top:{
-        display: 'flex',
-        flexDirection: 'column',
-        marginLeft: 5,
-        marginRight: 5,
-        marginBottom: 10
-    },
     backText:{
         fontSize: 18,
         fontWeight: '600',
-        color: '#5cacf7'
+        color: '#5cacf7',
+        marginLeft: 6
     },
     likeComment:{
         display: 'flex',
@@ -199,6 +145,9 @@ const styles = StyleSheet.create({
         padding: 5,
         fontSize: 18,
         fontWeight: '700'
+    },
+    keyboardStyle:{
+        backgroundColor: 'red'
     }
 
 })

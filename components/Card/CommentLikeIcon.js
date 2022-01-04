@@ -4,8 +4,6 @@ import {EvilIcons } from '@expo/vector-icons';
 
 //comment & like button component
 const CommentLike = (props) => {
-
-    
     return (
         <View style={styles.wrap}>
             <TouchableOpacity style={styles.num} onPress={ () => props.updateLike() }>
