@@ -87,11 +87,16 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     header:{
-        height: 30,
-        justifyContent: 'center',
-        backgroundColor: '#fff',
-        borderBottomColor: '#d7e4f7',
-        borderBottomWidth: 1
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#ededed',
+        borderBottomWidth: 1,
+        borderBottomColor: '#cae8e8',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity:  0.3,
+        shadowRadius: 3,
     },
     backBtn:{
         marginLeft: 5
