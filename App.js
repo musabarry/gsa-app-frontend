@@ -27,7 +27,7 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
 //10.15.85.21
 const link = from([//172.20.10.4   //10.15.85.21
   errorLink,
-   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
+   new HttpLink({uri: "https://gsabackend.herokuapp.com/graphql"}), //server(api) link
 ])
 //https://gsabackend.herokuapp.com/graphql
 //http://192.168.1.32:8080/graphql s=home
