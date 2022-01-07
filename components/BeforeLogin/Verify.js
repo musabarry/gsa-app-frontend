@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet,
   Text, View, TouchableOpacity,
-  TextInput,KeyboardAvoidingView, Keyboard, ScrollView
+  TextInput,KeyboardAvoidingView, Keyboard, Platform, TouchableNativeFeedback
 } from "react-native";
 import{useMutation} from '@apollo/client';
 import {VERIFY, SENDCODE} from '../../GraphQl/mutation';
@@ -9,8 +9,7 @@ import { Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import checkContext  from '../../Context/checkContext';
 import Loading from './loading';
-import { color } from "react-native-reanimated";
-
+import FormStyles from "./Styles/FormStyles";
 const Verify =(props) => {
 
   const [code, setCode] =  useState('');
@@ -43,7 +42,8 @@ const reSendCode = async () =>{
         verifyUser({
         variables:{
           user: userID,
-          code: code
+          code: code,
+          verifyType: 'verify'
         }
       }).then( async (res) =>{
         if(res.data.verifyUser.success){
@@ -58,6 +58,11 @@ const reSendCode = async () =>{
     }
   }
 
+
+  const goBack = async ()=>{
+    await AsyncStorage.removeItem('@userID')
+    state.setVerifyUser(false)
+  }
   useEffect(() =>{
       if(msg){
         setTimeout(() => {setMsg('')}, 5000)
@@ -69,33 +74,38 @@ const reSendCode = async () =>{
     )
   }else{
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        {/* <View style={styles.headerView}>
-          <TouchableOpacity onPress={() => props.navigation.goBack()} style={styles.back_btn}>
+      <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios'? 'padding' : 'height'} 
+       behavior="padding" style={styles.container}>
+        <View style={styles.headerView}>
+          <TouchableOpacity onPress={() => goBack()} style={styles.back_btn}>
             <Text style={styles.back_text}>Back</Text>
           </TouchableOpacity>
-        </View> */}
-        <View style={styles.verify}>
-          <View  style={styles.input}>
+        </View>
+        {/* <View style={styles.verify}> */}
+        <TouchableNativeFeedback onPress={() => Keyboard.dismiss()} style={{backgroundColor:'red'}}>
+          <View  style={styles.verify}>
              {msg?<View style={styles.msgView}> 
                  <Text style={styles.msgText}>{msg}</Text>
             </View>: <></>}
             <TextInput
               placeholder="Code"
-              style={styles.codeInput}
+              style={FormStyles.input}
               autoCapitalize="none"
               value={code}
               onChangeText={e => setCode(e)}
-            ></TextInput>
+              returnKeyType="send"
+            />
             <TouchableOpacity style={styles.resendView} onPress={reSendCode}>
                 <Text style={styles.resendText}>Resend verification  Code</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.verifyView} 
+            <TouchableOpacity style={FormStyles.submitView} 
             onPress={onSubmit}>
-              <Text style={styles.verifyBtn}>Confirm</Text>
+              <Text style={FormStyles.submitText}>Confirm</Text>
             </TouchableOpacity>
           </View>
-        </View>
+          </TouchableNativeFeedback>
+        {/* </View> */}
       </KeyboardAvoidingView>
     );
   }
@@ -121,28 +131,12 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#ab0300'
   },
-  input:{
-    marginTop: 20
-  },
   verify:{
-    flex:1,
-    flexDirection:'row',
+    display: 'flex',
+    flexDirection: 'column',
     alignItems:'center',
-    justifyContent:'center'
-  },
-  codeInput: {
-    height: 70,
-    borderWidth: 1,
-    backgroundColor: "rgba(225, 229, 235,0.8)",
-    paddingLeft: 10,
-    marginBottom: 30,
-    borderRadius: 23,
-    width: 400,
-    color: '#000',
-    fontSize: 27,
-    textAlign: 'center',
-    alignItems: 'center',
-    lineHeight: 30,
+    justifyContent:'center',
+    height: '100%'
   },
   resendView:{
     textAlign: 'center',
@@ -153,31 +147,6 @@ const styles = StyleSheet.create({
       fontSize: 15,
       fontWeight: '800',
       color: '#006328'
-  },
-  verifyBtn: {
-    fontSize: 22,
-    fontWeight: '800',
-    textAlign: "center",
-    paddingVertical: 3,
-    color: "#fff"
-  },
-  verifyView: {
-    //backgroundColor: '#fff',
-    backgroundColor: '#01294a',
-    borderRadius: 18,
-    overflow: 'hidden',
-    height: 50,
-    width: 300,
-    color: '#000',
-    marginTop: 5,
-    marginBottom: 5,
-    justifyContent:'center',
-    alignSelf: 'center'
-  },
-  loading:{
-    flex: 1,
-    backgroundColor: '#c9d9f2',
-    justifyContent: "center",
   },
   back_text:{
     fontSize: 18,

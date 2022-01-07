@@ -20,14 +20,14 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
       // console.log(`Graphql error ${message}`)
     
     )
-    //if(networkError)  console.log(" [Network error]:", networkError);
+    // if(networkError)  console.log(" [Network error]:", networkError);
   }
 })
 
 //10.15.85.21
 const link = from([//172.20.10.4   //10.15.85.21
   errorLink,
-   new HttpLink({uri: "https://gsabackend.herokuapp.com/graphql"}), //server(api) link
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 //https://gsabackend.herokuapp.com/graphql
 //http://192.168.1.32:8080/graphql s=home
@@ -65,7 +65,7 @@ const App = ({ navigation }) => {
   useEffect(() =>{
     
     ( async () =>{
-      
+      //await AsyncStorage.removeItem('@userID')
       const token = await AsyncStorage.getItem('@token_key')
       const id =  await AsyncStorage.getItem('@userID')
 
@@ -89,7 +89,7 @@ const App = ({ navigation }) => {
     <ThemeProvider>
       <StatusBar 
       animated={true}
-      backgroundColor="#ededed"
+      backgroundColor='#ededed'
       barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1, backgroundColor: '#ededed'}}>
         <checkContext.Provider value={{authnaticated, verifyUser,

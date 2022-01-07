@@ -71,55 +71,57 @@ if(userOut || !data.userInfo){
 if(data.userInfo){
   const avatar = data.userInfo.avatar
   return (
-  <KeyboardAvoidingView behavior="padding" style={styles.container}>       
+  <View style={styles.container}>       
     <View style={styles.contentsView}>      
-      <View st={styles.top}>
-      <TouchableOpacity style={styles.btn_back} onPress={() => props.navigation.goBack()}>
-        <Text style={styles.back_text}>Back</Text>
-      </TouchableOpacity>
-    </View>
-    {data.userInfo &&     
-    <ScrollView style={styles.infoView}>
-      <View  style={styles.wrapper_img}>
-          { avatar ? <Image source={{uri: avatar }}  style={styles.img}/>: 
-            <FontAwesome5 name="user-alt" size={330} color="#01294a" style={{marginLeft: 30}}/>
-           }
+      <View st={styles.header}>
+        <TouchableOpacity style={styles.btn_back} onPress={() => props.navigation.goBack()}>
+          <Text style={styles.back_text}>Back</Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.info_wrapper}>
-        <Text style={styles.name}>
-        {data.userInfo ? data.userInfo.firstname: ''} {data.userInfo ? data.userInfo.lastname: ''}
-        </Text>
-        <View style={styles.school}>
-          <FontAwesome5 name="school" size={24} color="black" />
-          <Text style={styles.text}>{data.userInfo ? data.userInfo.school: ''}</Text>
-        </View>
+      <ScrollView >
+        {data.userInfo && 
+        <View style={styles.infoView}>  
+          <View  style={styles.wrapper_img}>
+              { avatar ? <Image source={{uri: avatar }}  style={styles.img}/>: 
+                <FontAwesome5 name="user-alt" size={330} color="#01294a" style={{marginLeft: 30}}/>
+              }
+          </View>
+          <View style={styles.info_wrapper}>
+            <Text style={styles.name}>
+            {data.userInfo ? data.userInfo.firstname: ''} {data.userInfo ? data.userInfo.lastname: ''}
+            </Text>
+            <View style={styles.school}>
+              <FontAwesome5 name="school" size={24} color="black" />
+              <Text style={styles.text}>{data.userInfo ? data.userInfo.school: ''}</Text>
+            </View>
 
-        <View>
-          <View style={styles.candidateInformations}>
-            <Text style={styles.label}>Skills:</Text>
-            {data.userInfo.skills.map( skill => <Text key={skill}> {skill} </Text>)}
-          </View>         
-          <View>
-            <Text style={styles.label}>Interest:</Text>
-              <View >
-                {data.userInfo.interest.map(interest => <Text key={interest}> {interest}</Text>)}
+            <View>
+              <View style={styles.candidateInformations}>
+                <Text style={styles.label}>Skills:</Text>
+                {data.userInfo.skills.map( skill => <Text key={skill}> {skill} </Text>)}
+              </View>         
+              <View>
+                <Text style={styles.label}>Interest:</Text>
+                  <View >
+                    {data.userInfo.interest.map(interest => <Text key={interest}> {interest}</Text>)}
+                  </View>
               </View>
-          </View>
-          <View>
-            <Text style={styles.label}>Role:</Text>
-              <View >
-                <Text>{data.userInfo.role}</Text>
+              <View>
+                <Text style={styles.label}>Role:</Text>
+                  <View >
+                    <Text>{data.userInfo.role}</Text>
+                  </View>
               </View>
-          </View>
-          <Text style={styles.label}>Major:</Text>
-          <View>
-              <View >
-                <Text>{data.userInfo.major}</Text>
+              <Text style={styles.label}>Major:</Text>
+              <View>
+                  <View >
+                    <Text>{data.userInfo.major}</Text>
+                  </View>
               </View>
+            </View>
           </View>
-        </View>
-      </View>
-    </ScrollView>}
+        </View>}
+      </ScrollView>
       <View style={styles.logoutView}>
         <View style={styles.editBtns}>
           <TouchableOpacity style={styles.btnPass} 
@@ -136,8 +138,7 @@ if(data.userInfo){
           <Text style={styles.lougout}>LOGOUT</Text>
         </TouchableOpacity>
       </View>
-      </View>
-
+    </View>
       {/* modal for updating userInfo and password */}
         <Modal 
         animationType="slide"
@@ -147,32 +148,47 @@ if(data.userInfo){
         setModalVisible(!modalVisible);
         }}>
 
-        <View style={styles.editView}>
-          <View style={styles.topHeader}>
-            <TouchableOpacity  style={styles.btn_back} onPress={() =>  setModalVisible(!modalVisible)} >
-                <Text style={styles.back_text}>Cansel</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.editForm}>
-            {
-            isEnabled ? 
-            <EditInfo setModalVisible={setModalVisible}/> :
-            <NewPassword email={data.userInfo.email} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
-            }
-          </View>
+          <View style={styles.editView}>
+            <View style={styles.header}>
+              <TouchableOpacity  style={styles.btn_back} onPress={() =>  setModalVisible(!modalVisible)} >
+                  <Text style={styles.back_text}>Cansel</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.editForm}>
+              {
+              isEnabled ? 
+              <EditInfo setModalVisible={setModalVisible}/> :
+              <NewPassword email={data.userInfo.email} setModalVisible={setModalVisible} modalVisible={modalVisible}/>
+              }
+            </View>
           </View>
         </Modal>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  candidateInformations: {
-    paddingTop: 10
-  },
   container: {
     flex: 1,
+    height: '100%',
+    backgroundColor: '#ededed',
+  },
+  contentsView:{
+    height: '100%',
+    backgroundColor: '#ededed',
+    display: 'flex',
+  },
+  header:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#ededed',
+    borderBottomWidth: 1,
+    borderBottomColor: '#cae8e8',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity:  0.3,
+    shadowRadius: 3,
   },
   label:{
     fontSize: 18,
@@ -207,6 +223,9 @@ const styles = StyleSheet.create({
   info_wrapper:{
     paddingLeft: 10,
   },
+  candidateInformations: {
+    paddingTop: 10
+  },
   list:{
     fontSize: 17,
     fontWeight: '500',
@@ -233,12 +252,8 @@ const styles = StyleSheet.create({
     borderColor: "#d4e3fa",
       
   },
-  contentsView:{
-    height: '100%',
-    backgroundColor: '#ededed',
-  },
   infoView:{
-    backgroundColor: "#e8e8e8",
+    // backgroundColor: "#e8e8e8",
   },
   passView:{
     width: '100%',
@@ -251,11 +266,10 @@ const styles = StyleSheet.create({
   },
 
   logoutView:{
-    display: 'flex',
-    flexDirection: 'column',
     position: 'absolute',
     bottom: 0,
-    width: '100%'
+    width: '100%',
+    padding: 4
   },
   editBtns:{
     display: 'flex',

@@ -4,7 +4,6 @@ const FormStyles = StyleSheet.create({
     container: {
       flex: 1,
       //marginTop: Constants.statusBarHeight,
-  
     },
     headerView:{
       top: 0,

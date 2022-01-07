@@ -37,8 +37,8 @@ mutation createCommnet($post: ID!, $text: String!){
 `
 
 export const VERIFY  = gql`
-mutation verifyUser($user: ID!, $code: String!){
-  verifyUser(input:{user: $user, code: $code}){
+mutation verifyUser($user: ID!, $code: String!, $verifyType: String!){
+  verifyUser(input:{user: $user, code: $code, verifyType: $verifyType}){
     token
     success
     _id
@@ -47,7 +47,7 @@ mutation verifyUser($user: ID!, $code: String!){
 }
 `
 export const SENDCODE =  gql`
-mutation sendCode($user: ID!){
+mutation sendCode($user: String!){
   sendCode(input:{user: $user}) {
     success
     _id

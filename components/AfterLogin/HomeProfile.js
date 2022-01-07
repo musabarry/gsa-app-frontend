@@ -62,7 +62,6 @@ const HomeProfile = (props) => {
                                 <Text  style={styles.textInfo}>{personalInfo.role}</Text>
                             </View>
                             <View>
-                               
                             </View>
                         </View>
                     </View>
