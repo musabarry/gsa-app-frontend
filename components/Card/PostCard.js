@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal}  from 'react-native';
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
 import checkContext  from '../../Context/checkContext';
 import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
@@ -7,6 +7,7 @@ import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import TextCom from './TextCom';
 
 const PostCard = (props) =>{
     const state = useContext(checkContext);
@@ -124,9 +125,7 @@ return(
                 {props.uri != null ?
                     (
                     <>
-                    <Text style={styles.textPost}>
-                        {props.data.text}
-                    </Text>
+                    <TextCom  textData={props.data.text} max_line={5} />
                     <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}
                         onPress={() => doubleLike()}>
                             {
@@ -134,9 +133,7 @@ return(
                             }
                     </TouchableOpacity></>
                     ):(
-                    <Text style={styles.textPost}>
-                        {props.data.text}
-                    </Text>
+                        <TextCom  textData={props.data.text} max_line={5} />
                     )}
                 </View>
                 <View style={styles.bottom_wrapper}>
@@ -214,7 +211,9 @@ const styles =  StyleSheet.create({
         flexDirection: 'column',
     },
     textPost:{
-        marginBottom: 15
+        marginBottom: 15,
+        fontSize: 14,
+        flexShrink: 1,
     },
     middle_wrapper:{
         borderRadius: 10
@@ -225,14 +224,8 @@ const styles =  StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    // num:{
-    //     flexDirection: 'row',
-    //     margin: 3
-    // },
     post:{
-        borderBottomColor: '#000',
-        borderRadius: 10,
-        padding: 5
+        padding: 5,
     },
     timeOption:{
         flexDirection: 'row',

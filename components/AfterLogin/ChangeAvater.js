@@ -57,7 +57,6 @@ const ChangeAvater =(props) => {
             await camera.takePictureAsync(options)
             .then(res =>{
                 setImage(res.uri)
-                console.log(res.uri);
                 setTakeBtn(false)
             }).catch(err =>{
                 setImage('')
@@ -68,7 +67,6 @@ const ChangeAvater =(props) => {
     
     //select galary image
     const pickImage = async () => {
-            console.log("")
             const result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
@@ -99,7 +97,6 @@ const ChangeAvater =(props) => {
         RNS3.put(file, options)
         .then(response => {
             if (response.status !== 201){
-                console.log(image);
                 throw Error('Error uploadting to AWS S3')
             } 
             profileImage({
@@ -113,7 +110,6 @@ const ChangeAvater =(props) => {
                 setLoading(false)
                 return navigation.navigate('homeProfile')
             }).catch(error =>{
-                console.log(error);
                 setLoading(false)
             })
         }).catch(error => {

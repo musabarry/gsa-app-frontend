@@ -18,12 +18,14 @@ const CommentPage = (props) => {
     const [comments, setComments] = useState([])
     const postID = props.route.params.id
     const navBarHeight = (Platform.OS === 'ios') ? 47 : 100;
+    const [update, setUpdate] = useState(false)
     //const comments = props.route.params.comments
 
-    const {data, error, loading} = useQuery(GETCOMMENTS, 
+
+    const {data, error, loading, refetch} = useQuery(GETCOMMENTS, 
         {
             variables:{post: postID}
-        }
+        },
     )
 
     const submit = () =>{
@@ -35,19 +37,20 @@ const CommentPage = (props) => {
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
-                console.log(res);
                 setMsgText('')
-            }).catch(error =>{
-                console.log({error});
+                refetch()
+            }).catch(err =>{
+                setMsgText('')
             }) 
         }
     }
 
     useEffect(() =>{
+        
         if(data){
             setComments(data.getComments)
         }
-    }, [data, postID])
+    },[data])
 
     const goBack =() =>{
         return navigation.goBack()
@@ -68,7 +71,6 @@ const CommentPage = (props) => {
                 </View>
             </View>
             <ScrollView>
-             
                 {/* return either the comments or users like base on which button(like | comment) is clicked */}
                 { loading?   <Loading /> :  comments.map(item => <CommentList item={item} 
                         key={item._id} keys={item._id}/>)

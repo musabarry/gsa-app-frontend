@@ -1,11 +1,31 @@
-import React from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Platform, TouchableHighlight} from 'react-native';
 import Loading from '../BeforeLogin/loading';
 import { AntDesign } from '@expo/vector-icons';
+import TextCom from './TextCom';
 
 //component for rendering comment
 const CommentList = ({item}) => {
-    
+    const max_num = 2
+    const [showText, setShowText] = useState(false);
+    const [numberOfLines, setNumberOfLines] = useState(undefined);
+    const [showMoreButton, setShowMoreButton] = useState(false);
+
+    const onTextLayout = useCallback(
+        (e) => {
+          if (e.nativeEvent.lines.length > max_num && !showText) {
+            setShowMoreButton(true);
+            setNumberOfLines(max_num);
+          }
+        },
+        [showText]
+      );
+
+      useEffect(() => {
+        if (showMoreButton) {
+          setNumberOfLines(showText ? undefined : max_num);
+        }
+      }, [showText, showMoreButton]);
     return (
         <View style={styles.comment_wrapper}  >
             <View style={styles.info}>
@@ -21,7 +41,7 @@ const CommentList = ({item}) => {
                 </View>
             </View>
             <View style={styles.comment}>
-                <Text style={styles.text}>{item.text}</Text>
+                <TextCom textData={item.text} max_line={2}/>
                 <Text style={styles.date}>{item.date}</Text>
             </View>
         </View>
@@ -53,6 +73,7 @@ const styles = StyleSheet.create({
         width: '90%',
         borderRadius: 10,
         marginBottom: 4,
+       
     },
     info:{
         display: 'flex',
@@ -66,12 +87,8 @@ const styles = StyleSheet.create({
     },
     comment:{
         display: 'flex',
-        flexDirection: 'column'
-    },
-    text:{
-        marginLeft: 60,
-        fontSize: 14,
-        fontWeight: '600'
+        flexDirection: 'column',
+        padding: 5
     },
     date:{
         alignSelf: 'flex-end'

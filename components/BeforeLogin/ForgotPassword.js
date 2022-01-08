@@ -75,11 +75,11 @@ const  ForgotPassword = (props) => {
             })
         }
       }).catch(error =>{
-        console.log(error);
         setMsg('Code does not match')
       })
     }
   }
+
 
   useEffect(() =>{
     if(msg){
