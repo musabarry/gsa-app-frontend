@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import {View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Button} from 'react-native';
-import{useQuery, useLazyQuery} from '@apollo/client';
+import{useQuery} from '@apollo/client';
 import {GETUSER} from "../../GraphQl/query";
 import Loading from '../BeforeLogin/loading'
-import {  Feather, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import PostCard from '../Card/PostCard';
 const HomeProfile = (props) => {
 
@@ -49,7 +49,7 @@ const HomeProfile = (props) => {
                     <View style={styles.userInfo}>
                         <View style={styles.image_wrape}>
                             {personalInfo.avatar ? <Image style={styles.image} source={{uri: `${personalInfo.avatar}`}} />:
-                             <FontAwesome5 name="user-alt" size={150} color="#01294a" />}
+                             <FontAwesome5 name="user-alt" size={250} color="#01294a" />}
                         </View>
                         <View style={styles.details}>
                             <View style={styles.info}>
@@ -62,7 +62,6 @@ const HomeProfile = (props) => {
                                 <Text  style={styles.textInfo}>{personalInfo.role}</Text>
                             </View>
                             <View>
-                               
                             </View>
                         </View>
                     </View>
@@ -87,11 +86,16 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     header:{
-        height: 30,
-        justifyContent: 'center',
-        backgroundColor: '#fff',
-        borderBottomColor: '#d7e4f7',
-        borderBottomWidth: 1
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#ededed',
+        borderBottomWidth: 1,
+        borderBottomColor: '#cae8e8',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity:  0.3,
+        shadowRadius: 3,
     },
     backBtn:{
         marginLeft: 5
@@ -102,8 +106,10 @@ const styles = StyleSheet.create({
         color: '#82b5ff'
     },
     image_wrape:{
+        justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
-        height: 260
+        height: 240
     },
     image:{
         borderRadius: 5,

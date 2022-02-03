@@ -1,77 +1,56 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, Modal}  from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Modal}  from 'react-native';
 import { FontAwesome5, Feather, EvilIcons, Entypo } from '@expo/vector-icons';
-import CommentPage from './CommentPage';
 import checkContext  from '../../Context/checkContext';
 import {CREATELIKE, DELETEPOST} from '../../GraphQl/mutation';
 import {ALLPOST, USERINFO} from '../../GraphQl/query';
 import{useMutation} from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import TextCom from './TextCom';
 
 const PostCard = (props) =>{
     const state = useContext(checkContext);
     const navigation = useNavigation();
     //determine if the user liked a post or not
 
-    const userLike = () =>{
-        let found = false;
-        for(var i = 0; i < props.data.likes.length; i++) {
-            if (props.data.likes[i]._id === state.userID) {
-                found = true;
-                break;
-            }
-        }
-
-        // user id not in the like array ID
-        return found
-    }
-
     const [modalVisible, setModalVisible] = useState(false);
-    const [showLikes, setShowLikes] = useState(false)
-    const [showComments, setShowComments] =  useState(false)
     const [like, {error: likeError, loading: likeLoading}] =  useMutation(CREATELIKE)
     const [deletePost, {error: deleteError, loading: deleteLoading}] = useMutation(DELETEPOST)
 
     useEffect(() =>{
-        userLike()
+ 
     }, [updateLike])
-    //like click event
-    const likes = () =>{
-        setModalVisible(true) 
-        setShowComments(false)
-        setShowLikes(!showLikes)       
+
+
+
+    const routeToComment = async ()=>{
+        return navigation.navigate('commentpage',{
+             id: props.data._id,
+        })
+
     }
 
-    //comment click event
-    const comments = () =>{
-        setModalVisible(true)
-        setShowLikes(false)
-       setShowComments(!showComments)
+    const routeToLikes =  async () =>{
+        return navigation.navigate('likepage',{
+             likes: props.data.likes,
+             id: props.data._id,
+        })
     }
 
-    const open = () =>{
-        setModalVisible(true)
-    }
-    //close click event
-    const close = () =>{
-        setModalVisible(false)
-        setShowComments(false)
-        setShowLikes(false)
-    }
     //check card owner
     const owner  = props.userInfo._id == state.userID ? true : false
     
     //double tap image like
     let lastImagePress = 0
     const doubleLike = ()=>{
-    const time = new Date().getTime();
-    const delta = time - lastImagePress
-    const double_press_delay = 300;
+        const time = new Date().getTime();
+        const delta = time - lastImagePress
+
+        const double_press_delay = 300;
         if (delta < double_press_delay) {
             updateLike()
-        }
-        else {
+        }else {
             lastImagePress = time;
         }
     }
@@ -86,9 +65,9 @@ const PostCard = (props) =>{
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
-                userLike()
+
             }).catch(error =>{
-                userLike()
+    
 
             })
         }
@@ -106,7 +85,6 @@ const PostCard = (props) =>{
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
-                userLike()
                 setModalVisible(!modalVisible)
             }).catch(error =>{
                 setModalVisible(!modalVisible)
@@ -125,95 +103,86 @@ const PostCard = (props) =>{
         }
     }
 
-
-    return(
-        <View>
-            <View style={styles.card_wrapper}>
-                <View style={styles.top_wrapper}>
-                    <View style={styles.thumbnail_wraper}>
-                        {
-                            props.userInfo.avatar !== '' &&
-                            <Image style={styles.thumbnail} source={{uri: `${props.userInfo.avatar}`}}/> 
-                        }
-                    </View>
-                    <View style={styles.nameBox}>
-                        <TouchableOpacity style={styles.NameContainer} onPress={() => getUserInfo()}>
-                            <Text style={styles.name}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.school}>@{props.userInfo.school}</Text>
-                    </View>
-                </View >
-                <View style={styles.middle_wrapper}>
-                    <View style={styles.post}>
-                    {props.uri != null ?
-                        (
-                        <>
-                        <Text style={styles.textPost}>
-                            {props.data.text}
-                        </Text>
-                        <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}
-                         onPress={() => doubleLike()}>
-                             {
-                                <Image style={styles.img} source={{uri: `${props.uri}`}}/>
-                             }
-                        </TouchableOpacity></>
-                        ):(
-                        <Text style={styles.textPost}>
-                            {props.data.text}
-                        </Text>
-                        )}
-                    </View>
-                    <View style={styles.bottom_wrapper}>
-                        <View style={styles.wrap}>
-                            <TouchableOpacity style={styles.num} onPress={() => updateLike()}>
-                                <Entypo name={userLike() ? 'heart' : 'heart-outlined'} size={26} color={userLike() ? 'red' : 'black'} />
-                            </TouchableOpacity>
-                            <TouchableOpacity   
-                                style={styles.num}
-                                onPress={() => comments()}>
-                                <FontAwesome5 name="comment" size={24} color="black" />
-                                <Text style={styles.commnets}>{props.data.commnets.length}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.timeOption}>
-                            <Text>{props.data.date}</Text>
-                        </View>
-                    </View>
+return(
+    <View>
+        <View style={styles.card_wrapper}>
+            <View style={styles.top_wrapper}>
+                <View style={styles.thumbnail_wraper}>
+                    {
+                        props.userInfo.avatar !== '' &&
+                        <Image style={styles.thumbnail} source={{uri: `${props.userInfo.avatar}`}}/> 
+                    }
                 </View>
-                <View style={styles.bottomView}>
-                    <TouchableOpacity style={styles.likeNum} onPress={() => likes()}>
-                        <Text>{ props.data.likes.length > 0? props.data.likes.length + ' likes' :''}</Text>
+                <View style={styles.nameBox}>
+                    <TouchableOpacity style={styles.NameContainer} onPress={() => getUserInfo()}>
+                        <Text style={styles.name}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.more} onPress={() => open()}>
-                        { owner && <Feather name="more-horizontal" size={24} color="black" />}
-                    </TouchableOpacity>
+                    <Text style={styles.school}>@{props.userInfo.school}</Text>
+                </View>
+            </View >
+            <View style={styles.middle_wrapper}>
+                <View style={styles.post}>
+                {props.uri != null ?
+                    (
+                    <>
+                    <TextCom  textData={props.data.text} max_line={5} />
+                    <TouchableOpacity style={styles.ImgFrame} activeOpacity={0.3}
+                        onPress={() => doubleLike()}>
+                            {
+                            <Image style={styles.img} source={{uri: `${props.uri}`}}/>
+                            }
+                    </TouchableOpacity></>
+                    ):(
+                        <TextCom  textData={props.data.text} max_line={5} />
+                    )}
+                </View>
+                <View style={styles.bottom_wrapper}>
+                    <View style={styles.wrap}>
+                        <TouchableOpacity style={styles.num} onPress={() => updateLike()}>
+                            <Entypo name={props.data.userLiked ? 'heart' : 'heart-outlined'} size={26} color={props.data.userLiked ? 'red' : 'black'} />
+                        </TouchableOpacity>
+                        <TouchableOpacity   
+                            style={styles.num}
+                            onPress={() => routeToComment()}>
+                            <FontAwesome5 name="comment" size={24} color="black" />
+                            <Text style={styles.commnets}>{props.data.commnets}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.timeOption}>
+                        <Text>{props.data.date}</Text>
+                    </View>
                 </View>
             </View>
-                {/* modal for deletin a post */}
-                <Modal 
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                    }}>
-                        { showLikes || showComments ? 
-                    <CommentPage comments={props.data.commnets} likes={props.data.likes}
-                         id={props.data._id} close={close} showLikes={showLikes} 
-                         showComments={showComments} likesBtn={likes} commentsBtn={comments} />
-                         :
-                         <View style={styles.more_setting}>
-                            <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>
-                                <EvilIcons name="close" size={35} color="black" />
-                            </TouchableOpacity>
-                            <View>
-                                <TouchableOpacity style={styles.deleteBtn} onPress={() => postDelete()}>
-                                    <Text style={styles.deleteText}>Delete</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>}
-                </Modal>
+            <View style={styles.bottomView}>
+                <TouchableOpacity style={styles.likeNum} onPress={() => routeToLikes()}>
+                    <Text>{ props.data.likes.length > 0? props.data.likes.length + ' likes' :''}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.more} onPress={() => setModalVisible(!modalVisible)}>
+                    { owner && <Feather name="more-horizontal" size={24} color="black" />}
+                </TouchableOpacity>
+            </View>
         </View>
+            {/* modal for deletin a post */}
+            <Modal 
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                setModalVisible(!modalVisible);
+                }}>
+                        <View style={styles.more_setting}>
+                        <TouchableOpacity style={styles.close} onPress={() => setModalVisible(!modalVisible)}>
+                            <EvilIcons name="close" size={35} color="black" />
+                        </TouchableOpacity>
+                        <View>
+                            <TouchableOpacity style={styles.deleteBtn} onPress={() => postDelete()}>
+                                <Text style={styles.deleteText}>Delete</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    {/* // } */}
+            </Modal>
+    </View>
     )
 }
 
@@ -242,7 +211,9 @@ const styles =  StyleSheet.create({
         flexDirection: 'column',
     },
     textPost:{
-        marginBottom: 15
+        marginBottom: 15,
+        fontSize: 14,
+        flexShrink: 1,
     },
     middle_wrapper:{
         borderRadius: 10
@@ -253,14 +224,8 @@ const styles =  StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    // num:{
-    //     flexDirection: 'row',
-    //     margin: 3
-    // },
     post:{
-        borderBottomColor: '#000',
-        borderRadius: 10,
-        padding: 5
+        padding: 5,
     },
     timeOption:{
         flexDirection: 'row',

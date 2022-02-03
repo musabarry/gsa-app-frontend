@@ -15,18 +15,7 @@ export const ALLPOST = gql`
         school
         avatar
       }
-      commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-      }
+      commnets
       likes{
         _id
         firstname
@@ -34,6 +23,7 @@ export const ALLPOST = gql`
         school
         avatar
     }
+    userLiked
   }
 }
 `
@@ -58,18 +48,7 @@ query getUser($user: String!){
     date
     text
     imageAlbum
-    commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-    }
+    commnets
     likes{
         _id
         firstname
@@ -77,6 +56,7 @@ query getUser($user: String!){
         school
         avatar
     }
+    
     }
     }
   }
@@ -101,18 +81,7 @@ query {
     date
     text
     imageAlbum
-    commnets{
-      _id
-      text
-      date
-      byUser{
-        _id
-        firstname
-        lastname
-        avatar
-        school
-      }
-    }
+    commnets
     likes{
         _id
         firstname
@@ -120,15 +89,66 @@ query {
         school
         avatar
     }
+    userLiked
   }
 }
 `
 
 
-// export const connection = gql`
-// query{
-//   connection{
-//     success
-//   }
-// }
-// `
+export const SEARCHUSER = gql`
+query searchUser($name: String){
+  searchUser(name: $name){
+    _id
+    firstname
+    lastname
+    avatar
+    school
+  }
+}
+`
+
+export const LOOKUP = gql`
+query lookUp($name: String){
+  lookUp(name: $name){
+    _id
+    firstname
+    lastname
+    avatar
+    school
+  }
+}`
+
+export const GETCOMMENTS  = gql`
+query getComments($post: ID!){
+  getComments(post: $post){
+    _id
+    post
+    text
+    byUser{
+      _id
+      avatar
+      firstname
+      lastname
+      school
+    }
+    date
+  }
+}
+`
+
+
+export const GETMESSAGES = gql`
+query getComments($room: String!){
+  getMessage(room: $room){
+    _id
+    body
+    author{
+      _id
+      firstname
+      lastname
+      avatar
+    }
+    createAt
+  }
+}
+`

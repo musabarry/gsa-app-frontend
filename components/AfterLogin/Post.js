@@ -91,6 +91,7 @@ const Post = (props) =>{
       };
       
       const userID =   await AsyncStorage.getItem("@userID")
+
       //aws authanication keys for S3 bucket
       const options = {
         // keyPrefix: "postsImg/",
@@ -107,6 +108,7 @@ const Post = (props) =>{
         .then(response => {
           if (response.status !== 201) throw Error('Error uploadting to AWS S3')
           //else get the image link and save to DB
+          
           createPostImage({
               variables:{
                   owner: `${userID}`,

@@ -25,7 +25,7 @@ const AutoNavigation = ({ navigation }) => {
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="MajorEvents" component={Majorevents} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="NewPassword" component={NewPassword} />
+      {/* <Stack.Screen name="NewPassword" component={NewPassword} /> */}
     </Stack.Navigator>
   );
 };

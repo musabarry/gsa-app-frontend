@@ -30,7 +30,8 @@ const Profile = (props) =>{
               return <PostCard uri={item.imageAlbum ? item.imageAlbum[0] : null} 
                       data={item} key={item._id} 
                       userInfo={states.userInfo.userInfo}
-                      navHome={"Profile"} navScreen={"homeProfile"}/>
+                      // navHome={"Profile"} navScreen={"homeProfile"}
+                      />
             })}
       </ScrollView>
     </View>

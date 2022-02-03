@@ -1,9 +1,13 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {TouchableOpacity,StyleSheet,Text,
         View,Image} from "react-native";
 import {  Feather, FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ProfileInfo = (props) =>{
     const avatar = props.userInfo.avatar
+    const firstname = props.userInfo.firstname
+    const lastname = props.userInfo.lastname
+    const school = props.userInfo.school
 
     return(
         <View>
@@ -17,12 +21,12 @@ const ProfileInfo = (props) =>{
                     </View>
                     <View style={styles.name}>
                         <View>
-                            <Text style={styles.textName}>{props.userInfo.firstname} {props.userInfo.lastname}</Text>
+                            <Text style={styles.textName}>{firstname} {lastname}</Text>
                         </View>
                         <View style={styles.info}>
                             <View style={styles.school}>
                                 <FontAwesome5 name="school" size={24} color="#0051ff" />
-                                <Text style={styles.schoolName}>{props.userInfo.school}</Text>
+                                <Text style={styles.schoolName}>{school}</Text>
                             </View>
                             <TouchableOpacity style={styles.btn_setting} onPress={props.naviSetting}>
                                 <Feather name="more-horizontal" size={24} color="black" />

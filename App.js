@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import React, {useState, useEffect} from "react";
-import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
+import { StyleSheet, SafeAreaView, StatusBar, Platform } from "react-native";
 import RootSreen from "./RootStack/RootStack";
 import { NavigationContainer } from "@react-navigation/native";
 import {ApolloClient, InMemoryCache, from, ApolloProvider, HttpLink } from '@apollo/client';
@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'react-native-elements';
+import {socket} from './socket'
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>
@@ -19,14 +20,13 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
       // console.log(`Graphql error ${message}`)
     
     )
-    //if(networkError)  console.log(" [Network error]:", networkError);
+    // if(networkError)  console.log(" [Network error]:", networkError);
   }
 })
 
-//10.15.85.21
 const link = from([//172.20.10.4   //10.15.85.21
   errorLink,
-   new HttpLink({uri: "https://gsabackend.herokuapp.com/graphql"}), //server(api) link
+   new HttpLink({uri: "http://192.168.1.32:8080/graphql"}), //server(api) link
 ])
 //https://gsabackend.herokuapp.com/graphql
 //http://192.168.1.32:8080/graphql s=home
@@ -54,37 +54,76 @@ const App = ({ navigation }) => {
   const [authnaticated, setAuthanticated] = useState(false)
   const [userID, setUserID] =  useState();
   const [verifyUser, setVerifyUser] = useState(false)
+  
   client.cache.reset()
+
   // client.cache.modify({
   //   notifications(list, { readField }) {
   //     return list.filter(n => readField("id", n) !== id);
   //   },
   // });
+
+
+  const storeData = async (data, room) =>{
+       
+    let oldData =  await AsyncStorage.getItem(`@${room}`)
+    oldData =  JSON.parse(oldData)
+    if(oldData){
+        let addMsg = [...oldData, data]
+        await AsyncStorage.setItem(`@${room}`, JSON.stringify(addMsg))
+    }else{
+        let addMsg = [data]
+        await AsyncStorage.setItem(`@${room}`, JSON.stringify(addMsg))
+    }
+    
+}
+
   useEffect(() =>{
     ( async () =>{
+      //await AsyncStorage.removeItem('@userID')
       const token = await AsyncStorage.getItem('@token_key')
       const id =  await AsyncStorage.getItem('@userID')
-
+      const school = await AsyncStorage.getItem('@school')
+     // await AsyncStorage.removeItem(`@${school}`)
+      //console.log(await AsyncStorage.removeItem('@City'));
       if(token){
         setAuthanticated(true)
         setVerifyUser(false)
         setUserID(id)
+        socket.auth = {token: token, school: school}
+        socket.connect(userID);
       }else if(id && !token){
         setVerifyUser(true)
         setUserID(id)
+        socket.disconnect(id)
       }else{
         setAuthanticated(false)
         setVerifyUser(false)
         setUserID()
+        socket.disconnect(id)
+        socket.auth = null
       }
+      
+      socket.on('GSA', payload =>{
+       
+        //storeData(payload, 'GSA')
+      })
+
+      socket.on(school, payload =>{
+        //console.log(school);
+        //storeData(payload, school)
+      })
     })();
   }, []);
 
 
   return (
     <ThemeProvider>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar 
+      animated={true}
+      backgroundColor='#ededed'
+      barStyle="dark-content" />
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#ededed'}}>
         <checkContext.Provider value={{authnaticated, verifyUser,
           setVerifyUser, setAuthanticated, userID, setUserID}}>
           <ApolloProvider client={client}>

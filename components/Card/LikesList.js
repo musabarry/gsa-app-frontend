@@ -5,25 +5,24 @@ import { AntDesign } from '@expo/vector-icons';
 
 const LikesList = ({item}) => {
     
-
     //return all like from a post 
     return (
         <View style={styles.comment_wrapper}  >
-            <View style={styles.info}>
+            {/* <View style={styles.info}> */}
                 <View style={styles.thumbnail_wraper}>
                     {
                         item.avatar !== '' &&
                         <Image style={styles.thumbnail} source={{uri: item.avatar}}/> 
                     }
                 </View>
-                <View>
+                <View style={styles.info}>
                     <Text style={styles.name}>{item.firstname} {item.lastname}</Text>
-                    <Text>  @{item.school}</Text>
+                    <Text>@{item.school}</Text>
                 </View>
-            </View>
-            <View style={styles.comment}>
+                <View style={styles.comment}>
                 <Text style={styles.date}>{item.date}</Text>
             </View>
+            {/* </View> */}
         </View>
 
 
@@ -38,9 +37,11 @@ const styles = StyleSheet.create({
     comment_wrapper:{
         backgroundColor: '#e6e6e6',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        alignSelf: 'center',
         borderColor: '#cccccc',
         borderWidth: 1,
+        padding: 5,
         shadowOffset:{
             width: 0,
             height: 2,
@@ -48,27 +49,28 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        width: '95%',
+        borderRadius: 10,
+        marginBottom: 4,
+
     },
     info:{
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'column',
+        alignSelf: 'center',
+        marginLeft: 10,
     },
     name:{
-        marginLeft: 10,
-        fontWeight: '700',
+        fontWeight: 'bold',
         textTransform: 'capitalize'
     },
     comment:{
-        display: 'flex',
-        flexDirection: 'column'
-    },
-    text:{
-        marginLeft: 60,
-        fontSize: 14,
-        fontWeight: '600'
+        alignSelf: 'flex-end',
+        flex: 1,
     },
     date:{
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
+        fontWeight: 'bold'
     },
     thumbnail_wraper:{
         width: 50,

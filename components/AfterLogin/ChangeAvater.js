@@ -57,7 +57,6 @@ const ChangeAvater =(props) => {
             await camera.takePictureAsync(options)
             .then(res =>{
                 setImage(res.uri)
-                console.log(res.uri);
                 setTakeBtn(false)
             }).catch(err =>{
                 setImage('')
@@ -68,7 +67,6 @@ const ChangeAvater =(props) => {
     
     //select galary image
     const pickImage = async () => {
-            console.log("")
             const result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
@@ -87,7 +85,7 @@ const ChangeAvater =(props) => {
           name: `${state.userID}-${new Date().getTime()}`,
           type: "profile/jpeg"
         };
-
+        
         const options = {
             bucket: aws.bucketProfile,
             region: aws.region,
@@ -95,10 +93,12 @@ const ChangeAvater =(props) => {
             secretKey: aws.secretKey,
             successActionStatus: 201
         };
-        
+       
         RNS3.put(file, options)
         .then(response => {
-            if (response.status !== 201) throw Error('Error uploadting to AWS S3')
+            if (response.status !== 201){
+                throw Error('Error uploadting to AWS S3')
+            } 
             profileImage({
                 variables:{
                     image: `${response.body.postResponse.key}`,
