@@ -102,7 +102,8 @@ const WriteMessage = (props) => {
                             avatar={e.author.avatar}
                             firstname={e.author.firstname}
                             lastname={e.author.lastname}
-                            msg={e.body}  key={e._id}/>)
+                            msg={e.body}  key={e._id}
+                            date={e.createAt} auth_id={e.author._id}/>)
                         
                         })}
                 </View>

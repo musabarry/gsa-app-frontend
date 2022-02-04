@@ -1,23 +1,29 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, Image, View, StyleSheet} from 'react-native'
-import AutoNavigation from '../../../AutoNavigation/AutoNavigation';
+import checkContext  from '../../../Context/checkContext';
+const MessageCom = ({avatar, firstname, lastname, msg, date, auth_id}) => {
 
-const MessageCom = ({avatar, firstname, lastname, msg}) => {
-
-  return(
-    <View style={styles.msgBox}>
-        <View style={styles.userInfo}>
-            <View style={styles.imageWraper}>
-                <Image style={styles.image} source={{uri: avatar !== '' ? avatar : undefined}}/>
+    const states = useContext(checkContext);
+    const msgBoxStyle = states.userID === auth_id  ? styles.myMsgView : styles.otherMsgView
+    const msgTextStyle = states.userID === auth_id  ? styles.myMsgText : styles.otherMsgText
+    const dateStyle = states.userID === auth_id ? styles.myDate : styles.otherDate
+    return(
+        <View style={styles.msgBox}>
+            <View style={styles.userInfo}>
+                {states.userID !==   auth_id && <View style={styles.imageWraper}>
+                    <Image style={styles.image} source={{uri: avatar !== '' ? avatar : undefined}}/>
+                </View>}
+                {states.userID !== auth_id &&<View style={styles.nameView}>
+                    <Text style={styles.name}>{firstname} {lastname}</Text>
+                </View>}
             </View>
-            <View style={styles.nameView}>
-                <Text style={styles.name}>{firstname} {lastname}</Text>
+            <View style={msgBoxStyle}>
+                <Text style={msgTextStyle}>{msg}</Text>
+            </View>
+            <View style={dateStyle}>
+                    <Text style={styles.date}>{date}</Text>
             </View>
         </View>
-        <View style={styles.msgView}>
-            <Text style={styles.msgText}>{msg}</Text>
-        </View>
-    </View>
   );
 };
 
@@ -29,9 +35,12 @@ const styles = StyleSheet.create({
         margin: 5,
         flexDirection: 'column',
     },
+    otherUserInfo:{
+        borderTopWidth: 1,
+        borderTopColor: '#d6d6d6',
+    },
     userInfo:{
         display: 'flex',
-        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
     },
@@ -49,28 +58,49 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     nameView:{
-        width: '90%',
-        borderBottomWidth: 1,
-        borderBottomColor: '#d6d6d6',
+        marginLeft: 10,
         padding:0
     },
     name:{
        textAlign: 'center',
-       color: '#999999',
+       color: '#2baeff',
        margin: 0,
     },
-    msgView:{
+    myMsgView:{
+        alignSelf: 'flex-end',
+        backgroundColor: '#0472b5',
+        maxWidth: '75%',
         marginTop: 5,
         borderRadius: 10,
-        borderWidth: .3,
-        padding: 3,
-        borderColor: '#05b4ff',
-        minWidth: 10,
-        maxWidth: '60%',
+        padding: 5,
         minHeight: 25,
-        marginLeft: 20
+        marginLeft: 10,
     },
-    msgText:{
-        margin: 0
+    otherMsgView:{
+        alignSelf: 'flex-start',
+        backgroundColor: '#cfcfcf',
+        maxWidth: '75%',
+        marginTop: 5,
+        borderRadius: 10,
+        padding: 5,
+        minHeight: 25,
+        marginLeft: 10,
+    },
+    myMsgText:{
+        color: '#fff',
+        fontSize: 15
+    },
+    otherMsgText:{
+        color: '#000',
+        fontSize: 15
+    },
+    myDate:{
+        alignSelf: 'flex-end',
+    },
+    otherDate:{
+        alignSelf: 'flex-start',
+    },
+    date:{
+        fontSize: 11
     }
 })
