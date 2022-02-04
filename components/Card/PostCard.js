@@ -247,7 +247,7 @@ const styles =  StyleSheet.create({
         borderWidth: 1,
         borderRadius: 100,
         borderColor: '#CCC',
-        backgroundColor: '#01294a'
+        backgroundColor: '#01294a',
     },
     thumbnail:{
         width: '100%',

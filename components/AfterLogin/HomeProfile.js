@@ -37,6 +37,7 @@ const HomeProfile = (props) => {
             <Loading />
         )
     }
+
     if(data){
         return (
             <View style={styles.container}>
@@ -109,11 +110,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        height: 240
+        height: 240,
     },
     image:{
         borderRadius: 5,
         height: '100%',
+        width: '100%',
     },
     details:{
         display: 'flex',

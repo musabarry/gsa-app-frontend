@@ -10,6 +10,8 @@ import checkContext from './Context/checkContext';
 import { setContext } from '@apollo/client/link/context';
 import { ThemeProvider } from 'react-native-elements';
 import {socket} from './socket'
+// import * as Notifications from 'expo-notifications';
+// import * as Permissions from 'expo-permissions'
 const errorLink = onError(({graphqlErrors, networkError}) =>{
   if(graphqlErrors){
     graphqlErrors.map(({message, location, path}) =>
@@ -20,7 +22,6 @@ const errorLink = onError(({graphqlErrors, networkError}) =>{
       // console.log(`Graphql error ${message}`)
     
     )
-    // if(networkError)  console.log(" [Network error]:", networkError);
   }
 })
 
@@ -105,11 +106,12 @@ const App = ({ navigation }) => {
       }
       
       socket.on('GSA', payload =>{
-       
+        alert('New Message from GSA')
         //storeData(payload, 'GSA')
       })
 
       socket.on(school, payload =>{
+        alert('New Message from your School')
         //console.log(school);
         //storeData(payload, school)
       })
