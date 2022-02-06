@@ -106,14 +106,10 @@ const App = ({ navigation }) => {
       }
       
       socket.on('GSA', payload =>{
-        alert('New Message from GSA')
-        //storeData(payload, 'GSA')
+
       })
 
       socket.on(school, payload =>{
-        alert('New Message from your School')
-        //console.log(school);
-        //storeData(payload, school)
       })
     })();
   }, []);
