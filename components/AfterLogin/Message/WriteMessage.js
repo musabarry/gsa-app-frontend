@@ -34,7 +34,7 @@ const WriteMessage = (props) => {
                 body: msg,
                 room: roomChat.replace(' ', ''),
                 author: userID,
-                createAt: Date.now()  
+                createAt:`${Date.now()}`
                 //args.input.createAt
             }
             socket.emit(roomChat, data)

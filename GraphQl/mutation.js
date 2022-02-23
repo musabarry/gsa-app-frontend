@@ -29,8 +29,8 @@ export const PROFILEIMAGE = gql`
 `
 
 export const CREATECOMMENT = gql`
-mutation createCommnet($post: ID!, $text: String!){
-  createCommnet(input:{post: $post, text: $text}){
+mutation createCommnet($post: ID!, $text: String!, $date: String!){
+  createCommnet(input:{post: $post, text: $text, date: $date}){
     _id
   }
 }
@@ -66,16 +66,16 @@ mutation signup($email: String!, $password: String!, $firstname: String!, $lastn
 `
 
 export const CREATEPOSTTEXT = gql`
-mutation createPostText($owner: ID!, $text: String!){
-  createPostText(input:{owner: $owner, text: $text}){
+mutation createPostText($owner: ID!, $text: String!, $date: String!){
+  createPostText(input:{owner: $owner, text: $text, date: $date}){
     success
   }
 }
 `
 
 export const  CREATEPOSTIMAGE = gql`
-  mutation createPostImage($owner: ID!, $imageAlbum:[String], $text: String){
-      createPostImage(input:{owner: $owner, imageAlbum: $imageAlbum, text: $text}){
+  mutation createPostImage($owner: ID!, $imageAlbum:[String], $text: String, $date: String!){
+      createPostImage(input:{owner: $owner, imageAlbum: $imageAlbum, text: $text, date: $date}){
         success
       }
     }

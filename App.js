@@ -80,6 +80,7 @@ const App = ({ navigation }) => {
 }
 
   useEffect(() =>{
+   
     ( async () =>{
       //await AsyncStorage.removeItem('@userID')
       const token = await AsyncStorage.getItem('@token_key')
@@ -113,6 +114,7 @@ const App = ({ navigation }) => {
       })
     })();
   }, []);
+
 
 
   return (

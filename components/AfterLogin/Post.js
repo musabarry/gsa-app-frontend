@@ -91,7 +91,7 @@ const Post = (props) =>{
       };
       
       const userID =   await AsyncStorage.getItem("@userID")
-
+    
       //aws authanication keys for S3 bucket
       const options = {
         // keyPrefix: "postsImg/",
@@ -113,7 +113,8 @@ const Post = (props) =>{
               variables:{
                   owner: `${userID}`,
                   imageAlbum: [`${response.body.postResponse.key}`],
-                  text: text
+                  text: text,
+                  date: `${Date.now()}`
               },
               //refresh post data
               refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
@@ -133,7 +134,8 @@ const Post = (props) =>{
         createPostText({
           variables:{
             owner: `${userID}`,
-            text: text
+            text: text,
+            date:  `${Date.now()}`
           },
           refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
         }).then(res =>{

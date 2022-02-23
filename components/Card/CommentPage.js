@@ -28,18 +28,23 @@ const CommentPage = (props) => {
         },
     )
 
-    const submit = () =>{
+    const submit = async () =>{
         if(msgText.length > 1){
+            const date =  Date.now()
+            console.log(date);
             createCommnet({
                 variables:{
                     post: `${postID}`,
-                    text: msgText
+                    text: msgText,
+                    date: `${date}`
                 },
                 refetchQueries: [{query: ALLPOST}, {query: USERINFO}]
             }).then(res =>{
+         
                 setMsgText('')
                 refetch()
             }).catch(err =>{
+                console.log(err);
                 setMsgText('')
             }) 
         }
