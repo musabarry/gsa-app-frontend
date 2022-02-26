@@ -1,14 +1,16 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef, useContext, useCallback} from 'react'
 import {View, Text, TouchableOpacity, StyleSheet,
-     Image, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
+     Image, ScrollView, KeyboardAvoidingView, Platform, ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Feather, Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Feather, Ionicons, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import InputCom from '../../InputCom';
 import { socket } from '../../../socket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MessageCom from './MessageCom';
 import {GETMESSAGES} from '../../../GraphQl/query';
 import{useQuery} from '@apollo/client';
+import { GiftedChat, Send, Bubble, Day, InputToolbar } from 'react-native-gifted-chat';
+import authContext from '../../../Context/authContext';
 const WriteMessage = (props) => {
     const navigation = useNavigation();
     const routeData = props.route.params
@@ -19,45 +21,86 @@ const WriteMessage = (props) => {
     const navBarHeight = (Platform.OS === 'ios') ? 47 : 100;
     const roomChat =  routeData.room
     const [newMsg, setNewMsg] = useState()
+    const states = useContext(authContext)
+    const scrollView =  useRef();
+
+    const name =  states.userInfo.userInfo.firstname + ' '+ states.userInfo.userInfo.lastname
+    const avatar = states.userInfo.userInfo.avatar
+    const _id =  states.userInfo.userInfo._id
 
     const {data, error, loading, refetch} = useQuery(GETMESSAGES, 
         {
             variables:{room: roomChat}
         },
     )
+    const renderSend = (props) => {
+        return (
+          <Send {...props}>
+            <View>
+              <Ionicons
+                name="send"
+                style={{marginBottom: 5, marginRight: 5}}
+                size={32}
+                color="#2e64e5"
+              />
+            </View>
+          </Send>
+        );
+    };
+    const renderBubble = (props) => {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: '#2e64e5',
+              },
+            }}
+            textStyle={{
+              right: {
+                color: '#fff',
+              },
+            }}
+          />
 
-    const submit =  async () =>{  
-        const userID =await  AsyncStorage.getItem("@userID")
+        );
+    };
 
-        if(msg && roomChat){
+    const scrollToBottomComponent = () => {
+        return(
+            <View style={styles.bottomComponentContainer}>
+                <FontAwesome name='angle-double-down' size={22} color='#6646ee' />
+            </View>
+        );
+    }
+    const renderLoading = () => {
+        return (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size='large' color='#6646ee' />
+          </View>
+        );
+      }
+
+    const onSend = useCallback(([text]) => {
+        const userID = _id
+        const date = new Date()
+        console.log(messages.length, '1');
+        if(text.text && roomChat && userID){
            let data = {
-                body: msg,
+                body: text.text,
                 room: roomChat.replace(' ', ''),
                 author: userID,
-                createAt:`${Date.now()}`
-                //args.input.createAt
+                createdAt:`${date}`
             }
             socket.emit(roomChat, data)
             setMsgText('')
-            //refetch()
+            refetch()
+            console.log(messages.length, '2');
         }
-    }
+    });
 
-    const storeData = async (data) =>{
-       
-        let oldData =  await AsyncStorage.getItem(`@${roomChat}`)
-        oldData =  JSON.parse(oldData)
-        if(oldData){
-            let addMsg = [...oldData, data]
-            await AsyncStorage.setItem(`@${roomChat}`, JSON.stringify(addMsg))
-        }else{
-            let addMsg = [data]
-            await AsyncStorage.setItem(`@${roomChat}`, JSON.stringify(addMsg))
-        }
-    }
-    
-    useEffect(() =>{  
-        refetch()   
+
+    useEffect(() =>{    
         if(roomChat){
             socket.on(roomChat, payload =>{ 
                 refetch()
@@ -65,7 +108,6 @@ const WriteMessage = (props) => {
                     setMessages(data.getMessage)
                 }
             })
-
         } 
         if(data){
             setMessages(data.getMessage)
@@ -94,31 +136,25 @@ const WriteMessage = (props) => {
                         color="#05b4ff" />
                 </TouchableOpacity>
             </View>
-            <ScrollView>
-                <View>
-                    {messages &&
-                        messages.map(e =>{
-                        return(<MessageCom 
-                            avatar={e.author.avatar}
-                            firstname={e.author.firstname}
-                            lastname={e.author.lastname}
-                            msg={e.body}  key={e._id}
-                            date={e.createAt} auth_id={e.author._id}/>)
-                        
-                        })}
-                </View>
-            </ScrollView>
-            <KeyboardAvoidingView 
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                keyboardVerticalOffset={navBarHeight}>
-                <InputCom  
-                textPlaceholder={'Message'}
-                msgText={msg}
-                setMsgText={setMsgText}
-                submit={submit}
-                btnText={'Send'}/>
-            </KeyboardAvoidingView>
-        </View>
+            <GiftedChat
+                messages={messages}
+                onSend={(text)  => onSend(text)}
+                user={{
+                    _id: _id,
+                    name: name,
+                    avatar: avatar
+                }}
+                alwaysShowSend={true}
+                renderSend={renderSend}
+                renderBubble={renderBubble}
+                scrollToBottom={true}
+                scrollToBottomComponent={scrollToBottomComponent}
+                placeholder='Type your message here...'
+                // showUserAvatar
+                renderLoading={renderLoading}
+                showAvatarForEveryMessage={true}
+                renderUsernameOnMessage={true}/>
+        </View> 
     )
 }
 
@@ -183,10 +219,19 @@ const styles = StyleSheet.create({
     },
     keyboardView:{
         display: 'flex',
-        // flexDirection: 'column',
-        // marginBottom: 10,
-        // marginLeft: 10,
-        // marginRight: 10
     },
+    bottom_msg:{
+        // position: 'absolute',
+        // bottom: 0
+    },
+    loadingContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    bottomComponentContainer: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 
 })

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {Text, Image, View, StyleSheet} from 'react-native'
 import checkContext  from '../../../Context/checkContext';
-const MessageCom = ({avatar, firstname, lastname, msg, date, auth_id}) => {
+const MessageCom = ({avatar, name, msg, date, auth_id}) => {
 
     const states = useContext(checkContext);
     const msgBoxStyle = states.userID === auth_id  ? styles.myMsgView : styles.otherMsgView
@@ -14,7 +14,7 @@ const MessageCom = ({avatar, firstname, lastname, msg, date, auth_id}) => {
                     <Image style={styles.image} source={{uri: avatar !== '' ? avatar : undefined}}/>
                 </View>}
                 {states.userID !== auth_id &&<View style={styles.nameView}>
-                    <Text style={styles.name}>{firstname} {lastname}</Text>
+                    <Text style={styles.name}>{name}</Text>
                 </View>}
             </View>
             <View style={msgBoxStyle}>

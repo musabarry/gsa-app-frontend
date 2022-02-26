@@ -106,12 +106,12 @@ const App = ({ navigation }) => {
         socket.auth = null
       }
       
-      socket.on('GSA', payload =>{
+      // socket.on('GSA', payload =>{
 
-      })
+      // })
 
-      socket.on(school, payload =>{
-      })
+      // socket.on(school, payload =>{
+      // })
     })();
   }, []);
 

@@ -137,18 +137,19 @@ query getComments($post: ID!){
 `
 
 
+
+
 export const GETMESSAGES = gql`
 query getComments($room: String!){
   getMessage(room: $room){
     _id
-    body
-    author{
+    text
+    user{
       _id
-      firstname
-      lastname
+      name
       avatar
     }
-    createAt
+    createdAt
   }
 }
 `
